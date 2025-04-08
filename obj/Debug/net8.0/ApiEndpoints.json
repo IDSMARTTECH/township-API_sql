@@ -1,0 +1,1286 @@
+[
+  {
+    "ContainingType": "Township_API.Controllers.AmenitiesController",
+    "Method": "GetAllAmenities",
+    "RelativePath": "api/Amenities",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.AmenitiesController",
+    "Method": "UpdateAmenities",
+    "RelativePath": "api/Amenities/{UpdateAmenities}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "updatedAmenities",
+        "Type": "Township_API.Models.Amenities",
+        "IsRequired": true
+      },
+      {
+        "Name": "UpdateAmenities",
+        "Type": "",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.AmenitiesController",
+    "Method": "AddAmenities",
+    "RelativePath": "api/Amenities/AddAmenities",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "obj",
+        "Type": "Township_API.Models.Amenities",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.AmenitiesController",
+    "Method": "BulkSave",
+    "RelativePath": "api/Amenities/bulkSaveAmenities",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "Obj",
+        "Type": "System.Collections.Generic.List\u00601[[Township_API.Models.Amenities, Township-API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.AuthController",
+    "Method": "Login",
+    "RelativePath": "api/Auth/login",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "model",
+        "Type": "Township_API.Models.LoginModel",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.BuildingController",
+    "Method": "GetAllBuildings",
+    "RelativePath": "api/Building",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.BuildingController",
+    "Method": "UpdateBuilding",
+    "RelativePath": "api/Building/{UpdateBuilding}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "updatedBuilding",
+        "Type": "Township_API.Models.Building",
+        "IsRequired": true
+      },
+      {
+        "Name": "UpdateBuilding",
+        "Type": "",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.BuildingController",
+    "Method": "AddBuilding",
+    "RelativePath": "api/Building/AddBuilding",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "obj",
+        "Type": "Township_API.Models.Building",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.BuildingController",
+    "Method": "BulkSave",
+    "RelativePath": "api/Building/bulkSaveBuilding",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "Obj",
+        "Type": "System.Collections.Generic.List\u00601[[Township_API.Models.Building, Township-API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.ContractorTypeController",
+    "Method": "GetAllContractorTypes",
+    "RelativePath": "api/ContractorType",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.ContractorTypeController",
+    "Method": "UpdateContractorType",
+    "RelativePath": "api/ContractorType/{UpdateContractorType}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "updatedContractorType",
+        "Type": "Township_API.Models.ContractorType",
+        "IsRequired": true
+      },
+      {
+        "Name": "UpdateContractorType",
+        "Type": "",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.ContractorTypeController",
+    "Method": "AddContractorType",
+    "RelativePath": "api/ContractorType/AddContractorType",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "obj",
+        "Type": "Township_API.Models.ContractorType",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.ContractorTypeController",
+    "Method": "BulkSave",
+    "RelativePath": "api/ContractorType/bulkSaveContractorType",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "Obj",
+        "Type": "System.Collections.Generic.List\u00601[[Township_API.Models.ContractorType, Township-API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.Controller1",
+    "Method": "GetAllDependentResidents",
+    "RelativePath": "api/Controller1",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.Controller1",
+    "Method": "UpdateDependentResident",
+    "RelativePath": "api/Controller1/{UpdateDependentResident}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "updatedDResident",
+        "Type": "Township_API.Models.DependentResident",
+        "IsRequired": true
+      },
+      {
+        "Name": "UpdateDependentResident",
+        "Type": "",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.Controller1",
+    "Method": "AddDependentResident",
+    "RelativePath": "api/Controller1/AddDependentResident",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "obj",
+        "Type": "Township_API.Models.DependentResident",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.DependentLandOwnerController",
+    "Method": "GetAllDependentLandowners",
+    "RelativePath": "api/DependentLandOwner",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.DependentLandOwnerController",
+    "Method": "AddDependentLandOwner",
+    "RelativePath": "api/DependentLandOwner/{AddDependentLandOwner}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "obj",
+        "Type": "Township_API.Models.DependentLandOwner",
+        "IsRequired": true
+      },
+      {
+        "Name": "AddDependentLandOwner",
+        "Type": "",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.DependentLandOwnerController",
+    "Method": "UpdateDependentLandOwner",
+    "RelativePath": "api/DependentLandOwner/{UpdateDependentLandOwner}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "updatedDLandOwner",
+        "Type": "Township_API.Models.DependentLandOwner",
+        "IsRequired": true
+      },
+      {
+        "Name": "UpdateDependentLandOwner",
+        "Type": "",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.DependentLandOwnerController",
+    "Method": "AddDependentLandOwners",
+    "RelativePath": "api/DependentLandOwner/AddDependentLandOwners",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "Obj",
+        "Type": "System.Collections.Generic.List\u00601[[Township_API.Models.DependentLandOwner, Township-API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.DependentResidentController",
+    "Method": "GetAllDependentResidents",
+    "RelativePath": "api/DependentResident",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.DependentResidentController",
+    "Method": "AddDependentResidents",
+    "RelativePath": "api/DependentResident/{AddDependentResidents}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "Obj",
+        "Type": "System.Collections.Generic.List\u00601[[Township_API.Models.DependentResident, Township-API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "IsRequired": true
+      },
+      {
+        "Name": "AddDependentResidents",
+        "Type": "",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.DependentResidentController",
+    "Method": "UpdateDependentResident",
+    "RelativePath": "api/DependentResident/{UpdateDependentResident}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "updatedDependentResident",
+        "Type": "Township_API.Models.DependentResident",
+        "IsRequired": true
+      },
+      {
+        "Name": "UpdateDependentResident",
+        "Type": "",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.DependentResidentController",
+    "Method": "AddDependentResident",
+    "RelativePath": "api/DependentResident/AddDependentResident",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "obj",
+        "Type": "Township_API.Models.DependentResident",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.DependentTenentController",
+    "Method": "GetAllDependentTenents",
+    "RelativePath": "api/DependentTenent",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.DependentTenentController",
+    "Method": "AddTenents",
+    "RelativePath": "api/DependentTenent/{AddDependentTenents}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "Obj",
+        "Type": "System.Collections.Generic.List\u00601[[Township_API.Models.DependentTenent, Township-API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "IsRequired": true
+      },
+      {
+        "Name": "AddDependentTenents",
+        "Type": "",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.DependentTenentController",
+    "Method": "UpdateDependentTenent",
+    "RelativePath": "api/DependentTenent/{UpdateDependentTenent}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "updatedDTenent",
+        "Type": "Township_API.Models.DependentTenent",
+        "IsRequired": true
+      },
+      {
+        "Name": "UpdateDependentTenent",
+        "Type": "",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.DependentTenentController",
+    "Method": "AddDependentTenent",
+    "RelativePath": "api/DependentTenent/AddDependentTenent",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "obj",
+        "Type": "Township_API.Models.DependentTenent",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.LandownerController",
+    "Method": "GetAllLandowners",
+    "RelativePath": "api/Landowner",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.LandownerController",
+    "Method": "AddLandOwners",
+    "RelativePath": "api/Landowner/{AddLandOwners}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "Obj",
+        "Type": "System.Collections.Generic.List\u00601[[Township_API.Models.PrimaryLandowner, Township-API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "IsRequired": true
+      },
+      {
+        "Name": "AddLandOwners",
+        "Type": "",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.LandownerController",
+    "Method": "UpdateLandowner",
+    "RelativePath": "api/Landowner/{UpdateLandowner}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "updatedLandowner",
+        "Type": "Township_API.Models.PrimaryLandowner",
+        "IsRequired": true
+      },
+      {
+        "Name": "UpdateLandowner",
+        "Type": "",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.LandownerController",
+    "Method": "AddLandowner",
+    "RelativePath": "api/Landowner/AddLandowner",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "obj",
+        "Type": "Township_API.Models.PrimaryLandowner",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.NRDController",
+    "Method": "GetAllNRDs",
+    "RelativePath": "api/NRD",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.NRDController",
+    "Method": "UpdateNRD",
+    "RelativePath": "api/NRD/{UpdateNRD}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "updatedOBJ",
+        "Type": "Township_API.Models.NRD",
+        "IsRequired": true
+      },
+      {
+        "Name": "UpdateNRD",
+        "Type": "",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.NRDController",
+    "Method": "AddNRD",
+    "RelativePath": "api/NRD/AddNRD",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "obj",
+        "Type": "Township_API.Models.NRD",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.NRDController",
+    "Method": "BulkSave",
+    "RelativePath": "api/NRD/bulkSaveNRD",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "Obj",
+        "Type": "System.Collections.Generic.List\u00601[[Township_API.Models.NRD, Township-API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.PhaseController",
+    "Method": "GetAllPhases",
+    "RelativePath": "api/Phase",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.PhaseController",
+    "Method": "UpdatePhase",
+    "RelativePath": "api/Phase/{UpdatePhase}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "updatedObj",
+        "Type": "Township_API.Models.Phase",
+        "IsRequired": true
+      },
+      {
+        "Name": "UpdatePhase",
+        "Type": "",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.PhaseController",
+    "Method": "AddPhase",
+    "RelativePath": "api/Phase/AddPhase",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "obj",
+        "Type": "Township_API.Models.Phase",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.PhaseController",
+    "Method": "BulkSave",
+    "RelativePath": "api/Phase/bulkSavePhase",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "Obj",
+        "Type": "System.Collections.Generic.List\u00601[[Township_API.Models.Phase, Township-API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.ProfileController",
+    "Method": "GetProfiles",
+    "RelativePath": "api/Profile",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[Township_API.Models.Profile, Township-API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "Township_API.Controllers.ProfileController",
+    "Method": "CreateProfile",
+    "RelativePath": "api/Profile",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "profile",
+        "Type": "Township_API.Models.Profile",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": [
+      {
+        "Type": "Township_API.Models.Profile",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ]
+  },
+  {
+    "ContainingType": "Township_API.Controllers.ReaderLocationController",
+    "Method": "GetAllReaderLocations",
+    "RelativePath": "api/ReaderLocation",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.ReaderLocationController",
+    "Method": "UpdateReaderLocation",
+    "RelativePath": "api/ReaderLocation/{UpdateReaderLocation}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "updatedReaderLocation",
+        "Type": "Township_API.Models.ReaderLocation",
+        "IsRequired": true
+      },
+      {
+        "Name": "UpdateReaderLocation",
+        "Type": "",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.ReaderLocationController",
+    "Method": "AddReaderLocation",
+    "RelativePath": "api/ReaderLocation/AddReaderLocation",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "obj",
+        "Type": "Township_API.Models.ReaderLocation",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.ReaderLocationController",
+    "Method": "BulkSave",
+    "RelativePath": "api/ReaderLocation/bulkSaveReaderLocation",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "Obj",
+        "Type": "System.Collections.Generic.List\u00601[[Township_API.Models.ReaderLocation, Township-API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.ReaderRelayController",
+    "Method": "GetAllReaderRelays",
+    "RelativePath": "api/ReaderRelay",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.ReaderRelayController",
+    "Method": "UpdateReaderRelay",
+    "RelativePath": "api/ReaderRelay/{UpdateReaderRelay}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "updatedReaderRelay",
+        "Type": "Township_API.Models.ReaderRelay",
+        "IsRequired": true
+      },
+      {
+        "Name": "UpdateReaderRelay",
+        "Type": "",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.ReaderRelayController",
+    "Method": "AddReaderRelay",
+    "RelativePath": "api/ReaderRelay/AddReaderRelay",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "obj",
+        "Type": "Township_API.Models.ReaderRelay",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.ReaderRelayController",
+    "Method": "BulkSave",
+    "RelativePath": "api/ReaderRelay/bulkSaveReaderRelay",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "Obj",
+        "Type": "System.Collections.Generic.List\u00601[[Township_API.Models.ReaderRelay, Township-API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.ResidentController",
+    "Method": "GetAllResidents",
+    "RelativePath": "api/Resident",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.ResidentController",
+    "Method": "AddPrimaryResidents",
+    "RelativePath": "api/Resident/{AddPrimaryResidents}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "Obj",
+        "Type": "System.Collections.Generic.List\u00601[[Township_API.Models.PrimaryResident, Township-API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "IsRequired": true
+      },
+      {
+        "Name": "AddPrimaryResidents",
+        "Type": "",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.ResidentController",
+    "Method": "UpdateResident",
+    "RelativePath": "api/Resident/{UpdateResident}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "updatedResident",
+        "Type": "Township_API.Models.PrimaryResident",
+        "IsRequired": true
+      },
+      {
+        "Name": "UpdateResident",
+        "Type": "",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.ResidentController",
+    "Method": "AddResident",
+    "RelativePath": "api/Resident/AddResident",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "obj",
+        "Type": "Township_API.Models.PrimaryResident",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.ServiceTypeController",
+    "Method": "GetAllServiceTypes",
+    "RelativePath": "api/ServiceType",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.ServiceTypeController",
+    "Method": "UpdateServiceType",
+    "RelativePath": "api/ServiceType/{UpdateServiceType}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "updatedServiceType",
+        "Type": "Township_API.Models.ServiceType",
+        "IsRequired": true
+      },
+      {
+        "Name": "UpdateServiceType",
+        "Type": "",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.ServiceTypeController",
+    "Method": "AddServiceType",
+    "RelativePath": "api/ServiceType/AddServiceType",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "obj",
+        "Type": "Township_API.Models.ServiceType",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.ServiceTypeController",
+    "Method": "BulkSave",
+    "RelativePath": "api/ServiceType/bulkSaveServiceType",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "Obj",
+        "Type": "System.Collections.Generic.List\u00601[[Township_API.Models.ServiceType, Township-API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.TenentController",
+    "Method": "GetAllTenents",
+    "RelativePath": "api/Tenent",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.TenentController",
+    "Method": "AddTenents",
+    "RelativePath": "api/Tenent/{AddTenents}",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "Obj",
+        "Type": "System.Collections.Generic.List\u00601[[Township_API.Models.PrimaryTenent, Township-API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "IsRequired": true
+      },
+      {
+        "Name": "AddTenents",
+        "Type": "",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.TenentController",
+    "Method": "UpdateTenent",
+    "RelativePath": "api/Tenent/{UpdateTenent}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "updatedTenent",
+        "Type": "Township_API.Models.PrimaryTenent",
+        "IsRequired": true
+      },
+      {
+        "Name": "UpdateTenent",
+        "Type": "",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.TenentController",
+    "Method": "AddTenent",
+    "RelativePath": "api/Tenent/AddTenent",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "obj",
+        "Type": "Township_API.Models.PrimaryTenent",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.UserRegistrationController",
+    "Method": "GetAll",
+    "RelativePath": "api/UserRegistration",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.UserRegistrationController",
+    "Method": "UpdateUser",
+    "RelativePath": "api/UserRegistration/{UpdateUser}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "updatedUser",
+        "Type": "Township_API.Models.User",
+        "IsRequired": true
+      },
+      {
+        "Name": "UpdateUser",
+        "Type": "",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.UserRegistrationController",
+    "Method": "AddUser",
+    "RelativePath": "api/UserRegistration/AddUser",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "User",
+        "Type": "Township_API.Models.User",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.VehicleController",
+    "Method": "GetAllVehicles",
+    "RelativePath": "api/Vehicle",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.VehicleController",
+    "Method": "UpdateVehicle",
+    "RelativePath": "api/Vehicle/{UpdateVehicle}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "updatedVehicle",
+        "Type": "Township_API.Models.Vehicle",
+        "IsRequired": true
+      },
+      {
+        "Name": "UpdateVehicle",
+        "Type": "",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.VehicleController",
+    "Method": "AddVehicle",
+    "RelativePath": "api/Vehicle/AddVehicle",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "obj",
+        "Type": "Township_API.Models.Vehicle",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.VehicleController",
+    "Method": "BulkSave",
+    "RelativePath": "api/Vehicle/bulkSaveVehicles",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "Obj",
+        "Type": "System.Collections.Generic.List\u00601[[Township_API.Models.Vehicle, Township-API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.VehicleMakeController",
+    "Method": "GetAllVehicleMakes",
+    "RelativePath": "api/VehicleMake",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.VehicleMakeController",
+    "Method": "UpdateVehicleMake",
+    "RelativePath": "api/VehicleMake/{UpdateVehicleMake}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "updatedVehicleMake",
+        "Type": "Township_API.Models.VehicleMake",
+        "IsRequired": true
+      },
+      {
+        "Name": "UpdateVehicleMake",
+        "Type": "",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.VehicleMakeController",
+    "Method": "AddVehicleMake",
+    "RelativePath": "api/VehicleMake/AddVehicleMake",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "obj",
+        "Type": "Township_API.Models.VehicleMake",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Township_API.Controllers.VehicleMakeController",
+    "Method": "BulkSave",
+    "RelativePath": "api/VehicleMake/bulkSaveVehicleMake",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "Obj",
+        "Type": "System.Collections.Generic.List\u00601[[Township_API.Models.VehicleMake, Township-API, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  }
+]
