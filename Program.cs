@@ -7,21 +7,10 @@ using Township_API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowAngularDevClient",
-          policy =>
-          {
-              policy.WithOrigins("http://localhost:4200")
-                    .AllowAnyHeader()
-                    .AllowAnyMethod();
-          });
-});
 
 
-
-
+var port = builder.Configuration.GetValue<int>("AllowedPort");
+var allowedOrigin = $"http://localhost:{port}";
 //configure database
 builder.Services.AddDbContext<AppDBContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -43,6 +32,19 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
         };
     });
+
+
+// Add services to the container.
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngularDevClient",
+          policy =>
+          {
+              policy.WithOrigins(allowedOrigin)
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+          });
+});
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

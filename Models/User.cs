@@ -233,15 +233,15 @@ namespace Township_API.Models
         public int ID { get; set; }
 
         [Required, MaxLength(100)]
-        public string RegNo { get; set; }
-        public string vType { get; set; }
-        public string vMake { get; set; }
-        public string vColor { get; set; }
-        public string TagUID { get; set; }
+        public string? RegNo { get; set; }
+        public string? vType { get; set; }
+        public string? vMake { get; set; }
+        public string? vColor { get; set; }
+        public string? TagUID { get; set; }
         public DateTime? PrintedTagID { get; set; }
         public DateTime? TagEncodingDate { get; set; }
-        public string Logical_Delete { get; set; }
-        public string StickerNo { get; set; }
+        public string? Logical_Delete { get; set; }
+        public string? StickerNo { get; set; }
         public bool? isactive { get; set; } = false;
         public int? createdby { get; set; } = null;
         public DateTime? createdon { get; set; } = null;

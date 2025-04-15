@@ -52,8 +52,7 @@ namespace Township_API.Controllers
                 }
                 _context.Add(obj);
                 await _context.SaveChangesAsync();
-
-                return Ok();
+                return Ok(new { message = $"{obj.ID} Landowner created successfully" });
             }
             catch (Exception ex)
             {
@@ -163,7 +162,7 @@ namespace Township_API.Controllers
             _context.Add(obj);
             await _context.SaveChangesAsync();
 
-            return Ok();
+            return Ok(new { message = $"{obj.ID} Dependent Landowner saved successfully" });
         }
          
         [HttpGet]
