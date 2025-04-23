@@ -20,6 +20,16 @@
         };
 
     }
+    public class DependentJsonWrapper
+    {
+        public object Owners { get; set; }
+        public object? DependentOwners { get; set; }
+        public object? Vehicles { get; set; }
+        public object? UserNRDAccess { get; set; }
+        public object? UserBuildingAccess { get; set; }
+        public object? UserAminitiesAccess { get; set; }
+
+    }
 
 
 }

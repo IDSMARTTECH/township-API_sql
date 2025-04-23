@@ -5,6 +5,7 @@ using Township_API.Services;
 using Township_API.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
+using System.Collections.Generic;
 
 namespace Township_API.Controllers
 {
@@ -70,6 +71,38 @@ namespace Township_API.Controllers
             return Ok(Landowners);
         }
 
+
+        // GET: api/products 
+        [HttpGet("{ID}")]
+        public async Task<IActionResult> GetLandownerDetails(int ID)
+        {
+            var Landowners = await _context.Landowners.Where(p => p.ID == ID).ToListAsync();
+            string? IdNumber = Landowners[0].IDNumber;
+            if (IdNumber != null) {
+                 
+                try
+                {
+                          var jsonWrapper = new DependentJsonWrapper
+                                    { 
+                            Owners= Landowners,
+                            Vehicles = _context.Vehicles.Where(p=>p.TagUID==IdNumber).ToList(),
+                            UserNRDAccess = _context._userNRDAccess.Where(p =>p.CardHolderID.ToString()==IdNumber).ToList(),
+                            UserBuildingAccess = _context._userBuildingAccess.Where(p => p.CardHolderID.ToString() == IdNumber).ToList(),
+                            UserAminitiesAccess = _context._userAmenitiesAccess.Where(p => p.CardHolderID.ToString() == IdNumber).ToList() 
+                                    };
+
+                    return Ok(jsonWrapper);
+                }
+                catch (Exception ex)
+                {
+                    throw;// ex.Message.ToString()); 
+                }
+                
+            }
+            return Ok(new { message = $"Landowner records not found!" }); 
+        }
+         
+
         [HttpPost("{AddLandOwners}")]
         public async Task<IActionResult> AddLandOwners([FromBody] List<PrimaryLandowner> Obj)
         {
@@ -111,8 +144,8 @@ namespace Township_API.Controllers
             }
     
         }
-  
 
+      
 
     }
 
@@ -178,17 +211,21 @@ namespace Township_API.Controllers
             if (Obj == null || !Obj.Any())
                 return BadRequest("No Data provided");
 
-          //  using var transaction = await _context.Database.BeginTransactionAsync();
+           using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
+                // Turn IDENTITY_INSERT ON
+                _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT DependentLandowner ON");
+
                 foreach (var objID in Obj)
                 {
                     var existingobj = await _context.DependentLandowners
                         .FirstOrDefaultAsync(p => p.ID == objID.ID);
 
                     if (existingobj != null)
-                    { 
+                    {
                         //var existingDependentLandOwner = await _service.UpdateDependentLandownerAsync(objID.ID, objID);
+                       
                         var existingDependentLandOwner = await _context.DependentLandowners.FindAsync(objID.ID); 
                         if (existingDependentLandOwner == null)
                         {
@@ -198,17 +235,21 @@ namespace Township_API.Controllers
                     else
                     {
                         _context.DependentLandowners.Add(objID);
+                      
                     }
-                }
-
+                 }
+                
                 await _context.SaveChangesAsync();
-                //await transaction.CommitAsync();
+                // Turn IDENTITY_INSERT OFF
+                _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT DependentLandowner OFF");
+               
+                await transaction.CommitAsync();
 
                 return Ok(new { message = $"{Obj.Count} Dependent Landowners processed successfully" });
             }
             catch (Exception ex)
             {
-              //  await transaction.RollbackAsync();
+                await transaction.RollbackAsync();
                 return StatusCode(500, new { error = ex.Message });
             }
         }

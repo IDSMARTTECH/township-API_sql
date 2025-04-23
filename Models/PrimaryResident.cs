@@ -66,4 +66,6 @@ namespace Township_API.Models
         public int LogicalDeleted { get; set; }
     }
 
+
+   
 }

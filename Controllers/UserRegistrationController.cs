@@ -33,11 +33,11 @@ namespace Township_API.Controllers
             }
 
             // Update properties
-            existingUser.UID  = updatedUser.UID;
-            existingUser.UserName = updatedUser.UserName;
-            existingUser.Email = updatedUser.Email;
-            existingUser.Phone = updatedUser.Phone;
-            existingUser.Password = updatedUser.Password;
+            existingUser.uid  = updatedUser.uid;
+            existingUser.name = updatedUser.name;
+            existingUser.email = updatedUser.email;
+            existingUser.phone = updatedUser.phone;
+            existingUser.password = updatedUser.password;
             existingUser.Role = updatedUser.Role;
 
             _context.Entry(existingUser).State = EntityState.Modified;

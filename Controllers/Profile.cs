@@ -23,7 +23,11 @@ namespace Township_API.Controllers
         {
             return await _context.Profiles.Include(p => p.user).ToListAsync();
         }
-
+        [HttpGet("{ID}")]
+        public async Task<ActionResult<IEnumerable<ProfileDetails>>> GetProfileDetails(string Id)
+        {
+            return await _context.ProfileDetails.Where(p => p.profileid.ToString()==Id.ToString()).ToListAsync();
+        }
 
         [HttpPost]
             public async Task<ActionResult<Profile>> CreateProfile(Profile profile)

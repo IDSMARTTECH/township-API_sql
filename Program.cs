@@ -8,9 +8,22 @@ using Township_API.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 
-
 var port = builder.Configuration.GetValue<int>("AllowedPort");
 var allowedOrigin = $"http://localhost:{port}";
+//// Add services to the container.
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngularDevClient",
+          policy =>
+          {
+              policy.WithOrigins(allowedOrigin)
+                    .AllowAnyHeader()
+                    .AllowAnyMethod();
+          });
+});
+ 
+
+
 //configure database
 builder.Services.AddDbContext<AppDBContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -33,19 +46,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-
-// Add services to the container.
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowAngularDevClient",
-          policy =>
-          {
-              policy.WithOrigins(allowedOrigin)
-                    .AllowAnyHeader()
-                    .AllowAnyMethod();
-          });
-});
-
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -60,7 +60,7 @@ app.UseCors("AllowAngularDevClient");
 
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (1==1||app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();

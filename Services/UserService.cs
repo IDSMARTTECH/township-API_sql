@@ -48,11 +48,11 @@ namespace Township_API.Services
             if (existingUser == null) return null;
 
             // Update properties
-            existingUser.UserName = updatedUser.UserName;
-            existingUser.UserName = updatedUser.UserName;
-            existingUser.Email = updatedUser.Email;
-            existingUser.Phone = updatedUser.Phone;
-            existingUser.Password = updatedUser.Password;
+            existingUser.Id = updatedUser.Id;
+            existingUser.name = updatedUser.name;
+            existingUser.email = updatedUser.email;
+            existingUser.phone = updatedUser.phone;
+            existingUser.password = updatedUser.password;
             existingUser.Role = updatedUser.Role;
 
             await _context.SaveChangesAsync();

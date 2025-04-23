@@ -72,7 +72,10 @@ namespace Township_API.Controllers
             if (Obj == null || !Obj.Any())
                 return BadRequest("No Data provided");
 
-            //using var transaction = await _context.Database.BeginTransactionAsync();
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            // Turn IDENTITY_INSERT ON
+            _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT PrimaryTenent ON");
+
             try
             {
                 foreach (var objID in Obj)
@@ -96,13 +99,15 @@ namespace Township_API.Controllers
                 }
 
                 await _context.SaveChangesAsync();
-                //await transaction.CommitAsync();
+                await transaction.CommitAsync();
+                // Turn IDENTITY_INSERT OFF
+                _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT PrimaryTenent  OFF");
 
                 return Ok(new { message = $"{Obj.Count} Tenent processed successfully" });
             }
             catch (Exception ex)
             {
-                //await transaction.RollbackAsync();
+                await transaction.RollbackAsync();
                 return StatusCode(500, new { error = ex.Message });
             }
         }
@@ -176,7 +181,10 @@ namespace Township_API.Controllers
             if (Obj == null || !Obj.Any())
                 return BadRequest("No Data provided");
 
-           // using var transaction = await _context.Database.BeginTransactionAsync();
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            // Turn IDENTITY_INSERT ON
+            _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT DependentTenent ON");
+
             try
             {
                 foreach (var objID in Obj)
@@ -200,13 +208,15 @@ namespace Township_API.Controllers
                 }
 
                 await _context.SaveChangesAsync();
-              //  await transaction.CommitAsync();
+                await transaction.CommitAsync();
+                // Turn IDENTITY_INSERT OFF
+                _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT DependentTenent  OFF");
 
                 return Ok(new { message = $"{Obj.Count} DependentTenent processed successfully" });
             }
             catch (Exception ex)
             {
-              //  await transaction.RollbackAsync();
+                await transaction.RollbackAsync();
                 return StatusCode(500, new { error = ex.Message });
             }
         } 

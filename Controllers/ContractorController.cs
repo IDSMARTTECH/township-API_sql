@@ -15,7 +15,7 @@ namespace Township_API.Controllers
         {
             _context = context;  
         }
-         /*
+         
 
         // PUT: api/products/5
         [HttpPut("{UpdateContractor}")]
@@ -41,8 +41,20 @@ namespace Township_API.Controllers
 
 
         [HttpPost("AddContractor")]
-        public async Task<IActionResult> AddContractor([FromBody]  ContractorType obj)
+        public async Task<IActionResult> AddContractor([FromBody]  Contractor obj)
         {
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState
+                    .Where(ms => ms.Value.Errors.Any())
+                    .ToDictionary(
+                        kvp => kvp.Key,
+                        kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
+                    );
+
+                return BadRequest(new { message = "Validation Failed", errors });
+            }
+
             var existingContractor = await _context.ModuleData.FindAsync(0);
             if (existingContractor != null)
             {
@@ -59,30 +71,168 @@ namespace Township_API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllContractors()
         {
-            var Contractors = await _context.ModuleData.ToListAsync();
+            var Contractors = await _context.ContractorTypes.ToListAsync();
             return Ok(Contractors);
         }
 
-        */
+        [HttpPost("{AddContractors}")]
+        public async Task<IActionResult> AddContractors([FromBody] List<Contractor> Obj)
+        {
+            if (Obj == null || !Obj.Any())
+                return BadRequest("No Data provided");
+
+            using var transaction = await _context.Database.BeginTransactionAsync();
+
+            // Turn IDENTITY_INSERT ON
+            _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Contractor ON");
+
+
+            try
+            {
+                foreach (var objID in Obj)
+                {
+                    var existingobj = await _context.Contractors
+                        .FirstOrDefaultAsync(p => p.ID == objID.ID);
+
+                    if (existingobj != null)
+                    {
+                        //var existingContractor = await _service.UpdateContractorAsync(objID.ID, existingobj);
+                        var existingContractor = await _context.Contractors.FindAsync(objID.ID);
+                        if (existingContractor == null)
+                        {
+                            return NotFound();
+                        }
+                    }
+                    else
+                    {
+                        _context.Contractors.Add(objID);
+                    }
+                }
+
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+                // Turn IDENTITY_INSERT OFF
+                _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Contractor  OFF");
+
+                return Ok(new { message = $"{Obj.Count} Contractor processed successfully" });
+            }
+            catch (Exception ex)
+            {
+                //await transaction.RollbackAsync();
+                return StatusCode(500, new { error = ex.Message });
+            }
+        }
+
 
     }
 
 
     [Route("api/[controller]")]
     [ApiController]
-    public class ContractorDependentLandOwnerController : Controller
+    public class DependentContractorController : Controller
     {
         private readonly AppDBContext _context;
 
-        // private readonly iService _service;
-
-        public ContractorDependentLandOwnerController(AppDBContext context)
+        public DependentContractorController(AppDBContext context)
         {
             _context = context;
         }
-         
+
+        // PUT: api/products/5
+        [HttpPut("{UpdateDependentContractor}")]
+        public async Task<IActionResult> UpdateDependentContractor(int id, [FromBody] DependentContractor updatedDependentContractor)
+        {
+            if (id != updatedDependentContractor.ID)
+            {
+                return BadRequest("DependentContractor ID mismatch.");
+            }
+
+            //var existingDependentContractor = await _service.UpdateDependentContractorAsync(updatedDependentContractor.ID, updatedDependentContractor);
+            var existingDependentContractor = await _context.PrimaryResidents.FindAsync(updatedDependentContractor.ID);
+
+            if (existingDependentContractor == null)
+            {
+                return NotFound();
+            }
+
+            _context.Entry(existingDependentContractor).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+
+            return Ok(existingDependentContractor);
+        }
 
 
-    } 
-    
+        [HttpPost("AddDependentContractor")]
+        public async Task<IActionResult> AddDependentContractor([FromBody] DependentContractor obj)
+        {
+            var existingDependentContractor = await _context.DependentContractors.FindAsync(0);
+            if (existingDependentContractor != null)
+            {
+                return BadRequest("DependentContractor Exists.");
+            }
+            _context.Add(obj);
+            await _context.SaveChangesAsync();
+
+            return Ok();
+        }
+
+
+        // GET: api/products 
+        [HttpGet]
+        public async Task<IActionResult> GetAllDependentContractors()
+        {
+            var DependentContractors = await _context.DependentContractors.ToListAsync();
+            return Ok(DependentContractors);
+        }
+
+
+        [HttpPost("{AddDependentContractors}")]
+        public async Task<IActionResult> AddDependentContractors([FromBody] List<DependentContractor> Obj)
+        {
+            if (Obj == null || !Obj.Any())
+                return BadRequest("No Data provided");
+
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            // Turn IDENTITY_INSERT ON
+            _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT DependentContractor ON");
+
+            try
+            {
+                foreach (var objID in Obj)
+                {
+                    var existingobj = await _context.DependentContractors
+                        .FirstOrDefaultAsync(p => p.ID == objID.ID);
+
+                    if (existingobj != null)
+                    {
+                        //  var existingDependentContractor = await _service.UpdateDependentContractorAsync(objID.ID, existingobj);
+                        var existingDependentContractor = await _context.DependentContractors.FindAsync(0);
+                        if (existingDependentContractor == null)
+                        {
+                            return NotFound();
+                        }
+                    }
+                    else
+                    {
+                        _context.DependentContractors.Add(objID);
+                    }
+                }
+
+                await _context.SaveChangesAsync();
+                await transaction.CommitAsync();
+                // Turn IDENTITY_INSERT OFF
+                _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT DependentContractor  OFF");
+
+                return Ok(new { message = $"{Obj.Count} DependentContractor processed successfully" });
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                return StatusCode(500, new { error = ex.Message });
+            }
+        }
+
+
+    }
+
 }

@@ -87,6 +87,7 @@ namespace Township_API.Controllers
         {
 
             //using var transaction = await _context.Database.BeginTransactionAsync();
+             
             try
             {
                 foreach (var updatedObj in Obj)
@@ -1024,6 +1025,19 @@ namespace Township_API.Controllers
             {
                 return NotFound();
             }
+            existingVehicle.RegNo = updatedVehicle.RegNo;
+            existingVehicle.vType = updatedVehicle.vType;
+            existingVehicle.vMake = updatedVehicle.vMake;
+            existingVehicle.vColor = updatedVehicle.vColor;
+            existingVehicle.TagUID = updatedVehicle.TagUID;
+            existingVehicle.PrintedTagID = updatedVehicle.PrintedTagID;
+            existingVehicle.TagEncodingDate = updatedVehicle.TagEncodingDate;
+            existingVehicle.Logical_Delete = updatedVehicle.Logical_Delete;
+            existingVehicle.StickerNo = updatedVehicle.StickerNo;
+            existingVehicle.isactive = updatedVehicle.isactive; 
+            existingVehicle.updatedby = updatedVehicle.updatedby;
+            existingVehicle.updatedon = updatedVehicle.updatedon;
+
 
             _context.Entry(existingVehicle).State = EntityState.Modified;
             await _context.SaveChangesAsync();
@@ -1061,7 +1075,11 @@ namespace Township_API.Controllers
             //if (Vehicles == null || !Vehicles.Any())
             //     return "BadRequest("No Vehicles provided")";
 
-            // using var transaction = await _context.Database.BeginTransactionAsync();
+             using var transaction = await _context.Database.BeginTransactionAsync();
+            // Turn IDENTITY_INSERT ON
+            _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblVehicle ON");
+
+
             try
             {
                 foreach (var updatedObj in Obj)
@@ -1082,7 +1100,8 @@ namespace Township_API.Controllers
                         existingOBJ.PrintedTagID = updatedObj.PrintedTagID;
                         existingOBJ.StickerNo = updatedObj.StickerNo;
 
-
+                        existingOBJ.createdby = 1; 
+                        existingOBJ.createdon = DateTime.Now;
                     }
                     else
                     {
@@ -1091,14 +1110,16 @@ namespace Township_API.Controllers
                 }
 
                 await _context.SaveChangesAsync();
-                //await transaction.CommitAsync();
+                await transaction.CommitAsync();
 
-                return null;//Ok(new { message = $"{Vehicles.Count} Vehicles processed successfully" });
+                // Turn IDENTITY_INSERT OFF
+                _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblVehicle OFF");
+                return Ok(new { message = $"{Obj.Count} Vehicles processed successfully" });
             }
             catch (Exception ex)
             {
-                //await transaction.RollbackAsync();
-                return null;//StatusCode(500, new { error = ex.Message });
+                await transaction.RollbackAsync();
+                return StatusCode(500, new { error = ex.Message });
             }
         }
     }

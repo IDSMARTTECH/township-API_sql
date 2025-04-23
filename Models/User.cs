@@ -24,19 +24,19 @@ namespace Township_API.Models
 
         [Required]
         [MaxLength(100)]
-        public string UID { get; set; }
+        public string uid { get; set; }
 
         [Required, MaxLength(250)]
-        public string UserName { get; set; }
+        public string name { get; set; }
 
         [Required, MaxLength(50)]
-        public string Password { get; set; }
+        public string password { get; set; }
 
         [Required, EmailAddress]
-        public string Email { get; set; }
+        public string email { get; set; }
 
         [Required, Phone]
-        public string? Phone { get; set; }
+        public string? phone { get; set; }
         public bool? isactive { get; set; } = false;
         public bool? isdeleted { get; set; } = false;
         public int? createdby { get; set; }
@@ -45,7 +45,7 @@ namespace Township_API.Models
         public DateTime? updatedon { get; set; } = null;
 
         [ForeignKey("Role")]
-        public int? RoleID { get; set; }
+        public int? roleID { get; set; }
         public Role? Role { get; set; }
     }
 
@@ -87,8 +87,6 @@ namespace Township_API.Models
         [ForeignKey("Module")]
         public int? moduleId { get; set; }
         public Module? module { get; set; }
-
-
         public bool? CanInsert { get; set; } = false;
         public bool? CanUpdate { get; set; } = false;
         public bool? CanDelete { get; set; } = false;
@@ -107,11 +105,12 @@ namespace Township_API.Models
     //    public int PermissionID { get; set; }
 
     //    [ForeignKey("Role")]
-    //    public int RoleID { get; set; } 
-    //    public Roles Role { get; set; }
+    //    public int RoleID { get; set; }
+
+    //    public Role  Role { get; set; }
 
     //    [ForeignKey("Module")]
-    //    public int ModuleID { get; set; } 
+    //    public int ModuleID { get; set; }
     //    public Module Module { get; set; }
 
     //    public bool CanInsert { get; set; } = false;
@@ -213,12 +212,12 @@ namespace Township_API.Models
     public class Service_Provider
     {
         public int ID { get; set; }
-        public string code { get; set; }
-        public string name { get; set; }
-        public string email { get; set; }
-        public string phone { get; set; }
-        public string ServiceProviderID { get; set; }
-        public string role { get; set; }
+        public string? code { get; set; }
+        public string? name { get; set; }
+        public string? email { get; set; }
+        public string? phone { get; set; }
+        public string? ServiceProviderID { get; set; }
+        public string? role { get; set; }
         public bool? isactive { get; set; } = false;
         public int? createdby { get; set; } = null;
         public DateTime? createdon { get; set; } = null;
@@ -229,19 +228,41 @@ namespace Township_API.Models
     [Table("tblVehicle")]
     public class Vehicle
     {
+        
         [Key]
         public int ID { get; set; }
 
-        [Required, MaxLength(100)]
+        [Required, MaxLength(50)]
         public string? RegNo { get; set; }
-        public string? vType { get; set; }
+        public string? vType { get; set; } 
         public string? vMake { get; set; }
         public string? vColor { get; set; }
         public string? TagUID { get; set; }
-        public DateTime? PrintedTagID { get; set; }
+        public string? PrintedTagID { get; set; }
         public DateTime? TagEncodingDate { get; set; }
-        public string? Logical_Delete { get; set; }
+        public int? Logical_Delete { get; set; }
         public string? StickerNo { get; set; }
+        public int? isactive { get; set; } = 0;
+        public int? createdby { get; set; } = null;
+        public DateTime? createdon { get; set; } = null;
+        public int? updatedby { get; set; } = null;
+        public DateTime? updatedon { get; set; } = null;
+    }
+
+    [Table("tblDoorAccess")]
+    public class DoorAccess
+    {
+        public int ID { get; set; }
+        public int ModuleID { get; set; }
+        public int CardHolderID { get; set; }
+        public int sun { get; set; }
+        public int mon { get; set; }
+        public int tus { get; set; }
+        public int wed { get; set; }
+        public int thu { get; set; }
+        public int fri { get; set; }
+        public int sat { get; set; }
+        public DateTime? validTillDate { get; set; }
         public bool? isactive { get; set; } = false;
         public int? createdby { get; set; } = null;
         public DateTime? createdon { get; set; } = null;
@@ -249,12 +270,35 @@ namespace Township_API.Models
         public DateTime? updatedon { get; set; } = null;
     }
 
-    [Table("tblUserNRDAccess")]
+    [Table("vwNRDDoorAccess")]
     public class UserNRDAccess
     {
         public int ID { get; set; }
-        public int NRD { get; set; }
-        public int userID { get; set; }
+        public int ModuleID { get; set; }
+        public int CardHolderID { get; set; }
+        public int sun { get; set; }
+        public int mon { get; set; }
+        public int tus { get; set; }
+        public int wed { get; set; }
+        public int thu { get; set; }
+        public int fri { get; set; }
+        public int sat { get; set; }
+        public DateTime? validTillDate { get; set; }
+        public bool? isactive { get; set; } = false;
+        public int? createdby { get; set; } = null;
+        public DateTime? createdon { get; set; } = null;
+        public int? updatedby { get; set; } = null;
+        public DateTime? updatedon { get; set; } = null;
+    }
+
+
+
+    [Table("vwAmenitiesDoorAccess")]
+    public class UserAmenitiesAccess
+    {
+        public int ID { get; set; }
+        public int ModuleID { get; set; }
+        public int CardHolderID { get; set; }
         public int sun { get; set; }
         public int mon { get; set; }
         public int tus { get; set; }
@@ -274,7 +318,8 @@ namespace Township_API.Models
     public class UserBuildingAccess
     {
         public int ID { get; set; }
-        public int BuildingID { get; set; }
+        public int ModuleID { get; set; }
+        public int CardHolderID { get; set; }
         public int sun { get; set; }
         public int mon { get; set; }
         public int tus { get; set; }
@@ -283,14 +328,11 @@ namespace Township_API.Models
         public int fri { get; set; }
         public int sat { get; set; }
         public DateTime? validTillDate { get; set; }
-        public int userID { get; set; }
         public int isAcive { get; set; }
         public int? createdby { get; set; } = null;
         public DateTime? createdon { get; set; } = null;
         public int? updatedby { get; set; } = null;
         public DateTime? updatedon { get; set; } = null;
     }
-
-
 
 }

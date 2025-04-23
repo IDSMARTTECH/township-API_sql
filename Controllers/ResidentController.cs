@@ -68,7 +68,12 @@ namespace Township_API.Controllers
             if (Obj == null || !Obj.Any())
                 return BadRequest("No Data provided");
 
-            //using var transaction = await _context.Database.BeginTransactionAsync();
+            using var transaction = await _context.Database.BeginTransactionAsync();
+
+            // Turn IDENTITY_INSERT ON
+            _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT PrimaryResident ON");
+            
+
             try
             {
                 foreach (var objID in Obj)
@@ -92,7 +97,9 @@ namespace Township_API.Controllers
                 }
 
                 await _context.SaveChangesAsync();
-                //await transaction.CommitAsync();
+                await transaction.CommitAsync();
+                // Turn IDENTITY_INSERT OFF
+                _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT PrimaryResident  OFF");
 
                 return Ok(new { message = $"{Obj.Count} PrimaryResident processed successfully" });
             }
@@ -171,7 +178,10 @@ namespace Township_API.Controllers
             if (Obj == null || !Obj.Any())
                 return BadRequest("No Data provided");
 
-            //using var transaction = await _context.Database.BeginTransactionAsync();
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            // Turn IDENTITY_INSERT ON
+            _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT DependentResident ON");
+
             try
             {
                 foreach (var objID in Obj)
@@ -195,13 +205,15 @@ namespace Township_API.Controllers
                 }
 
                 await _context.SaveChangesAsync();
-                //   await transaction.CommitAsync();
+                await transaction.CommitAsync();
+                // Turn IDENTITY_INSERT OFF
+                _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT DependentResident  OFF");
 
                 return Ok(new { message = $"{Obj.Count} DependentResident processed successfully" });
             }
             catch (Exception ex)
             {
-                //   await transaction.RollbackAsync();
+                   await transaction.RollbackAsync();
                 return StatusCode(500, new { error = ex.Message });
             }
         }

@@ -25,8 +25,7 @@ namespace Township_API.Data
 
         public DbSet<Vehicle> Vehicles { get; set; }
 
-
-        public DbSet<Service_Provider> Service_Providers { get; set; }
+         
         public DbSet<PrimaryLandowner> Landowners { get; set; }
         public DbSet<DependentLandOwner> DependentLandowners { get; set; }
         public DbSet<PrimaryTenent> PrimaryTenents { get; set; }
@@ -34,6 +33,12 @@ namespace Township_API.Data
 
         public DbSet<PrimaryResident> PrimaryResidents { get; set; }
         public DbSet<DependentResident> DependentResidents { get; set; }
+
+
+        public DbSet<Contractor>Contractors { get; set; }
+        public DbSet<DependentContractor>DependentContractors { get; set; }
+
+        public DbSet<Service_Provider> ServiceProviders { get; set; }
         public DbSet<ModuleData> ModuleDatas { get; set; }
 
          
@@ -50,39 +55,71 @@ namespace Township_API.Data
         public IQueryable<ReaderRelay> ReaderRelays => (IQueryable<ReaderRelay>)ModuleDatas.Where(n => n.TypeID == (int)commonTypes.ModuleTypes.ReaderRelays && n.ID > (int)commonTypes.ModuleTypes.ReaderRelays);
         public IQueryable<VehicleMake> VehicleMakes => (IQueryable<VehicleMake>)ModuleDatas.Where(n => n.TypeID == (int)commonTypes.ModuleTypes.VehicleMake && n.ID > (int)commonTypes.ModuleTypes.VehicleMake);
 
+        public DbSet<DoorAccess> _userDoorAccess { get; set; }
+
+        public DbSet<UserAmenitiesAccess> _userAmenitiesAccess { get; set; }
+        public DbSet<UserNRDAccess> _userNRDAccess { get; set; }
+
+        public DbSet<UserBuildingAccess> _userBuildingAccess { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
 
-            //modelBuilder.Entity<ModuleData>()
-            //    .HasDiscriminator<string>("ModuleType")
-            //    .HasValue<NRD>("NRD")
-            //    .HasValue<Building>("Building")
-            //    .HasValue<VehicleType>("VehicleType")
-            //    .HasValue<ReaderType>("ReaderType")
-            //    .HasValue<ReaderMode>("ReaderMode")
-            //    .HasValue<ContractorType>("ContractorType")
-            //    .HasValue<Amenities>("amenities")
-            //    .HasValue<Phase>("phase")
-            //    .HasValue<ReaderLocation>("ReaderLocations")
-            //    .HasValue<VehicleMake>("VehicleMake")
-            //    .HasValue<ReaderRelay>("ReaderRelays")
-            //    .HasValue<ServiceType>("ServiceType");
+        //modelBuilder.Entity<ModuleData>()
+        //    .HasDiscriminator<string>("ModuleType")
+        //    .HasValue<NRD>("NRD")
+        //    .HasValue<Building>("Building")
+        //    .HasValue<VehicleType>("VehicleType")
+        //    .HasValue<ReaderType>("ReaderType")
+        //    .HasValue<ReaderMode>("ReaderMode")
+        //    .HasValue<ContractorType>("ContractorType")
+        //    .HasValue<Amenities>("amenities")
+        //    .HasValue<Phase>("phase")
+        //    .HasValue<ReaderLocation>("ReaderLocations")
+        //    .HasValue<VehicleMake>("VehicleMake")
+        //    .HasValue<ReaderRelay>("ReaderRelays")
+        //    .HasValue<ServiceType>("ServiceType");
 
 
-            //modelBuilder.Entity<NRD>().ToTable("NRDs");
-            //modelBuilder.Entity<Building>().ToTable("Buildings");
-            //modelBuilder.Entity<VehicleType>().ToTable("VehicleTypes");
-            //modelBuilder.Entity<ReaderType>().ToTable("ReaderTypes");
-            //modelBuilder.Entity<ReaderMode>().ToTable("ReaderModes");
-            //modelBuilder.Entity<ContractorType>().ToTable("ContractorTypes");
-            //modelBuilder.Entity<Amenities>().ToTable("Amenitiess");
-            //modelBuilder.Entity<Phase>().ToTable("Phases");
-            //modelBuilder.Entity<ReaderLocations>().ToTable("ReaderLocations");
-            //modelBuilder.Entity<VehicleMake>().ToTable("VehicleMakes");
-            //modelBuilder.Entity<ReaderRelay>().ToTable("ReaderRelays");
-            //modelBuilder.Entity<ServiceType>().ToTable("ServiceTypes");
+        //modelBuilder.Entity<NRD>().ToTable("NRDs");
+        //modelBuilder.Entity<Building>().ToTable("Buildings");
+        //modelBuilder.Entity<VehicleType>().ToTable("VehicleTypes");
+        //modelBuilder.Entity<ReaderType>().ToTable("ReaderTypes");
+        //modelBuilder.Entity<ReaderMode>().ToTable("ReaderModes");
+        //modelBuilder.Entity<ContractorType>().ToTable("ContractorTypes");
+        //modelBuilder.Entity<Amenities>().ToTable("Amenitiess");
+        //modelBuilder.Entity<Phase>().ToTable("Phases");
+        //modelBuilder.Entity<ReaderLocations>().ToTable("ReaderLocations");
+        //modelBuilder.Entity<VehicleMake>().ToTable("VehicleMakes");
+        //modelBuilder.Entity<ReaderRelay>().ToTable("ReaderRelays");
+        //modelBuilder.Entity<ServiceType>().ToTable("ServiceTypes");
+         
+
+        //modelBuilder.Entity<UserNRDAccess>(entity =>
+        //{
+        //    entity.HasNoKey(); // Views often don’t have a primary key
+        //    entity.ToView("vwNRDDoorAccess"); // Name of the view in SQL
+        //    // Optional: configure column mapping if needed
+        //    // entity.Property(e => e.Name).HasColumnName("SomeColumn");
+        //});
+        //    modelBuilder.Entity<UserBuildingAccess>(entity =>
+        //    {
+        //        entity.HasNoKey(); // Views often don’t have a primary key
+        //        entity.ToView("vwBuildingDoorAccess"); // Name of the view in SQL
+        //                                          // Optional: configure column mapping if needed
+        //                                          // entity.Property(e => e.Name).HasColumnName("SomeColumn");
+        //    });
+
+        //    modelBuilder.Entity<UserAmenitiesAccess>(entity =>
+        //    {
+        //        entity.HasNoKey(); // Views often don’t have a primary key
+        //        entity.ToView("vwAmenitiesDoorAccess"); // Name of the view in SQL
+        //                                               // Optional: configure column mapping if needed
+        //                                               // entity.Property(e => e.Name).HasColumnName("SomeColumn");
+        //    });
+
+
         }
     }
 }
