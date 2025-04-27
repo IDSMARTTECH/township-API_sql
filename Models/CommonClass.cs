@@ -22,7 +22,7 @@
     }
     public class DependentJsonWrapper
     {
-        public object Owners { get; set; }
+        public object? Owners { get; set; }
         public object? DependentOwners { get; set; }
         public object? Vehicles { get; set; }
         public object? UserNRDAccess { get; set; }

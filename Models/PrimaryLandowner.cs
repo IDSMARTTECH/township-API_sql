@@ -1,10 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Township_API.Models
 {
+
     [Table("PrimaryLandowner")]
     public class PrimaryLandowner
     {
+        [Key]
         public int ID { get; set; }
         public string? CSN { get; set; }
         public string? IDNumber { get; set; }
@@ -31,31 +34,47 @@ namespace Township_API.Models
         public DateTime? CardPrintingDate { get; set; }
         public int? LogicalDeleted { get; set; } 
         public DateTime? LandOwnerIssueDate { get; set; }
-    }
+    } 
     [Table("DependentLandowner")]
     public class DependentLandOwner
     {
         public int PID { get; set; }
+        [Key]
         public int ID { get; set; }
-        public string? CSN { get; set; }
+        [MaxLength(20)]
+        public string? CSN { get; set; } 
+        [Required] 
+        [MaxLength(20)] 
         public string? IDNumber { get; set; }
+        [MaxLength(20)]
         public string? TagNumber { get; set; }
+        [MaxLength(20)]
         public string? PANnumber { get; set; }
+        [MaxLength(20)]
         public string? PassportNo { get; set; }
+        [MaxLength(20)]
         public string? LicenseNo { get; set; }
+        [MaxLength(20)]
         public string? AadharCardId { get; set; }
-        public string? VoterID { get; set; }
+        [MaxLength(20)]
+        public string? VoterID { get; set; } 
+        [Required] 
+        [MaxLength(50)] 
         public string? Firstname { get; set; }
+        [MaxLength(50)]
         public string? MiddletName { get; set; }
+        [MaxLength(50)]
         public string? LastName { get; set; }
+        [MaxLength(150)]
         public string? ShortName { get; set; }
         public string? Gender { get; set; }
+        [MaxLength(10)]
         public string? BloodGroup { get; set; }
         public DateTime? DOB { get; set; }
         public string? MobileNo { get; set; }
         public DateTime? CardIssueDate { get; set; }
-        public DateTime? CardPrintingDate { get; set; }
-        public string? LogicalDeleted { get; set; }
+        public DateTime? CardPrintingDate { get; set; } 
+        public int? LogicalDeleted { get; set; } = 0;   
         public DateTime? DependLandOwnerIssueDate { get; set; } 
          
     }

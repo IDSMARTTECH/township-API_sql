@@ -18,7 +18,7 @@ namespace Township_API.Controllers
             _context = context;   
         }
           
-
+        
         // PUT: api/products/5
         [HttpPut("{UpdateDependentResident}")]
         public async Task<IActionResult> UpdateDependentResident(int id, [FromBody] DependentResident updatedDResident)
@@ -64,6 +64,6 @@ namespace Township_API.Controllers
             var DependentResidents = await _context.DependentResidents.ToListAsync();
             return Ok(DependentResidents);
         }
-         
+        
     }
 }

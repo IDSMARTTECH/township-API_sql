@@ -6,6 +6,10 @@ namespace Township_API.Controllers
     {
         public List<PrimaryLandowner> owners { get; set; }
         public Task<List<DependentLandOwner>> DependentOwners { get; set; }
-        public Task<List<DependentLandOwner>> Vehicles { get; set; }
+        public Task<List<Vehicle>> Vehicles { get; set; }
+        public Task<List<UserNRDAccess>> UserNRDAccess { get; set; }
+        public Task<List<UserBuildingAccess>> UserBuildingAccess { get; set; }
+        public Task<List<UserAmenitiesAccess>> UserAmenitiesAccess { get; set; }
+
     }
 }

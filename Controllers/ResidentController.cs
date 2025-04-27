@@ -62,6 +62,38 @@ namespace Township_API.Controllers
             return Ok(Residents);
         }
 
+
+        // GET: api/products 
+        [HttpGet("{ID}")]
+        public async Task<IActionResult> GetResidentDetails(int ID)
+        {
+            var Residents = await _context.PrimaryResidents.Where(p => p.ID == ID).ToListAsync();
+            string? IdNumber = Residents[0].IDNumber;
+            if (IdNumber != null)
+            {
+                try
+                {
+                    var jsonWrapper = new DependentJsonWrapper
+                    {
+                        Owners = Residents,
+                        DependentOwners = _context.DependentResidents.Where(p => p.PID == ID).ToList(),
+                        Vehicles = _context.Vehicles.Where(p => p.TagUID == IdNumber).ToList(),
+                        UserNRDAccess = _context._userNRDAccess.Where(p => p.CardHolderID != null && p.CardHolderID.ToString() == IdNumber).ToList(),
+                        UserBuildingAccess = _context._userBuildingAccess.Where(p => p.CardHolderID != null && p.CardHolderID.ToString() == IdNumber).ToList(),
+                        UserAminitiesAccess = _context._userAmenitiesAccess.Where(p => p.CardHolderID != null && p.CardHolderID.ToString() == IdNumber).ToList()
+
+                    };
+
+                    return Ok(jsonWrapper);
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message.ToString());
+                }
+            }
+            return Ok(new { message = $"Resident records not found!" });
+        }
+
         [HttpPost("{AddPrimaryResidents}")]
         public async Task<IActionResult> AddPrimaryResidents([FromBody] List<PrimaryResident> Obj)
         {

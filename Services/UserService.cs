@@ -26,7 +26,6 @@ namespace Township_API.Services
         }
 
 
-
         // Find by Id
         public async Task<User?> GetByIdAsync(int id)
         {

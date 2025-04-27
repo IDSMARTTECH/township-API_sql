@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -11,8 +12,8 @@ namespace Township_API.Models
 {
     public class LoginModel
     {
-        public string Email { get; set; }
-        public string Password { get; set; }
+        public string? Email { get; set; }
+        public string? Password { get; set; }
     }
 
     //User
@@ -160,16 +161,16 @@ namespace Township_API.Models
         public int ParentID { get; set; } = 0;
         public string? ModuleType { get; set; } = null;
         public string? Discriminator { get; set; } = null;
-         
+
         public bool? isactive { get; set; } = false;
         public int? createdby { get; set; } = null;
         public DateTime? createdon { get; set; } = null;
         public int? updatedby { get; set; } = null;
         public DateTime? updatedon { get; set; } = null;
-         
+
     }
 
-    public abstract class ModuleDataTemplate : ModuleData 
+    public abstract class ModuleDataTemplate : ModuleData
     {
         [Key]
         public int ID { get; set; }
@@ -177,23 +178,23 @@ namespace Township_API.Models
         public string Name { get; set; }
         [Required, MaxLength(50)]
         public string Code { get; set; }
-        [Required, MaxLength(50)]        
+        [Required, MaxLength(50)]
         public int ParentID { get; set; } = 0;
-         
+
         public int status { get; set; }
-            public int isDeleted { get; set; }
-   
-      //  public int? TypeID { get; set; } = null;
-        
+        public int isDeleted { get; set; }
+
+        //  public int? TypeID { get; set; } = null;
+
     }
 
     public class NRD : ModuleData
     {
-       
+
     }
     public class Building : ModuleData
     {
-         
+
     }
     public class ReaderType : ModuleData { }
     public class Amenities : ModuleData { }
@@ -228,13 +229,13 @@ namespace Township_API.Models
     [Table("tblVehicle")]
     public class Vehicle
     {
-        
+
         [Key]
         public int ID { get; set; }
 
         [Required, MaxLength(50)]
         public string? RegNo { get; set; }
-        public string? vType { get; set; } 
+        public string? vType { get; set; }
         public string? vMake { get; set; }
         public string? vColor { get; set; }
         public string? TagUID { get; set; }
@@ -249,9 +250,11 @@ namespace Township_API.Models
         public DateTime? updatedon { get; set; } = null;
     }
 
+
     [Table("tblDoorAccess")]
     public class DoorAccess
     {
+        [Key]
         public int ID { get; set; }
         public int ModuleID { get; set; }
         public int CardHolderID { get; set; }
@@ -270,69 +273,55 @@ namespace Township_API.Models
         public DateTime? updatedon { get; set; } = null;
     }
 
-    [Table("vwNRDDoorAccess")]
-    public class UserNRDAccess
+    public class UserNRDAccess 
     {
-        public int ID { get; set; }
-        public int ModuleID { get; set; }
-        public int CardHolderID { get; set; }
-        public int sun { get; set; }
-        public int mon { get; set; }
-        public int tus { get; set; }
-        public int wed { get; set; }
-        public int thu { get; set; }
-        public int fri { get; set; }
-        public int sat { get; set; }
+        public string? ModuleName { get; set; }
+        public string? moduleID { get; set; }
+        public string? CardHolderID { get; set; }
         public DateTime? validTillDate { get; set; }
+        public bool? sun { get; set; } = false;
+        public bool? mon { get; set; } = false;
+        public bool? tus { get; set; } = false;
+        public bool? wed { get; set; } = false;
+        public bool? thu { get; set; } = false;
+        public bool? fri { get; set; } = false;
+        public bool? sat { get; set; } = false;
         public bool? isactive { get; set; } = false;
-        public int? createdby { get; set; } = null;
-        public DateTime? createdon { get; set; } = null;
-        public int? updatedby { get; set; } = null;
-        public DateTime? updatedon { get; set; } = null;
+        public bool? isdeleted { get; set; } = false; 
     }
 
-
-
-    [Table("vwAmenitiesDoorAccess")]
     public class UserAmenitiesAccess
     {
-        public int ID { get; set; }
-        public int ModuleID { get; set; }
-        public int CardHolderID { get; set; }
-        public int sun { get; set; }
-        public int mon { get; set; }
-        public int tus { get; set; }
-        public int wed { get; set; }
-        public int thu { get; set; }
-        public int fri { get; set; }
-        public int sat { get; set; }
-        public DateTime? validTillDate { get; set; }
-        public bool? isactive { get; set; } = false;
-        public int? createdby { get; set; } = null;
-        public DateTime? createdon { get; set; } = null;
-        public int? updatedby { get; set; } = null;
-        public DateTime? updatedon { get; set; } = null;
+        public string? ModuleName { get; set; }
+        public string? moduleID { get; set; }
+        public string? CardHolderID { get; set; }
+        public DateTime? validTillDate { get; set; } 
+        public  bool? sun { get; set; }= false;
+        public  bool? mon { get; set; }= false;
+        public  bool? tus { get; set; }= false;
+        public  bool? wed { get; set; }= false;
+        public  bool? thu { get; set; }= false;
+        public  bool? fri { get; set; }= false;
+        public  bool? sat { get; set; } = false;
+        public  bool? isactive { get; set; } = false;
+        public bool? isdeleted { get; set; } = false; 
     }
 
-    [Table("tblUserBuildingAccess")]
     public class UserBuildingAccess
     {
-        public int ID { get; set; }
-        public int ModuleID { get; set; }
-        public int CardHolderID { get; set; }
-        public int sun { get; set; }
-        public int mon { get; set; }
-        public int tus { get; set; }
-        public int wed { get; set; }
-        public int thu { get; set; }
-        public int fri { get; set; }
-        public int sat { get; set; }
-        public DateTime? validTillDate { get; set; }
-        public int isAcive { get; set; }
-        public int? createdby { get; set; } = null;
-        public DateTime? createdon { get; set; } = null;
-        public int? updatedby { get; set; } = null;
-        public DateTime? updatedon { get; set; } = null;
+        public string? ModuleName { get; set; }
+        public string? moduleID { get; set; }
+        public string? CardHolderID { get; set; }
+        public DateTime? validTillDate { get; set; } 
+        public  bool? sun { get; set; } = false;
+        public  bool? mon { get; set; } = false;
+        public  bool? tus { get; set; } = false;
+        public  bool? wed { get; set; } = false;
+        public  bool? thu { get; set; } = false;
+        public  bool? fri { get; set; } = false;
+        public  bool? sat { get; set; } = false;
+        public  bool? isactive { get; set; } = false;
+        public bool? isdeleted { get; set; } = false; 
     }
 
 }

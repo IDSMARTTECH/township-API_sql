@@ -65,8 +65,38 @@ namespace Township_API.Controllers
                 return Ok(ServiceProviders);
             }
 
+        // GET: api/products 
+        [HttpGet("{ID}")]
+        public async Task<IActionResult> GetContractorDetails(int ID)
+        {
+            var Contractors = await _context.Contractors.Where(p => p.ID == ID).ToListAsync();
+            string? IdNumber = Contractors[0].IDNumber;
+            if (IdNumber != null)
+            {
+                try
+                {
+                    var jsonWrapper = new DependentJsonWrapper
+                    {
+                        Owners = Contractors,
+                        DependentOwners = _context.DependentContractors.Where(p => p.PID == ID).ToList(),
+                        Vehicles = _context.Vehicles.Where(p => p.TagUID == IdNumber).ToList(),
+                        UserNRDAccess = _context._userNRDAccess.Where(p => p.CardHolderID != null && p.CardHolderID.ToString() == IdNumber).ToList(),
+                        UserBuildingAccess = _context._userBuildingAccess.Where(p => p.CardHolderID != null && p.CardHolderID.ToString() == IdNumber).ToList(),
+                        UserAminitiesAccess = _context._userAmenitiesAccess.Where(p => p.CardHolderID != null && p.CardHolderID.ToString() == IdNumber).ToList()
+                    };
 
-            [HttpPost("{AddServiceProviders}")]
+                    return Ok(jsonWrapper);
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message.ToString());
+                }
+            }
+            return Ok(new { message = $"Contractor records not found!" });
+        }
+
+
+        [HttpPost("{AddServiceProviders}")]
             public async Task<IActionResult> AddServiceProviders([FromBody] List<Service_Provider> Obj)
             {
                 if (Obj == null || !Obj.Any())

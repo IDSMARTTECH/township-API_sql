@@ -65,6 +65,37 @@ namespace Township_API.Controllers
             return Ok(Tenents);
         }
 
+        // GET: api/products 
+        [HttpGet("{ID}")]
+        public async Task<IActionResult> GetTenentDetails(int ID)
+        {
+            var Tenents = await _context.PrimaryTenents.Where(p => p.ID == ID).ToListAsync();
+            string? IdNumber = Tenents[0].IDNumber;
+            if (IdNumber != null)
+            {
+                try
+                {
+                    var jsonWrapper = new DependentJsonWrapper
+                    {
+                        Owners = Tenents,
+                        DependentOwners = _context.DependentTenents.Where(p => p.PID == ID).ToList(),
+                        Vehicles = _context.Vehicles.Where(p => p.TagUID == IdNumber).ToList(),
+                        UserNRDAccess = _context._userNRDAccess.Where(p => p.CardHolderID != null && p.CardHolderID.ToString() == IdNumber).ToList(),
+                        UserBuildingAccess = _context._userBuildingAccess.Where(p => p.CardHolderID != null && p.CardHolderID.ToString() == IdNumber).ToList(),
+                        UserAminitiesAccess = _context._userAmenitiesAccess.Where(p => p.CardHolderID != null && p.CardHolderID.ToString() == IdNumber).ToList()
+
+                    };
+
+                    return Ok(jsonWrapper);
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message.ToString());
+                }
+            }
+            return Ok(new { message = $"Tenent records not found!" });
+        }
+
 
         [HttpPost("{AddTenents}")]
         public async Task<IActionResult> AddTenents([FromBody] List<PrimaryTenent> Obj)

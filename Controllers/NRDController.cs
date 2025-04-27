@@ -17,7 +17,7 @@ namespace Township_API.Controllers
             _context = context;
           //  _service = srv;
         }
-         
+        
         // PUT: api/products/5
         [HttpPut("{UpdateNRD}")]
         public async Task<IActionResult> UpdateNRD(int id, [FromBody] NRD updatedOBJ)
@@ -26,6 +26,7 @@ namespace Township_API.Controllers
             {
                 return BadRequest("NRD ID mismatch.");
             }
+
 
             var existingOBJ = await _context.ModuleData.FindAsync(id);
             if (existingOBJ == null)
@@ -137,7 +138,7 @@ namespace Township_API.Controllers
         {
             _context = context;
         }
-
+        
         // PUT: api/products/5
         [HttpPut("{UpdatePhase}")]
         public async Task<IActionResult> UpdatePhase(int id, [FromBody] Phase updatedObj)
@@ -229,7 +230,7 @@ namespace Township_API.Controllers
                 return null;//StatusCode(500, new { error = ex.Message });
             }
         }
-
+        
     }
 
 
@@ -338,7 +339,7 @@ namespace Township_API.Controllers
                 return null;//StatusCode(500, new { error = ex.Message });
             }
         }
-
+        
     }
 
     [Route("api/[controller]")]
@@ -737,8 +738,8 @@ namespace Township_API.Controllers
         [HttpPost("bulkSaveServiceType")]
         public async Task<IActionResult> BulkSave([FromBody] List<ServiceType> Obj)
         {
-            //if (Vehicles == null || !Vehicles.Any())
-            //     return "BadRequest("No Vehicles provided")";
+            //if (Obj == null || !Obj.Any())
+            //    return "BadRequest("No Service Type provided")";
 
             //  using var transaction = await _context.Database.BeginTransactionAsync();
             try
@@ -885,8 +886,6 @@ namespace Township_API.Controllers
                 return null;//StatusCode(500, new { error = ex.Message });
             }
         }
-
-
     }
 
     [Route("api/[controller]")]
@@ -998,6 +997,7 @@ namespace Township_API.Controllers
                 return null;//StatusCode(500, new { error = ex.Message });
             }
         }
+
     }
 
     [Route("api/[controller]")]
@@ -1010,118 +1010,116 @@ namespace Township_API.Controllers
         {
             _context = context;
         }
-
-
-        // PUT: api/products/5
-        [HttpPut("{UpdateVehicle}")]
-        public async Task<IActionResult> UpdateVehicle(int id, [FromBody] Vehicle updatedVehicle)
-        {
-            if (id != updatedVehicle.ID)
-            {
-                return BadRequest("Vehicle ID mismatch.");
-            }
-            var existingVehicle = await _context.Vehicles.FindAsync(id);
-            if (existingVehicle == null)
-            {
-                return NotFound();
-            }
-            existingVehicle.RegNo = updatedVehicle.RegNo;
-            existingVehicle.vType = updatedVehicle.vType;
-            existingVehicle.vMake = updatedVehicle.vMake;
-            existingVehicle.vColor = updatedVehicle.vColor;
-            existingVehicle.TagUID = updatedVehicle.TagUID;
-            existingVehicle.PrintedTagID = updatedVehicle.PrintedTagID;
-            existingVehicle.TagEncodingDate = updatedVehicle.TagEncodingDate;
-            existingVehicle.Logical_Delete = updatedVehicle.Logical_Delete;
-            existingVehicle.StickerNo = updatedVehicle.StickerNo;
-            existingVehicle.isactive = updatedVehicle.isactive; 
-            existingVehicle.updatedby = updatedVehicle.updatedby;
-            existingVehicle.updatedon = updatedVehicle.updatedon;
-
-
-            _context.Entry(existingVehicle).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-
-            return Ok(existingVehicle);
-        }
-
-
-        [HttpPost("AddVehicle")]
-        public async Task<IActionResult> AddVehicle([FromBody] Vehicle obj)
-        {
-            var existingVehicle = await _context.Vehicles.FindAsync(0);
-            if (existingVehicle != null)
-            {
-                return BadRequest("Vehicle Exists.");
-            }
-            _context.Add(obj);
-            await _context.SaveChangesAsync();
-
-            return Ok();
-        }
-
-
-        // GET: api/products 
-        [HttpGet]
-        public async Task<IActionResult> GetAllVehicles()
-        {
-            var Vehicles = await _context.Vehicles.ToListAsync();
-            return Ok(Vehicles);
-        }
-
-        [HttpPost("bulkSaveVehicles")]
-        public async Task<IActionResult> BulkSave([FromBody] List<Vehicle> Obj)
-        {
-            //if (Vehicles == null || !Vehicles.Any())
-            //     return "BadRequest("No Vehicles provided")";
-
-             using var transaction = await _context.Database.BeginTransactionAsync();
-            // Turn IDENTITY_INSERT ON
-            _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblVehicle ON");
-
-
-            try
-            {
-                foreach (var updatedObj in Obj)
+                
+                // PUT: api/products/5
+                [HttpPut("{UpdateVehicle}")]
+                public async Task<IActionResult> UpdateVehicle(int id, [FromBody] Vehicle updatedVehicle)
                 {
-                    var existingOBJ = await _context.Vehicles
-                        .FirstOrDefaultAsync(v => v.ID == updatedObj.ID);
-
-                    if (existingOBJ != null)
+                    if (id != updatedVehicle.ID)
                     {
-                        // Update properties 
-                        existingOBJ.RegNo = updatedObj.RegNo;
-                        existingOBJ.vType = updatedObj.vType;
-                        existingOBJ.vMake = updatedObj.vMake;
-                        existingOBJ.vColor = updatedObj.vColor;
-                        existingOBJ.TagUID = updatedObj.TagUID;
-                        existingOBJ.TagEncodingDate = updatedObj.TagEncodingDate;
-                        existingOBJ.Logical_Delete = updatedObj.Logical_Delete;
-                        existingOBJ.PrintedTagID = updatedObj.PrintedTagID;
-                        existingOBJ.StickerNo = updatedObj.StickerNo;
-
-                        existingOBJ.createdby = 1; 
-                        existingOBJ.createdon = DateTime.Now;
+                        return BadRequest("Vehicle ID mismatch.");
                     }
-                    else
+                    var existingVehicle = await _context.Vehicles.FindAsync(id);
+                    if (existingVehicle == null)
                     {
-                        _context.Vehicles.Add(updatedObj);
+                        return NotFound();
                     }
+                    existingVehicle.RegNo = updatedVehicle.RegNo;
+                    existingVehicle.vType = updatedVehicle.vType;
+                    existingVehicle.vMake = updatedVehicle.vMake;
+                    existingVehicle.vColor = updatedVehicle.vColor;
+                    existingVehicle.TagUID = updatedVehicle.TagUID;
+                    existingVehicle.PrintedTagID = updatedVehicle.PrintedTagID;
+                    existingVehicle.TagEncodingDate = updatedVehicle.TagEncodingDate;
+                    existingVehicle.Logical_Delete = updatedVehicle.Logical_Delete;
+                    existingVehicle.StickerNo = updatedVehicle.StickerNo;
+                    existingVehicle.isactive = updatedVehicle.isactive; 
+                    existingVehicle.updatedby = updatedVehicle.updatedby;
+                    existingVehicle.updatedon = updatedVehicle.updatedon;
+
+
+                    _context.Entry(existingVehicle).State = EntityState.Modified;
+                    await _context.SaveChangesAsync();
+
+                    return Ok(existingVehicle);
                 }
 
-                await _context.SaveChangesAsync();
-                await transaction.CommitAsync();
 
-                // Turn IDENTITY_INSERT OFF
-                _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblVehicle OFF");
-                return Ok(new { message = $"{Obj.Count} Vehicles processed successfully" });
-            }
-            catch (Exception ex)
-            {
-                await transaction.RollbackAsync();
-                return StatusCode(500, new { error = ex.Message });
-            }
-        }
+                [HttpPost("AddVehicle")]
+                public async Task<IActionResult> AddVehicle([FromBody] Vehicle obj)
+                {
+                    var existingVehicle = await _context.Vehicles.FindAsync(0);
+                    if (existingVehicle != null)
+                    {
+                        return BadRequest("Vehicle Exists.");
+                    }
+                    _context.Add(obj);
+                    await _context.SaveChangesAsync();
+
+                    return Ok();
+                }
+
+
+                // GET: api/products 
+                [HttpGet]
+                public async Task<IActionResult> GetAllVehicles()
+                {
+                    var Vehicles = await _context.Vehicles.ToListAsync();
+                    return Ok(Vehicles);
+                }
+
+                [HttpPost("bulkSaveVehicles")]
+                public async Task<IActionResult> BulkSave([FromBody] List<Vehicle> Obj)
+                {
+                    //if (Vehicles == null || !Vehicles.Any())
+                    //     return "BadRequest("No Vehicles provided")";
+
+                     using var transaction = await _context.Database.BeginTransactionAsync();
+                    // Turn IDENTITY_INSERT ON
+                    _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblVehicle ON");
+
+
+                    try
+                    {
+                        foreach (var updatedObj in Obj)
+                        {
+                            var existingOBJ = await _context.Vehicles
+                                .FirstOrDefaultAsync(v => v.ID == updatedObj.ID);
+
+                            if (existingOBJ != null)
+                            {
+                                // Update properties 
+                                existingOBJ.RegNo = updatedObj.RegNo;
+                                existingOBJ.vType = updatedObj.vType;
+                                existingOBJ.vMake = updatedObj.vMake;
+                                existingOBJ.vColor = updatedObj.vColor;
+                                existingOBJ.TagUID = updatedObj.TagUID;
+                                existingOBJ.TagEncodingDate = updatedObj.TagEncodingDate;
+                                existingOBJ.Logical_Delete = updatedObj.Logical_Delete;
+                                existingOBJ.PrintedTagID = updatedObj.PrintedTagID;
+                                existingOBJ.StickerNo = updatedObj.StickerNo;
+
+                                existingOBJ.createdby = 1; 
+                                existingOBJ.createdon = DateTime.Now;
+                            }
+                            else
+                            {
+                                _context.Vehicles.Add(updatedObj);
+                            }
+                        }
+
+                        await _context.SaveChangesAsync();
+                        await transaction.CommitAsync();
+
+                        // Turn IDENTITY_INSERT OFF
+                        _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblVehicle OFF");
+                        return Ok(new { message = $"{Obj.Count} Vehicles processed successfully" });
+                    }
+                    catch (Exception ex)
+                    {
+                        await transaction.RollbackAsync();
+                        return StatusCode(500, new { error = ex.Message });
+                    }
+                } 
     }
-
 }
