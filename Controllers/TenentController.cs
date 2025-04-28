@@ -100,6 +100,8 @@ namespace Township_API.Controllers
         [HttpPost("{AddTenents}")]
         public async Task<IActionResult> AddTenents([FromBody] List<PrimaryTenent> Obj)
         {
+
+
             if (Obj == null || !Obj.Any())
                 return BadRequest("No Data provided");
 

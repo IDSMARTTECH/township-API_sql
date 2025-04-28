@@ -169,7 +169,7 @@ namespace Township_API.Models
         public DateTime? updatedon { get; set; } = null;
 
     }
-
+   
     public abstract class ModuleDataTemplate : ModuleData
     {
         [Key]
@@ -190,11 +190,11 @@ namespace Township_API.Models
 
     public class NRD : ModuleData
     {
-
+     public  List<Building> Buildings { get; set; }
     }
     public class Building : ModuleData
     {
-
+       public NRD NRD { get; set; }
     }
     public class ReaderType : ModuleData { }
     public class Amenities : ModuleData { }
@@ -323,5 +323,6 @@ namespace Township_API.Models
         public  bool? isactive { get; set; } = false;
         public bool? isdeleted { get; set; } = false; 
     }
+     
 
-}
+    }

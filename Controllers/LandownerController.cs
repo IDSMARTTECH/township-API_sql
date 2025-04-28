@@ -6,6 +6,7 @@ using Township_API.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
 using System.Collections.Generic;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Township_API.Controllers
 {
@@ -78,6 +79,12 @@ namespace Township_API.Controllers
                 }
                 _context.Add(obj);
                 await _context.SaveChangesAsync();
+
+
+                // string number = obj.ID.ToString();
+                 obj.IDNumber = "2"+obj.ID.ToString("D10");
+                await _context.SaveChangesAsync();
+
                 return Ok(new { message = $"{obj.ID} Landowner created successfully" });
             }
             catch (Exception ex)

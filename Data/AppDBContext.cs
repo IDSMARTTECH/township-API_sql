@@ -59,7 +59,7 @@ namespace Township_API.Data
         public DbSet<UserNRDAccess> _userNRDAccess { get; set; }
 
         public DbSet<UserBuildingAccess> _userBuildingAccess { get; set; }
-
+          
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {  
             modelBuilder.Entity<UserNRDAccess>(entity =>
@@ -83,8 +83,7 @@ namespace Township_API.Data
                                                         // Optional: configure column mapping if needed
                                                         // entity.Property(e => e.Name).HasColumnName("SomeColumn");
             });
-
-
+             
         }
     }
 }
