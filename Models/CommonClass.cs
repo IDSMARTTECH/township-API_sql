@@ -1,6 +1,6 @@
 ﻿namespace Township_API.Models
 {
-   
+
     public class commonTypes
     {
         public enum ModuleTypes
@@ -18,7 +18,29 @@
             ReaderRelays = 12,
             ServiceType = 13
         };
+        public enum AccessCardHilders
+        { 
+            Resident = 1,
+            DependentResident = 2,    
+            Landowner=3,
+            DependentLandowner=4,
+            Tenent=5,
+            DependentTenent=6,
+            ServiceProvider=7,
+            contractor=8,
+            Guest = 9
 
+        };
+    }
+    public class profileRegister
+    {
+        public string USER { get; set; }
+        public string ModuleName { get; set; }
+        public string RoleName { get; set; }
+        public string CanInsert { get; set; }
+        public string CanUpdate { get; set; }
+        public string CanDelete { get; set; }
+        public string CanView { get; set; }
     }
     public class DependentJsonWrapper
     {

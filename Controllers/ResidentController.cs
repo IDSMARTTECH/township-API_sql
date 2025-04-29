@@ -3,6 +3,7 @@ using Township_API.Models;
 using Township_API.Services;
 using Township_API.Data;
 using Microsoft.EntityFrameworkCore;
+using static Township_API.Models.commonTypes;
 
 namespace Township_API.Controllers
 {
@@ -20,17 +21,46 @@ namespace Township_API.Controllers
         [HttpPut("{UpdateResident}")]
         public async Task<IActionResult> UpdateResident(int id, [FromBody] PrimaryResident updatedResident)
         {
+
             if (id != updatedResident.ID)
             {
                 return BadRequest("Resident ID mismatch.");
             }
 
-            //var existingResident = await _service.UpdatePrimaryResidentAsync(updatedResident.ID, updatedResident);
-            var existingResident = await _context.PrimaryResidents.FindAsync(updatedResident.ID);
+           var existingResident = await _context.PrimaryResidents.FindAsync(id);
             if (existingResident == null)
             {
                 return NotFound();
             }
+
+            //var existingResident = await _service.UpdatePrimaryResidentAsync(updatedResident.ID, updatedResident); 
+            existingResident.ID = updatedResident.ID;
+            existingResident.CSN = updatedResident.CSN;
+            existingResident.IDNumber = updatedResident.IDNumber;
+            existingResident.TagNumber = updatedResident.TagNumber;
+            existingResident.PANnumber = updatedResident.PANnumber;
+            existingResident.PassportNo = updatedResident.PassportNo;
+            existingResident.LicenseNo = updatedResident.LicenseNo;
+            existingResident.ICEno = updatedResident.ICEno;
+            existingResident.AadharCardId = updatedResident.AadharCardId;
+            existingResident.VoterID = updatedResident.VoterID;
+            existingResident.FirstName = updatedResident.FirstName;
+            existingResident.MiddletName = updatedResident.MiddletName;
+            existingResident.LastName = updatedResident.LastName;
+            existingResident.ShortName = updatedResident.ShortName;
+            existingResident.Gender = updatedResident.Gender;
+            existingResident.BloodGroup = updatedResident.BloodGroup;
+            existingResident.DOB = updatedResident.DOB;
+            existingResident.EmailID = updatedResident.EmailID;
+            existingResident.MobileNo = updatedResident.MobileNo;
+            existingResident.LandLine = updatedResident.LandLine;
+            existingResident.NRD = updatedResident.NRD;
+            existingResident.Building = updatedResident.Building;
+            existingResident.FlatNumber = updatedResident.FlatNumber;
+            existingResident.CardIssueDate = updatedResident.CardIssueDate;
+            existingResident.CardPrintingDate = updatedResident.CardPrintingDate;
+            existingResident.RegistrationIssueDate = updatedResident.RegistrationIssueDate;
+
 
             _context.Entry(existingResident).State = EntityState.Modified;
             await _context.SaveChangesAsync();
@@ -50,7 +80,10 @@ namespace Township_API.Controllers
             _context.Add(obj);
             await _context.SaveChangesAsync();
 
-            return Ok();
+            int number = (int)AccessCardHilders.Resident;
+            obj.IDNumber = number.ToString() + obj.ID.ToString("D10");
+            await _context.SaveChangesAsync();
+            return Ok(obj);
         }
 
 
@@ -104,7 +137,7 @@ namespace Township_API.Controllers
 
             // Turn IDENTITY_INSERT ON
             _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT PrimaryResident ON");
-            
+
 
             try
             {
@@ -114,21 +147,49 @@ namespace Township_API.Controllers
                         .FirstOrDefaultAsync(p => p.ID == objID.ID);
 
                     if (existingobj != null)
-                    {
-                        //var existingPrimaryResident = await _service.UpdatePrimaryResidentAsync(objID.ID, existingobj);
-                        var existingPrimaryResident = await _context.PrimaryResidents.FindAsync(objID.ID);
-                        if (existingPrimaryResident == null)
-                        {
-                            return NotFound();
-                        }
+                    {  
+                       existingobj.ID = objID.ID;
+                       existingobj.CSN = objID.CSN;
+                       existingobj.IDNumber = objID.IDNumber;
+                       existingobj.TagNumber = objID.TagNumber;
+                       existingobj.PANnumber = objID.PANnumber;
+                       existingobj.PassportNo = objID.PassportNo;
+                       existingobj.LicenseNo = objID.LicenseNo;
+                       existingobj.ICEno = objID.ICEno;
+                       existingobj.AadharCardId = objID.AadharCardId;
+                       existingobj.VoterID = objID.VoterID;
+                       existingobj.FirstName = objID.FirstName;
+                       existingobj.MiddletName = objID.MiddletName;
+                       existingobj.LastName = objID.LastName;
+                       existingobj.ShortName = objID.ShortName;
+                       existingobj.Gender = objID.Gender;
+                       existingobj.BloodGroup = objID.BloodGroup;
+                       existingobj.DOB = objID.DOB;
+                       existingobj.EmailID = objID.EmailID;
+                       existingobj.MobileNo = objID.MobileNo;
+                       existingobj.LandLine = objID.LandLine;
+                        existingobj.NRD = objID.NRD;
+                        existingobj.Building = objID.Building;
+                       existingobj.FlatNumber = objID.FlatNumber;
+                       existingobj.CardIssueDate = objID.CardIssueDate;
+                       existingobj.CardPrintingDate = objID.CardPrintingDate;
+                       existingobj.RegistrationIssueDate = objID.RegistrationIssueDate;
+
+                        await _context.SaveChangesAsync();
+
                     }
                     else
                     {
                         _context.PrimaryResidents.Add(objID);
+                        await _context.SaveChangesAsync();
+
+                        int number = (int)AccessCardHilders.Resident;
+                        objID.IDNumber = number.ToString() + objID.ID.ToString("D10");
+                        await _context.SaveChangesAsync();
+
                     }
                 }
 
-                await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
                 // Turn IDENTITY_INSERT OFF
                 _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT PrimaryResident  OFF");
@@ -149,11 +210,11 @@ namespace Township_API.Controllers
     [ApiController]
     public class DependentResidentController : Controller
     {
-        private readonly AppDBContext _context; 
+        private readonly AppDBContext _context;
 
-        public DependentResidentController(AppDBContext context )
+        public DependentResidentController(AppDBContext context)
         {
-            _context = context; 
+            _context = context;
         }
 
         // PUT: api/products/5
@@ -166,14 +227,39 @@ namespace Township_API.Controllers
             }
 
             //var existingDependentResident = await _service.UpdateDependentResidentAsync(updatedDependentResident.ID, updatedDependentResident);
-            var existingDependentResident = await _context.PrimaryResidents.FindAsync(updatedDependentResident.ID);
-
-            if (existingDependentResident == null)
+            var existingDependentResident = await _context.DependentResidents.FindAsync(updatedDependentResident.ID);
+              if (existingDependentResident == null)
             {
                 return NotFound();
             }
+            existingDependentResident.ID = updatedDependentResident.ID;
+            existingDependentResident.PID = updatedDependentResident.PID;
+            existingDependentResident.CSN = updatedDependentResident.CSN;
+            existingDependentResident.IDNumber = updatedDependentResident.IDNumber;
+            existingDependentResident.TagNumber = updatedDependentResident.TagNumber;
+            existingDependentResident.PANnumber = updatedDependentResident.PANnumber;
+            existingDependentResident.PassportNo = updatedDependentResident.PassportNo;
+            existingDependentResident.LicenseNo = updatedDependentResident.LicenseNo;
+            existingDependentResident.ICEno = updatedDependentResident.ICEno;
+            existingDependentResident.AadharCardId = updatedDependentResident.AadharCardId;
+            existingDependentResident.VoterID = updatedDependentResident.VoterID;
+            existingDependentResident.FirstName = updatedDependentResident.FirstName;
+            existingDependentResident.MiddletName = updatedDependentResident.MiddletName;
+            existingDependentResident.LastName = updatedDependentResident.LastName;
+            existingDependentResident.ShortName = updatedDependentResident.ShortName;
+            existingDependentResident.Gender = updatedDependentResident.Gender;
+            existingDependentResident.BloodGroup = updatedDependentResident.BloodGroup;
+            existingDependentResident.DOB = updatedDependentResident.DOB;
+            existingDependentResident.EmailID = updatedDependentResident.EmailID;
+            existingDependentResident.MobileNo = updatedDependentResident.MobileNo;
+            existingDependentResident.LandLine = updatedDependentResident.LandLine;
+            existingDependentResident.Building = updatedDependentResident.Building;
+            existingDependentResident.FlatNumber = updatedDependentResident.FlatNumber;
+            existingDependentResident.CardIssueDate = updatedDependentResident.CardIssueDate;
+            existingDependentResident.CardPrintingDate = updatedDependentResident.CardPrintingDate;
+            existingDependentResident.RegistrationIssueDate = updatedDependentResident.RegistrationIssueDate;
+            existingDependentResident.LogicalDeleted = updatedDependentResident.LogicalDeleted; 
 
-            _context.Entry(existingDependentResident).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
             return Ok(existingDependentResident);
@@ -191,6 +277,9 @@ namespace Township_API.Controllers
             _context.Add(obj);
             await _context.SaveChangesAsync();
 
+            int number = (int)AccessCardHilders.DependentResident;
+            obj.IDNumber = number.ToString() + obj.ID.ToString("D10");
+            await _context.SaveChangesAsync();
             return Ok();
         }
 
@@ -224,19 +313,52 @@ namespace Township_API.Controllers
                     if (existingobj != null)
                     {
                         //  var existingdependentResident = await _service.UpdateDependentResidentAsync(objID.ID, existingobj);
-                        var existingdependentResident = await _context.DependentResidents.FindAsync(0);
-                        if (existingdependentResident == null)
-                        {
-                            return NotFound();
-                        }
+                        //var existingdependentResident = await _context.DependentResidents.FindAsync(0);
+                        //if (existingdependentResident == null)
+                        //{
+                        //    return NotFound();
+                        //}
+                        existingobj.ID = objID.ID;
+                        existingobj.PID = objID.PID;
+                        existingobj.CSN = objID.CSN;
+                        existingobj.IDNumber = objID.IDNumber;
+                        existingobj.TagNumber = objID.TagNumber;
+                        existingobj.PANnumber = objID.PANnumber;
+                        existingobj.PassportNo = objID.PassportNo;
+                        existingobj.LicenseNo = objID.LicenseNo;
+                        existingobj.ICEno = objID.ICEno;
+                        existingobj.AadharCardId = objID.AadharCardId;
+                        existingobj.VoterID = objID.VoterID;
+                        existingobj.FirstName = objID.FirstName;
+                        existingobj.MiddletName = objID.MiddletName;
+                        existingobj.LastName = objID.LastName;
+                        existingobj.ShortName = objID.ShortName;
+                        existingobj.Gender = objID.Gender;
+                        existingobj.BloodGroup = objID.BloodGroup;
+                        existingobj.DOB = objID.DOB;
+                        existingobj.EmailID = objID.EmailID;
+                        existingobj.MobileNo = objID.MobileNo;
+                        existingobj.LandLine = objID.LandLine;
+                        existingobj.Building = objID.Building;
+                        existingobj.FlatNumber = objID.FlatNumber;
+                        existingobj.CardIssueDate = objID.CardIssueDate;
+                        existingobj.CardPrintingDate = objID.CardPrintingDate;
+                        existingobj.RegistrationIssueDate = objID.RegistrationIssueDate;
+                        existingobj.LogicalDeleted = objID.LogicalDeleted;
+
+                        await _context.SaveChangesAsync();
                     }
                     else
                     {
-                        _context.DependentResidents.Add(objID);
+                        _context.DependentResidents.Add(objID); 
+                        await _context.SaveChangesAsync();
+
+                        int number = (int)AccessCardHilders.DependentResident;
+                        objID.IDNumber = number.ToString() + objID.ID.ToString("D10");
+                        await _context.SaveChangesAsync();
                     }
                 }
 
-                await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
                 // Turn IDENTITY_INSERT OFF
                 _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT DependentResident  OFF");
@@ -245,7 +367,7 @@ namespace Township_API.Controllers
             }
             catch (Exception ex)
             {
-                   await transaction.RollbackAsync();
+                await transaction.RollbackAsync();
                 return StatusCode(500, new { error = ex.Message });
             }
         }

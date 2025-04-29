@@ -7,6 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using System.Security.Cryptography;
 using System.Collections.Generic;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using static Township_API.Models.commonTypes;
+using EventFlow.Jobs;
 
 namespace Township_API.Controllers
 {
@@ -54,6 +56,7 @@ namespace Township_API.Controllers
             existingLandowner.EmailID = updatedLandowner.EmailID;
             existingLandowner.MobileNo = updatedLandowner.MobileNo;
             existingLandowner.LandLine = updatedLandowner.LandLine;
+            existingLandowner.NRD = updatedLandowner.NRD;
             existingLandowner.Building = updatedLandowner.Building;
             existingLandowner.FlatNumber = updatedLandowner.FlatNumber;
             existingLandowner.CardIssueDate = updatedLandowner.CardIssueDate;
@@ -78,11 +81,9 @@ namespace Township_API.Controllers
                     return BadRequest("Landowner Exists.");
                 }
                 _context.Add(obj);
-                await _context.SaveChangesAsync();
-
-
-                // string number = obj.ID.ToString();
-                 obj.IDNumber = "2"+obj.ID.ToString("D10");
+                await _context.SaveChangesAsync(); 
+                 int number = (int)AccessCardHilders.Landowner ;
+                 obj.IDNumber = number .ToString()+ obj.ID.ToString("D10");
                 await _context.SaveChangesAsync();
 
                 return Ok(new { message = $"{obj.ID} Landowner created successfully" });
@@ -158,7 +159,7 @@ namespace Township_API.Controllers
                         }
 
                         existingLandOwner.CSN = objID.CSN;
-                        existingLandOwner.IDNumber = objID.IDNumber;
+                      //  existingLandOwner.IDNumber = objID.IDNumber;
                         existingLandOwner.TagNumber = objID.TagNumber;
                         existingLandOwner.PANnumber = objID.PANnumber;
                         existingLandOwner.PassportNo = objID.PassportNo;
@@ -176,6 +177,7 @@ namespace Township_API.Controllers
                         existingLandOwner.EmailID = objID.EmailID;
                         existingLandOwner.MobileNo = objID.MobileNo;
                         existingLandOwner.LandLine = objID.LandLine;
+                        existingLandOwner.NRD = objID.NRD;
                         existingLandOwner.Building = objID.Building;
                         existingLandOwner.FlatNumber = objID.FlatNumber;
                         existingLandOwner.CardIssueDate = objID.CardIssueDate;
@@ -187,7 +189,12 @@ namespace Township_API.Controllers
                     }
                     else
                     {
+                         
                         _context.Landowners.Add(objID);
+                        await _context.SaveChangesAsync();
+
+                        int number = (int)AccessCardHilders.Landowner;
+                        objID.IDNumber = number.ToString() + objID.ID.ToString("D10");
                         await _context.SaveChangesAsync();
                     }
                 }
@@ -270,6 +277,10 @@ namespace Township_API.Controllers
                 return BadRequest("Dependent LandOwner Exists.");
             }
             _context.Add(obj);
+            await _context.SaveChangesAsync(); 
+
+            int number = (int)AccessCardHilders.DependentLandowner;
+            obj.IDNumber = number.ToString() + obj.ID.ToString("D10");
             await _context.SaveChangesAsync();
 
             return Ok(new { message = $"{obj.ID} Dependent Landowner saved successfully" });
@@ -338,6 +349,9 @@ namespace Township_API.Controllers
                         _context.DependentLandowners.Add(objID);
                         await _context.SaveChangesAsync();
 
+                        int number = (int)AccessCardHilders.DependentLandowner;
+                        objID.IDNumber = number.ToString() + objID.ID.ToString("D10");
+                        await _context.SaveChangesAsync();
                     }
                 }
 

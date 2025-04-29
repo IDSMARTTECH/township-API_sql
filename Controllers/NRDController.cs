@@ -34,6 +34,11 @@ namespace Township_API.Controllers
             {
                 return NotFound();
             }
+            var existsOBJ = await _context.ModuleData.Where(p=>p.Name == updatedOBJ.Name && p.ID!= updatedOBJ.ID).ToListAsync();
+            if (existingOBJ != null)
+            {
+                return BadRequest("NRD ID Already Exists.");
+            }
 
             // Update properties
             existingOBJ.Name = updatedOBJ.Name;
@@ -1064,6 +1069,12 @@ namespace Township_API.Controllers
             {
                 return NotFound();
             }
+            var existingVeh = await _context.Vehicles.Where (p=>p.RegNo==updatedVehicle.RegNo && p.ID != id).ToListAsync();
+            if (existingVeh != null)
+            {
+                return BadRequest("Vehicle RegNo already registered!");
+            }
+
             existingVehicle.RegNo = updatedVehicle.RegNo;
             existingVehicle.vType = updatedVehicle.vType;
             existingVehicle.vMake = updatedVehicle.vMake;
@@ -1076,8 +1087,7 @@ namespace Township_API.Controllers
             existingVehicle.isactive = updatedVehicle.isactive;
             existingVehicle.updatedby = updatedVehicle.updatedby;
             existingVehicle.updatedon = updatedVehicle.updatedon;
-
-
+    
             _context.Entry(existingVehicle).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 

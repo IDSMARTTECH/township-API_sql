@@ -3,6 +3,7 @@ using Township_API.Models;
 using Township_API.Data;
 using Microsoft.EntityFrameworkCore;
 using Township_API.Services;
+using static Township_API.Models.commonTypes;
 
 namespace Township_API.Controllers
 { 
@@ -51,6 +52,10 @@ namespace Township_API.Controllers
                 return BadRequest("DependentResident Exists.");
             }
             _context.Add(obj);
+            await _context.SaveChangesAsync();
+
+            int number = (int)AccessCardHilders.Resident;
+            obj.IDNumber = number.ToString() + obj.ID.ToString("D10");
             await _context.SaveChangesAsync();
 
             return Ok();

@@ -28,6 +28,7 @@ namespace Township_API.Models
         public string? EmailID { get; set; }
         public string? MobileNo { get; set; }
         public string? LandLine { get; set; }
+        public string? NRD { get; set; }
         public string? Building { get; set; }
         public string? FlatNumber { get; set; }
         public DateTime? CardIssueDate { get; set; }

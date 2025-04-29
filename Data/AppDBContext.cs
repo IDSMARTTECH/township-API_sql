@@ -53,6 +53,8 @@ namespace Township_API.Data
         public IQueryable<ReaderRelay> ReaderRelays => (IQueryable<ReaderRelay>)ModuleDatas.Where(n => n.TypeID == (int)commonTypes.ModuleTypes.ReaderRelays && n.ID > (int)commonTypes.ModuleTypes.ReaderRelays);
         public IQueryable<VehicleMake> VehicleMakes => (IQueryable<VehicleMake>)ModuleDatas.Where(n => n.TypeID == (int)commonTypes.ModuleTypes.VehicleMake && n.ID > (int)commonTypes.ModuleTypes.VehicleMake);
 
+
+
         public DbSet<DoorAccess> _userDoorAccess { get; set; }
 
         public DbSet<UserAmenitiesAccess> _userAmenitiesAccess { get; set; }
