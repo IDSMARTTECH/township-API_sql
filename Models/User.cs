@@ -257,7 +257,7 @@ namespace Township_API.Models
         [Key]
         public int ID { get; set; }
         public int ModuleID { get; set; }
-        public int CardHolderID { get; set; }
+        public string CardHolderID { get; set; }
         public int sun { get; set; }
         public int mon { get; set; }
         public int tus { get; set; }
