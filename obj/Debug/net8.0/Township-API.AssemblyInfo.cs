@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Township-API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+17c8726ef0e6efb26ba80baa83f9540d99a5c607")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f21171f7a472f942ff89a01fbf2021204a975396")]
 [assembly: System.Reflection.AssemblyProductAttribute("Township-API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Township-API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
