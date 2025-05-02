@@ -17,7 +17,7 @@ namespace Township_API.Controllers
             _context = context;
         }
 
-        // PUT: api/products/5
+        // PUT: api/UpdateResident/5
         [HttpPut("{UpdateResident}")]
         public async Task<IActionResult> UpdateResident(int id, [FromBody] PrimaryResident updatedResident)
         {
