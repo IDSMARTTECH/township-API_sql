@@ -53,6 +53,7 @@ namespace Township_API.Data
         public IQueryable<ReaderRelay> ReaderRelays => (IQueryable<ReaderRelay>)ModuleDatas.Where(n => n.TypeID == (int)commonTypes.ModuleTypes.ReaderRelays && n.ID > (int)commonTypes.ModuleTypes.ReaderRelays);
         public IQueryable<VehicleMake> VehicleMakes => (IQueryable<VehicleMake>)ModuleDatas.Where(n => n.TypeID == (int)commonTypes.ModuleTypes.VehicleMake && n.ID > (int)commonTypes.ModuleTypes.VehicleMake);
         public DbSet<DoorAccess> _userDoorAccess { get; set; }
+        public DbSet<UserALLAccess> _userAllAccess { get; set; }
 
         public DbSet<UserAmenitiesAccess> _userAmenitiesAccess { get; set; }
         public DbSet<UserNRDAccess> _userNRDAccess { get; set; } 
@@ -82,7 +83,13 @@ namespace Township_API.Data
                                                         // Optional: configure column mapping if needed
                                                         // entity.Property(e => e.Name).HasColumnName("SomeColumn");
             });
-            
+            modelBuilder.Entity<UserALLAccess>(entity =>
+            {
+                entity.HasNoKey(); // Views often don’t have a primary key
+                entity.ToView("vwAllDoorAccess"); // Name of the view in SQL
+                                                        // Optional: configure column mapping if needed
+                                                        // entity.Property(e => e.Name).HasColumnName("SomeColumn");
+            });
         }
     }
 }

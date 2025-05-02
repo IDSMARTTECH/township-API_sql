@@ -265,14 +265,32 @@ namespace Township_API.Models
         public bool? thu { get; set; }
         public bool? fri { get; set; }
         public bool? sat { get; set; }
-        public string isactive { get; set; }
-        public string isdeleted { get; set; }
-        public int createdby { get; set; }
-        public DateTime createdon { get; set; }
-        public int updatedby { get; set; }
-        public DateTime updatedon { get; set; }
+        public string? isactive { get; set; }="0";
+        public string? isdeleted { get; set; }
+        public int? createdby { get; set; }
+        public DateTime? createdon { get; set; }
+        public int? updatedby { get; set; }
+        public DateTime? updatedon { get; set; }
     }
-   
+
+    public class UserALLAccess
+    {
+        public string? ModuleName { get; set; }
+        public int? moduleID { get; set; }
+        public string? CardHolderID { get; set; }
+        public DateTime? validTillDate { get; set; }
+        public string? sun { get; set; }
+        public string? mon { get; set; }
+        public string? tus { get; set; }
+        public string? wed { get; set; }
+        public string? thu { get; set; }
+        public string? fri { get; set; }
+        public string? sat { get; set; }
+
+        public string? isactive { get; set; }
+        public string? isdeleted { get; set; }
+    }
+
     public class UserNRDAccess
     {
         public string? ModuleName { get; set; }

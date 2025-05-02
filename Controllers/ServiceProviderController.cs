@@ -99,6 +99,7 @@ namespace Township_API.Controllers
                         Owners = Contractors,
                         DependentOwners = _context.DependentContractors.Where(p => p.PID == ID).ToList(),
                         Vehicles = _context.Vehicles.Where(p => p.TagUID == IdNumber).ToList(),
+                        UserAllAccess = await _context._userAllAccess.Where(p => p.CardHolderID == IdNumber).ToListAsync(),
                         UserNRDAccess = _context._userNRDAccess.Where(p => p.CardHolderID != null && p.CardHolderID.ToString() == IdNumber).ToList(),
                         UserBuildingAccess = _context._userBuildingAccess.Where(p => p.CardHolderID != null && p.CardHolderID.ToString() == IdNumber).ToList(),
                         UserAminitiesAccess = _context._userAmenitiesAccess.Where(p => p.CardHolderID != null && p.CardHolderID.ToString() == IdNumber).ToList()

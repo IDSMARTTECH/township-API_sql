@@ -116,10 +116,11 @@ namespace Township_API.Controllers
                         Owners = Residents,
                         DependentOwners =await _context.DependentResidents.Where(p => p.PID == ID).ToListAsync(),
                         Vehicles = await _context.Vehicles.Where(p => p.TagUID == IdNumber).ToListAsync() ,
+                        UserAllAccess = await _context._userAllAccess.Where(p => p.CardHolderID == IdNumber).ToListAsync(),
                         UserNRDAccess = await _context._userNRDAccess.Where(p => p.CardHolderID != null && p.CardHolderID.ToString() == IdNumber).ToListAsync(),
-                        UserBuildingAccess = await _context._userBuildingAccess.Where(p => p.CardHolderID != null && p.CardHolderID.ToString() == IdNumber).ToListAsync(),
-                        UserAminitiesAccess = await _context._userAmenitiesAccess.Where(p => p.CardHolderID != null && p.CardHolderID.ToString() == IdNumber).ToListAsync() 
-                    };
+                         UserBuildingAccess = await _context._userBuildingAccess.Where(p => p.CardHolderID != null && p.CardHolderID.ToString() == IdNumber).ToListAsync(),
+                         UserAminitiesAccess = await _context._userAmenitiesAccess.Where(p => p.CardHolderID != null && p.CardHolderID.ToString() == IdNumber).ToListAsync()
+                   };
 
                     return Ok(jsonWrapper);
                 }

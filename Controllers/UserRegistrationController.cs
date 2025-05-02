@@ -78,10 +78,11 @@ namespace Township_API.Controllers
             if (IdNumber != null)
             {
                 try
-                { 
+                {
                     var jsonWrapper = new DependentJsonWrapper
                     {
-                        UserNRDAccess = await _context._userNRDAccess.Where(p =>p.CardHolderID  == IdNumber).ToListAsync(),
+                        UserAllAccess = await _context._userAllAccess.Where(p => p.CardHolderID == IdNumber).ToListAsync(),
+                        UserNRDAccess = await _context._userNRDAccess.Where(p => p.CardHolderID == IdNumber).ToListAsync(),
                         UserBuildingAccess = await _context._userBuildingAccess.Where(p => p.CardHolderID == IdNumber).ToListAsync(),
                         UserAminitiesAccess = await _context._userAmenitiesAccess.Where(p => p.CardHolderID == IdNumber).ToListAsync()
                     };
@@ -129,9 +130,9 @@ namespace Township_API.Controllers
                         existingDtls.fri = objID.fri;
                         existingDtls.sat = objID.sat;
                         existingDtls.validTillDate = objID.validTillDate;
-                        existingDtls.isactive = objID.isactive;   
+                        existingDtls.isactive = objID.isactive;
                         existingDtls.updatedby = objID.updatedby;
-                        existingDtls.updatedon = objID.updatedon; 
+                        existingDtls.updatedon = objID.updatedon;
                         await _context.SaveChangesAsync();
                     }
                     else

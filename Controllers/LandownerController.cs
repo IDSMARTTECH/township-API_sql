@@ -129,12 +129,13 @@ namespace Township_API.Controllers
                     {
                         var jsonWrapper = new DependentJsonWrapper
                         {
-                              Owners = Landowners,
-                              DependentOwners =await _context.DependentLandowners.Where(p => p.PID == ID).ToListAsync(),
-                              Vehicles = await _context.Vehicles.Where(p => p.TagUID == IdNumber).ToListAsync(),
-                              UserNRDAccess = await _context._userNRDAccess.Where(p => p.CardHolderID == IdNumber).ToListAsync(),
-                              UserBuildingAccess = await _context._userBuildingAccess.Where(p => p.CardHolderID == IdNumber).ToListAsync(),
-                              UserAminitiesAccess = await _context._userAmenitiesAccess.Where(p => p.CardHolderID == IdNumber).ToListAsync()
+                            Owners = Landowners,
+                            DependentOwners = await _context.DependentLandowners.Where(p => p.PID == ID).ToListAsync(),
+                            Vehicles = await _context.Vehicles.Where(p => p.TagUID == IdNumber).ToListAsync(),
+                            UserAllAccess = await _context._userAllAccess.Where(p => p.CardHolderID == IdNumber).ToListAsync(),
+                            UserNRDAccess = await _context._userNRDAccess.Where(p => p.CardHolderID == IdNumber).ToListAsync(),
+                            UserBuildingAccess = await _context._userBuildingAccess.Where(p => p.CardHolderID == IdNumber).ToListAsync(),
+                            UserAminitiesAccess = await _context._userAmenitiesAccess.Where(p => p.CardHolderID == IdNumber).ToListAsync() 
                         };
 
 
