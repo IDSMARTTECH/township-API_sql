@@ -6,6 +6,7 @@ namespace Township_API.Models
     [Table("PrimaryTenent")]
     public class PrimaryTenent
     {
+        [Key]
         public int ID { get; set; }
         [Required] 
         public int RID { get; set; }        //Primary-ResidentID
@@ -41,13 +42,14 @@ namespace Township_API.Models
         public DateTime? CardPrintingDate { get; set; }
         public DateTime? RegistrationIssueDate { get; set; } 
         public DateTime? Aggreement_From { get; set; }
-        public DateTime? Aggreement_To { get; set; } 
-        public int? LogicalDeleted { get; set; }
+        public DateTime? Aggreement_To { get; set; }
+        public int? LogicalDeleted { get; set; } = 0;
     }
 
     [Table("DependentTenent")]
     public class DependentTenent
     {
+        [Key]
         public int ID { get; set; }
         [Required]
         public int PID { get; set; }        //Primary-ResidentID
@@ -72,6 +74,7 @@ namespace Township_API.Models
         public string? EmailID { get; set; }
         public string? MobileNo { get; set; }
         public string? LandLine { get; set; }
+        [Required]
         public string? Building { get; set; }
         public string? FlatNumber { get; set; }
         public DateTime? CardIssueDate { get; set; }

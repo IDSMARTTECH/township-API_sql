@@ -30,17 +30,20 @@ namespace Township_API.Models
         public string? EmailID { get; set; }
         public string? MobileNo { get; set; }
         public string? LandLine { get; set; }
+        [Required]
         public string? NRD { get; set; }
+        [Required]
         public string? Building { get; set; }
         public string? FlatNumber { get; set; }
         public DateTime? CardIssueDate { get; set; }
         public DateTime? CardPrintingDate { get; set; }
-        public int? LogicalDeleted { get; set; } 
+        public int? LogicalDeleted { get; set; } = 0;
         public DateTime? LandOwnerIssueDate { get; set; }
     } 
     [Table("DependentLandowner")]
     public class DependentLandOwner
     {
+        [Required]
         public int PID { get; set; }
         [Key]
         public int ID { get; set; }
@@ -67,6 +70,7 @@ namespace Township_API.Models
         [MaxLength(50)]
         public string? MiddletName { get; set; }
         [MaxLength(50)]
+        [Required]
         public string? LastName { get; set; }
         [MaxLength(150)]
         public string? ShortName { get; set; }

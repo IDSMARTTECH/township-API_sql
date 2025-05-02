@@ -31,18 +31,21 @@ namespace Township_API.Models
         public string? LandLine { get; set; }
         [Required]
         public string NRD { get; set; }
+        [Required]
         public string Building { get; set; }
         public string FlatNumber { get; set; }
         public DateTime? CardIssueDate { get; set; }
         public DateTime? CardPrintingDate { get; set; }
         public DateTime? RegistrationIssueDate { get; set; }
-        public int LogicalDeleted { get; set; }
+        public int LogicalDeleted { get; set; } = 0;
     }
 
     [Table("DependentResident")]
     public class DependentResident
     {
+        [Key]
         public int ID { get; set; }
+        [Required]
         public int PID { get; set; }        //Primary-ResidentID
         public string? CSN { get; set; }
         public string? IDNumber { get; set; }
@@ -65,12 +68,13 @@ namespace Township_API.Models
         public string? EmailID { get; set; }
         public string? MobileNo { get; set; }
         public string? LandLine { get; set; }
+        [Required]
         public string? Building { get; set; }
         public string? FlatNumber { get; set; }
         public DateTime? CardIssueDate { get; set; }
         public DateTime? CardPrintingDate { get; set; }
         public DateTime? RegistrationIssueDate { get; set; }
-        public int? LogicalDeleted { get; set; }
+        public int? LogicalDeleted { get; set; } = 0;
     }
 
 

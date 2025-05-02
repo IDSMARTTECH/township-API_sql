@@ -983,6 +983,12 @@ namespace Township_API.Controllers
             {
                 return BadRequest("Amenities Exists.");
             }
+            var  _existingAmenities = await _context.ModuleData.Where(p =>p.ID!=obj.ID &&  p.Name == obj.Name && p.ParentID == obj.ParentID).ToListAsync();
+            if (_existingAmenities != null)
+            {
+                if (_existingAmenities.Count() > 0)
+                    return BadRequest("Amenities already registered with this NRD!");
+            }
             _context.Add(obj); //_context.Add(obj);await _context.SaveChangesAsync();
 
 
@@ -1069,10 +1075,11 @@ namespace Township_API.Controllers
             {
                 return NotFound();
             }
-            var existingVeh = await _context.Vehicles.Where (p=>p.RegNo==updatedVehicle.RegNo && p.ID != id).ToListAsync();
+            var existingVeh = await _context.Vehicles.Where(p => p.RegNo == updatedVehicle.RegNo && p.ID != updatedVehicle.ID).ToListAsync();
             if (existingVeh != null)
             {
-                return BadRequest("Vehicle RegNo already registered!");
+                if (existingVeh.Count() > 0)
+                    return BadRequest("Vehicle RegNo already registered with another user!");
             }
 
             existingVehicle.RegNo = updatedVehicle.RegNo;
@@ -1098,11 +1105,19 @@ namespace Township_API.Controllers
         [HttpPost("AddVehicle")]
         public async Task<IActionResult> AddVehicle([FromBody] Vehicle obj)
         {
-            var existingVehicle = await _context.Vehicles.FindAsync(0);
+            var existingVehicle = await _context.Vehicles.FindAsync(0); 
             if (existingVehicle != null)
             {
-                return BadRequest("Vehicle Exists.");
+                return BadRequest("Vehicle record Exists.");
             }
+
+            var existingVeh = await _context.Vehicles.Where(p => p.RegNo == obj.RegNo && p.ID != obj.ID).ToListAsync();
+            if ( existingVeh!= null )
+            {
+                if  ( existingVeh.Count() > 0)
+                return BadRequest("Vehicle RegNo already registered with another user!");
+            }
+            obj.createdon = DateTime.Now;
             _context.Add(obj);
             await _context.SaveChangesAsync();
 
