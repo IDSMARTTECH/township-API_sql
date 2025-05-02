@@ -20,7 +20,7 @@ namespace Township_API.Controllers
         }
 
         // PUT: api/products/5
-        [HttpPut("{UpdateNRD}")]
+        [HttpPost("{UpdateNRD}/{id}")]
         public async Task<IActionResult> UpdateNRD(int id, [FromBody] NRD updatedOBJ)
         {
             if (id != updatedOBJ.ID)
@@ -185,7 +185,7 @@ namespace Township_API.Controllers
         }
 
         // PUT: api/products/5
-        [HttpPut("{UpdatePhase}")]
+        [HttpPost("{UpdatePhase}/{id}")]
         public async Task<IActionResult> UpdatePhase(int id, [FromBody] Phase updatedObj)
         {
             if (id != updatedObj.ID)
@@ -291,7 +291,7 @@ namespace Township_API.Controllers
         }
 
         // PUT: api/products/5
-        [HttpPut("{UpdateContractorType}")]
+        [HttpPost("{UpdateContractorType}/{id}")]
         public async Task<IActionResult> UpdateContractorType(int id, [FromBody] ContractorType updatedContractorType)
         {
             if (id != updatedContractorType.ID)
@@ -400,7 +400,7 @@ namespace Township_API.Controllers
 
 
         // PUT: api/products/5
-        [HttpPut("{UpdateVehicleMake}")]
+        [HttpPost("{UpdateVehicleMake}/{id}")]
         public async Task<IActionResult> UpdateVehicleMake(int id, [FromBody] VehicleMake updatedVehicleMake)
         {
             if (id != updatedVehicleMake.ID)
@@ -511,7 +511,7 @@ namespace Township_API.Controllers
 
 
         // PUT: api/products/5
-        [HttpPut("{UpdateReaderLocation}")]
+        [HttpPost("{UpdateReaderLocation}/{id}")]
         public async Task<IActionResult> UpdateReaderLocation(int id, [FromBody] ReaderLocation updatedReaderLocation)
         {
             if (id != updatedReaderLocation.ID)
@@ -620,7 +620,7 @@ namespace Township_API.Controllers
 
 
         // PUT: api/products/5
-        [HttpPut("{UpdateReaderRelay}")]
+        [HttpPost("{UpdateReaderRelay}/{id}")]
         public async Task<IActionResult> UpdateReaderRelay(int id, [FromBody] ReaderRelay updatedReaderRelay)
         {
             if (id != updatedReaderRelay.ID)
@@ -729,7 +729,7 @@ namespace Township_API.Controllers
 
 
         // PUT: api/products/5
-        [HttpPut("{UpdateServiceType}")]
+        [HttpPost("{UpdateServiceType}/{id}")]
         public async Task<IActionResult> UpdateServiceType(int id, [FromBody] ServiceType updatedServiceType)
         {
             if (id != updatedServiceType.ID)
@@ -835,7 +835,7 @@ namespace Township_API.Controllers
         }
 
         // PUT: api/products/5
-        [HttpPut("{UpdateBuilding}")]
+        [HttpPost("{UpdateBuilding}/{id}")]
         public async Task<IActionResult> UpdateBuilding(int id, [FromBody] Building updatedBuilding)
         {
             if (id != updatedBuilding.ID)
@@ -946,7 +946,7 @@ namespace Township_API.Controllers
 
 
         // PUT: api/products/5
-        [HttpPut("{UpdateAmenities}")]
+        [HttpPost("{UpdateAmenities}/{id}")]
         public async Task<IActionResult> UpdateAmenities(int id, [FromBody] Amenities updatedAmenities)
         {
             if (id != updatedAmenities.ID)
@@ -1057,7 +1057,7 @@ namespace Township_API.Controllers
         }
 
         // PUT: api/products/5
-        [HttpPut("{UpdateVehicle}")]
+        [HttpPost("{UpdateVehicle}/{id}")]
         public async Task<IActionResult> UpdateVehicle(int id, [FromBody] Vehicle updatedVehicle)
         {
             if (id != updatedVehicle.ID)

@@ -24,7 +24,7 @@ namespace Township_API.Controllers
         }
 
         // PUT: api/products/5
-        [HttpPut("{UpdateServiceProvider}")]
+        [HttpPost("{UpdateServiceProvider}/{id}")]
         public async Task<IActionResult> UpdateServiceProvider(int id, [FromBody] Service_Provider updatedServiceProvider)
         {
             if (id != updatedServiceProvider.ID)

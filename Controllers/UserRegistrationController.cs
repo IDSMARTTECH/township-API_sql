@@ -18,7 +18,7 @@ namespace Township_API.Controllers
         }
 
         // PUT: api/products/5
-        [HttpPut("{UpdateUser}")]
+        [HttpPost("{UpdateUser}/{id}")]
         public async Task<IActionResult> UpdateUser(int id, [FromBody] User updatedUser)
         {
             if (id != updatedUser.Id)

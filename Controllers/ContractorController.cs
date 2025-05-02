@@ -18,7 +18,7 @@ namespace Township_API.Controllers
          
 
         // PUT: api/products/5
-        [HttpPut("{UpdateContractor}")]
+        [HttpPost("{UpdateContractor}/{id}")]
         public async Task<IActionResult> UpdateContractor(int id, [FromBody]  Contractor updatedContractor)
         {
             if (id != updatedContractor.ID)
@@ -139,7 +139,7 @@ namespace Township_API.Controllers
         }
 
         // PUT: api/products/5
-        [HttpPut("{UpdateDependentContractor}")]
+        [HttpPost("{UpdateDependentContractor}/{id}")]
         public async Task<IActionResult> UpdateDependentContractor(int id, [FromBody] DependentContractor updatedDependentContractor)
         {
             if (id != updatedDependentContractor.ID)

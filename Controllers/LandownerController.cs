@@ -23,7 +23,7 @@ namespace Township_API.Controllers
         }
 
         // PUT: api/products/5
-        [HttpPut("{UpdateLandowner}")]
+        [HttpPost("{UpdateLandowner}/{id}")]
         public async Task<IActionResult> UpdateLandowner(int id, [FromBody] PrimaryLandowner updatedLandowner)
         {
             if (id != updatedLandowner.ID)
@@ -238,8 +238,8 @@ namespace Township_API.Controllers
             _context = context;
         }
  
-        // PUT: api/products/5
-        [HttpPut("{UpdateDependentLandOwner}")]
+        // PUT: api/products/5 
+        [HttpPost("{UpdateDependentLandOwner}/{id}")]
         public async Task<IActionResult> UpdateDependentLandOwner(int id, [FromBody] DependentLandOwner updatedDLandOwner)
         {
             if (id != updatedDLandOwner.ID)
