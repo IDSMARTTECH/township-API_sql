@@ -21,7 +21,7 @@ namespace Township_API.Data
         public DbSet<ProfileDetails> ProfileDetails { get; set; }
 
         public DbSet<ModuleData> ModuleData { get; set; }
-               public DbSet<Vehicle> Vehicles { get; set; }
+        public DbSet<Vehicle> Vehicles { get; set; }
 
          
         public DbSet<PrimaryLandowner> Landowners { get; set; }
@@ -52,13 +52,10 @@ namespace Township_API.Data
         public IQueryable<ServiceType> ServiceTypes => (IQueryable<ServiceType>)ModuleDatas.Where(n => n.TypeID == (int)commonTypes.ModuleTypes.ServiceType && n.ID > (int)commonTypes.ModuleTypes.ServiceType);
         public IQueryable<ReaderRelay> ReaderRelays => (IQueryable<ReaderRelay>)ModuleDatas.Where(n => n.TypeID == (int)commonTypes.ModuleTypes.ReaderRelays && n.ID > (int)commonTypes.ModuleTypes.ReaderRelays);
         public IQueryable<VehicleMake> VehicleMakes => (IQueryable<VehicleMake>)ModuleDatas.Where(n => n.TypeID == (int)commonTypes.ModuleTypes.VehicleMake && n.ID > (int)commonTypes.ModuleTypes.VehicleMake);
-
-
-
         public DbSet<DoorAccess> _userDoorAccess { get; set; }
 
         public DbSet<UserAmenitiesAccess> _userAmenitiesAccess { get; set; }
-        public DbSet<UserNRDAccess> _userNRDAccess { get; set; }
+        public DbSet<UserNRDAccess> _userNRDAccess { get; set; } 
 
         public DbSet<UserBuildingAccess> _userBuildingAccess { get; set; }
           
@@ -85,7 +82,7 @@ namespace Township_API.Data
                                                         // Optional: configure column mapping if needed
                                                         // entity.Property(e => e.Name).HasColumnName("SomeColumn");
             });
-             
+            
         }
     }
 }

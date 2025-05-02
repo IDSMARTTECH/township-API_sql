@@ -38,7 +38,7 @@ namespace Township_API.Controllers
                 return NotFound();
             }
             existingLandowner.CSN = updatedLandowner.CSN;
-            existingLandowner.IDNumber = updatedLandowner.IDNumber;
+           // existingLandowner.IDNumber = updatedLandowner.IDNumber;
             existingLandowner.TagNumber = updatedLandowner.TagNumber;
             existingLandowner.PANnumber = updatedLandowner.PANnumber;
             existingLandowner.PassportNo = updatedLandowner.PassportNo;
@@ -100,8 +100,17 @@ namespace Township_API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllLandowners()
         {
-            var Landowners = await _context.Landowners.ToListAsync();
-            return Ok(Landowners);
+            try
+            { 
+                var Landowners = await _context.Landowners.ToListAsync();
+                return Ok(Landowners);
+            }
+            catch (Exception ex)
+            {
+                var r = ex.Message.ToString();
+                return Ok();
+            }
+            return Ok();
         }
 
 
@@ -110,27 +119,32 @@ namespace Township_API.Controllers
         public async Task<IActionResult> GetLandownerDetails(int ID)
         {
             var Landowners = await _context.Landowners.Where(p => p.ID == ID).ToListAsync();
-            string? IdNumber = Landowners[0].IDNumber; 
-            if (IdNumber != null) {                 
-                try
+            if (Landowners != null &&  Landowners.Count>0)
+            {
+
+                string? IdNumber = Landowners[0].IDNumber;
+                if (IdNumber != null)
                 {
-                          var jsonWrapper = new DependentJsonWrapper
-                           {
-                              Owners= Landowners,
-                              DependentOwners = _context.DependentLandowners.Where(p => p.PID == ID).ToList(),
-                              Vehicles = _context.Vehicles.Where(p=>p.TagUID==IdNumber).ToList(),
-                              UserNRDAccess = _context._userNRDAccess.Where(p => p.CardHolderID!=null && p.CardHolderID.ToString() == IdNumber).ToList(),
-                              UserBuildingAccess = _context._userBuildingAccess.Where(p => p.CardHolderID != null && p.CardHolderID.ToString() == IdNumber).ToList(),
-                              UserAminitiesAccess = _context._userAmenitiesAccess.Where(p => p.CardHolderID != null && p.CardHolderID.ToString() == IdNumber).ToList()
+                    try
+                    {
+                        var jsonWrapper = new DependentJsonWrapper
+                        {
+                              Owners = Landowners,
+                              DependentOwners =await _context.DependentLandowners.Where(p => p.PID == ID).ToListAsync(),
+                              Vehicles = await _context.Vehicles.Where(p => p.TagUID == IdNumber).ToListAsync(),
+                              UserNRDAccess = await _context._userNRDAccess.Where(p => p.CardHolderID == IdNumber).ToListAsync(),
+                              UserBuildingAccess = await _context._userBuildingAccess.Where(p => p.CardHolderID == IdNumber).ToListAsync(),
+                              UserAminitiesAccess = await _context._userAmenitiesAccess.Where(p => p.CardHolderID == IdNumber).ToListAsync()
+                        };
 
-                          }; 
 
-                    return Ok(jsonWrapper);
+                        return Ok(jsonWrapper);
+                    }
+                    catch (Exception ex)
+                    {
+                        return BadRequest(ex.Message.ToString());
+                    }
                 }
-                catch (Exception ex)
-                {   
-                    return BadRequest(ex.Message.ToString()); 
-                }  
             }
             return Ok(new { message = $"Landowner records not found!" });
         }
@@ -242,7 +256,7 @@ namespace Township_API.Controllers
             existingDependentLandOwner.PID = updatedDLandOwner.PID;
             //existingDependentLandOwner.id = existingDependentLandOwner
             existingDependentLandOwner.CSN = updatedDLandOwner.CSN;
-            existingDependentLandOwner.IDNumber = updatedDLandOwner.IDNumber;
+            //existingDependentLandOwner.IDNumber = updatedDLandOwner.IDNumber;
             existingDependentLandOwner.TagNumber = updatedDLandOwner.TagNumber;
             existingDependentLandOwner.PANnumber = updatedDLandOwner.PANnumber;
             existingDependentLandOwner.PassportNo = updatedDLandOwner.PassportNo;
@@ -322,7 +336,7 @@ namespace Township_API.Controllers
                         existingDependentLandOwner.PID = objID.PID;
                         //existingDependentLandOwner.id = existingDependentLandOwner
                         existingDependentLandOwner.CSN = objID.CSN;
-                        existingDependentLandOwner.IDNumber = objID.IDNumber;
+                       //a existingDependentLandOwner.IDNumber = objID.IDNumber;
                         existingDependentLandOwner.TagNumber = objID.TagNumber;
                         existingDependentLandOwner.PANnumber = objID.PANnumber;
                         existingDependentLandOwner.PassportNo = objID.PassportNo;

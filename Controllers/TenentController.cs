@@ -115,11 +115,11 @@ namespace Township_API.Controllers
                     var jsonWrapper = new DependentJsonWrapper
                     {
                         Owners = Tenents,
-                        DependentOwners = _context.DependentTenents.Where(p => p.PID == ID).ToList(),
-                        Vehicles = _context.Vehicles.Where(p => p.TagUID == IdNumber).ToList(),
-                        UserNRDAccess = _context._userNRDAccess.Where(p => p.CardHolderID != null && p.CardHolderID.ToString() == IdNumber).ToList(),
-                        UserBuildingAccess = _context._userBuildingAccess.Where(p => p.CardHolderID != null && p.CardHolderID.ToString() == IdNumber).ToList(),
-                        UserAminitiesAccess = _context._userAmenitiesAccess.Where(p => p.CardHolderID != null && p.CardHolderID.ToString() == IdNumber).ToList()
+                        DependentOwners =await _context.DependentTenents.Where(p => p.PID == ID).ToListAsync(),
+                        Vehicles = await _context.Vehicles.Where(p => p.TagUID == IdNumber).ToListAsync(),
+                        UserNRDAccess = await _context._userNRDAccess.Where(p => p.CardHolderID != null && p.CardHolderID.ToString() == IdNumber).ToListAsync(),
+                        UserBuildingAccess = await _context._userBuildingAccess.Where(p => p.CardHolderID != null && p.CardHolderID.ToString() == IdNumber).ToListAsync(),
+                        UserAminitiesAccess = await _context._userAmenitiesAccess.Where(p => p.CardHolderID != null && p.CardHolderID.ToString() == IdNumber).ToListAsync() 
 
                     };
 
@@ -161,10 +161,8 @@ namespace Township_API.Controllers
                         {
                             return NotFound();
                         }
-                        existingTenent.ID = objID.ID;
-                        existingTenent.RID = objID.RID;
-                        existingTenent.CSN = objID.CSN;
-                        existingTenent.IDNumber = objID.IDNumber;
+                         existingTenent.RID = objID.RID;
+                        existingTenent.CSN = objID.CSN;  
                         existingTenent.TagNumber = objID.TagNumber;
                         existingTenent.PANnumber = objID.PANnumber;
                         existingTenent.PassportNo = objID.PassportNo;
@@ -249,11 +247,9 @@ namespace Township_API.Controllers
             if (existingDependentTenent == null)
             {
                 return NotFound();
-            }
-            existingDependentTenent.ID = updatedDTenent.ID;
+            } 
             existingDependentTenent.PID = updatedDTenent.PID;
-            existingDependentTenent.CSN = updatedDTenent.CSN;
-            existingDependentTenent.IDNumber = updatedDTenent.IDNumber;
+            existingDependentTenent.CSN = updatedDTenent.CSN; 
             existingDependentTenent.TagNumber = updatedDTenent.TagNumber;
             existingDependentTenent.PANnumber = updatedDTenent.PANnumber;
             existingDependentTenent.PassportNo = updatedDTenent.PassportNo;
@@ -295,9 +291,14 @@ namespace Township_API.Controllers
             {
                 return BadRequest("DependentTenent Exists.");
             }
+
+            // Turn IDENTITY_INSERT OFF
+            _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT DependentTenent  ON");
             _context.Add(obj);
             await _context.SaveChangesAsync();
 
+            // Turn IDENTITY_INSERT OFF
+            _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT DependentTenent  OFF");
             int number = (int)AccessCardHilders.DependentTenent;
             obj.IDNumber = number.ToString() + obj.ID.ToString("D10");
             await _context.SaveChangesAsync();
@@ -339,11 +340,9 @@ namespace Township_API.Controllers
                         if (existingTenent == null)
                         {
                             return NotFound();
-                        }
-                        existingobj.ID = objID.ID;
+                        } 
                         existingobj.PID = objID.PID;
-                        existingobj.CSN = objID.CSN;
-                        existingobj.IDNumber = objID.IDNumber;
+                        existingobj.CSN = objID.CSN; 
                         existingobj.TagNumber = objID.TagNumber;
                         existingobj.PANnumber = objID.PANnumber;
                         existingobj.PassportNo = objID.PassportNo;

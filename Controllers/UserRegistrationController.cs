@@ -72,18 +72,18 @@ namespace Township_API.Controllers
         }
 
 
-        [HttpGet("CardAccessRights\\{ID}")]
-        public async Task<IActionResult> GetCardAccessRights(string IdNumber)
+        [HttpGet("{IdNumber}")]
+        public async Task<IActionResult> CardAccessRights(string IdNumber)
         {
             if (IdNumber != null)
             {
                 try
-                {
+                { 
                     var jsonWrapper = new DependentJsonWrapper
                     {
-                        UserNRDAccess = _context._userNRDAccess.Where(p => p.CardHolderID != null && p.CardHolderID.ToString() == IdNumber).ToList(),
-                        UserBuildingAccess = _context._userBuildingAccess.Where(p => p.CardHolderID != null && p.CardHolderID.ToString() == IdNumber).ToList(),
-                        UserAminitiesAccess = _context._userAmenitiesAccess.Where(p => p.CardHolderID != null && p.CardHolderID.ToString() == IdNumber).ToList()
+                        UserNRDAccess = await _context._userNRDAccess.Where(p =>p.CardHolderID  == IdNumber).ToListAsync(),
+                        UserBuildingAccess = await _context._userBuildingAccess.Where(p => p.CardHolderID == IdNumber).ToListAsync(),
+                        UserAminitiesAccess = await _context._userAmenitiesAccess.Where(p => p.CardHolderID == IdNumber).ToListAsync()
                     };
 
                     return Ok(jsonWrapper);
@@ -109,17 +109,17 @@ namespace Township_API.Controllers
             {
                 foreach (var objID in Obj)
                 {
-                    var existingobj = await _context._userDoorAccess.Where(p => p.CardHolderID == objID.CardHolderID && p.ModuleID == objID.ModuleID)
+                    var existingobj = await _context._userDoorAccess.Where(p => p.CardHolderID == objID.CardHolderID && p.moduleID == objID.moduleID)
                         .FirstOrDefaultAsync();
 
                     if (existingobj != null)
                     {
-                        var existingDtls = await _context._userDoorAccess.FindAsync(objID.ID);
+                        var existingDtls = await _context._userDoorAccess.FindAsync(objID.id);
                         if (existingDtls == null)
                         {
                             return NotFound();
                         }
-                        existingDtls.ModuleID = objID.ModuleID;
+                        existingDtls.moduleID = objID.moduleID;
                         existingDtls.CardHolderID = objID.CardHolderID;
                         existingDtls.sun = objID.sun;
                         existingDtls.mon = objID.mon;

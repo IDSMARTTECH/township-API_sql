@@ -36,7 +36,7 @@ namespace Township_API.Controllers
             //var existingResident = await _service.UpdatePrimaryResidentAsync(updatedResident.ID, updatedResident); 
             existingResident.ID = updatedResident.ID;
             existingResident.CSN = updatedResident.CSN;
-            existingResident.IDNumber = updatedResident.IDNumber;
+           // existingResident.IDNumber = updatedResident.IDNumber;
             existingResident.TagNumber = updatedResident.TagNumber;
             existingResident.PANnumber = updatedResident.PANnumber;
             existingResident.PassportNo = updatedResident.PassportNo;
@@ -77,8 +77,13 @@ namespace Township_API.Controllers
             {
                 return BadRequest("Resident Exists.");
             }
+            // Turn IDENTITY_INSERT ON
+            _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT PrimaryResident ON");
+
             _context.Add(obj);
             await _context.SaveChangesAsync();
+            // Turn IDENTITY_INSERT OFF
+            _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT PrimaryResident OFF");
 
             int number = (int)AccessCardHilders.Resident;
             obj.IDNumber = number.ToString() + obj.ID.ToString("D10");
@@ -109,12 +114,11 @@ namespace Township_API.Controllers
                     var jsonWrapper = new DependentJsonWrapper
                     {
                         Owners = Residents,
-                        DependentOwners = _context.DependentResidents.Where(p => p.PID == ID).ToList(),
-                        Vehicles = _context.Vehicles.Where(p => p.TagUID == IdNumber).ToList(),
-                        UserNRDAccess = _context._userNRDAccess.Where(p => p.CardHolderID != null && p.CardHolderID.ToString() == IdNumber).ToList(),
-                        UserBuildingAccess = _context._userBuildingAccess.Where(p => p.CardHolderID != null && p.CardHolderID.ToString() == IdNumber).ToList(),
-                        UserAminitiesAccess = _context._userAmenitiesAccess.Where(p => p.CardHolderID != null && p.CardHolderID.ToString() == IdNumber).ToList()
-
+                        DependentOwners =await _context.DependentResidents.Where(p => p.PID == ID).ToListAsync(),
+                        Vehicles = await _context.Vehicles.Where(p => p.TagUID == IdNumber).ToListAsync() ,
+                        UserNRDAccess = await _context._userNRDAccess.Where(p => p.CardHolderID != null && p.CardHolderID.ToString() == IdNumber).ToListAsync(),
+                        UserBuildingAccess = await _context._userBuildingAccess.Where(p => p.CardHolderID != null && p.CardHolderID.ToString() == IdNumber).ToListAsync(),
+                        UserAminitiesAccess = await _context._userAmenitiesAccess.Where(p => p.CardHolderID != null && p.CardHolderID.ToString() == IdNumber).ToListAsync() 
                     };
 
                     return Ok(jsonWrapper);
@@ -135,9 +139,6 @@ namespace Township_API.Controllers
 
             using var transaction = await _context.Database.BeginTransactionAsync();
 
-            // Turn IDENTITY_INSERT ON
-            _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT PrimaryResident ON");
-
 
             try
             {
@@ -147,10 +148,9 @@ namespace Township_API.Controllers
                         .FirstOrDefaultAsync(p => p.ID == objID.ID);
 
                     if (existingobj != null)
-                    {  
-                       existingobj.ID = objID.ID;
+                    {   
                        existingobj.CSN = objID.CSN;
-                       existingobj.IDNumber = objID.IDNumber;
+                       //existingobj.IDNumber = objID.IDNumber;
                        existingobj.TagNumber = objID.TagNumber;
                        existingobj.PANnumber = objID.PANnumber;
                        existingobj.PassportNo = objID.PassportNo;
@@ -180,19 +180,22 @@ namespace Township_API.Controllers
                     }
                     else
                     {
+                        // Turn IDENTITY_INSERT ON
+                        _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT PrimaryResident ON");
+
                         _context.PrimaryResidents.Add(objID);
                         await _context.SaveChangesAsync();
 
                         int number = (int)AccessCardHilders.Resident;
                         objID.IDNumber = number.ToString() + objID.ID.ToString("D10");
                         await _context.SaveChangesAsync();
+                        // Turn IDENTITY_INSERT OFF
+                        _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT PrimaryResident  OFF");
 
                     }
                 }
 
                 await transaction.CommitAsync();
-                // Turn IDENTITY_INSERT OFF
-                _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT PrimaryResident  OFF");
 
                 return Ok(new { message = $"{Obj.Count} PrimaryResident processed successfully" });
             }
@@ -231,11 +234,10 @@ namespace Township_API.Controllers
               if (existingDependentResident == null)
             {
                 return NotFound();
-            }
-            existingDependentResident.ID = updatedDependentResident.ID;
+            } 
             existingDependentResident.PID = updatedDependentResident.PID;
             existingDependentResident.CSN = updatedDependentResident.CSN;
-            existingDependentResident.IDNumber = updatedDependentResident.IDNumber;
+           // existingDependentResident.IDNumber = updatedDependentResident.IDNumber;
             existingDependentResident.TagNumber = updatedDependentResident.TagNumber;
             existingDependentResident.PANnumber = updatedDependentResident.PANnumber;
             existingDependentResident.PassportNo = updatedDependentResident.PassportNo;
@@ -274,8 +276,13 @@ namespace Township_API.Controllers
             {
                 return BadRequest("DependentResident Exists.");
             }
+
+            // Turn IDENTITY_INSERT OFF
+            _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT DependentResident  OFF");
             _context.Add(obj);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(); 
+            // Turn IDENTITY_INSERT OFF
+            _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT DependentResident  OFF");
 
             int number = (int)AccessCardHilders.DependentResident;
             obj.IDNumber = number.ToString() + obj.ID.ToString("D10");
@@ -321,7 +328,7 @@ namespace Township_API.Controllers
                         existingobj.ID = objID.ID;
                         existingobj.PID = objID.PID;
                         existingobj.CSN = objID.CSN;
-                        existingobj.IDNumber = objID.IDNumber;
+                     //   existingobj.IDNumber = objID.IDNumber;
                         existingobj.TagNumber = objID.TagNumber;
                         existingobj.PANnumber = objID.PANnumber;
                         existingobj.PassportNo = objID.PassportNo;

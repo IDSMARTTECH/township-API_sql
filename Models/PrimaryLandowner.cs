@@ -18,9 +18,11 @@ namespace Township_API.Models
         public string? ICEno { get; set; }
         public string? AadharCardId { get; set; }
         public string? VoterID { get; set; }
-        public string? FirstName { get; set; }
+        [Required]
+        public string FirstName { get; set; }
         public string? MiddletName { get; set; }
-        public string? LastName { get; set; }
+        [Required]
+        public string LastName { get; set; }
         public string? ShortName { get; set; }
         public string? Gender { get; set; }
         public string? BloodGroup { get; set; }
