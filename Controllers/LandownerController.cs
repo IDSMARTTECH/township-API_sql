@@ -113,7 +113,7 @@ namespace Township_API.Controllers
             try
             { 
                 var Landowners = await _context.Landowners.ToListAsync();
-                return Ok(new { message = $"Landowner records not found!" });
+                return Ok(Landowners);
             }
             catch (Exception ex)
             {
