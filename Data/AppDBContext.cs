@@ -21,9 +21,7 @@ namespace Township_API.Data
         public DbSet<ProfileDetails> ProfileDetails { get; set; }
 
         public DbSet<ModuleData> ModuleData { get; set; }
-        public DbSet<Vehicle> Vehicles { get; set; }
-
-         
+        public DbSet<Vehicle> Vehicles { get; set; }         
         public DbSet<PrimaryLandowner> Landowners { get; set; }
         public DbSet<DependentLandOwner> DependentLandowners { get; set; }
         public DbSet<PrimaryTenent> PrimaryTenents { get; set; }

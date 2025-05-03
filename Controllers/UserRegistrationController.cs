@@ -110,7 +110,7 @@ namespace Township_API.Controllers
             {
                 foreach (var objID in Obj)
                 {
-                    var existingobj = await _context._userDoorAccess.Where(p => p.CardHolderID == objID.CardHolderID && p.moduleID == objID.moduleID)
+                    var existingobj = await _context._userDoorAccess.Where(p => p.CardHolderID == objID.CardHolderID && p.moduleID.ToString() == objID.moduleID.ToString())
                         .FirstOrDefaultAsync();
 
                     if (existingobj != null)

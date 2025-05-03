@@ -1,7 +1,16 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "D:\\IDS\\SmartCard\\Township-API_SQL\\",
-  "Documents": [],
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{EB34905F-80E7-4FB4-A8F5-2D9E5CEDD145}|Township-API.csproj|d:\\ids\\smartcard\\township-api_sql\\controllers\\nrdcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EB34905F-80E7-4FB4-A8F5-2D9E5CEDD145}|Township-API.csproj|solutionrelative:controllers\\nrdcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{EB34905F-80E7-4FB4-A8F5-2D9E5CEDD145}|Township-API.csproj|d:\\ids\\smartcard\\township-api_sql\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{EB34905F-80E7-4FB4-A8F5-2D9E5CEDD145}|Township-API.csproj|solutionrelative:models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -9,7 +18,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": -1,
+          "SelectedChildIndex": 13,
           "Children": [
             {
               "$type": "Bookmark",
@@ -60,8 +69,30 @@
               "Name": "ST:138:0:{116d2292-e37d-41cd-a077-ebacac4c8cc4}"
             },
             {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "User.cs",
+              "DocumentMoniker": "D:\\IDS\\SmartCard\\Township-API_SQL\\Models\\User.cs",
+              "RelativeDocumentMoniker": "Models\\User.cs",
+              "ToolTip": "D:\\IDS\\SmartCard\\Township-API_SQL\\Models\\User.cs",
+              "RelativeToolTip": "Models\\User.cs",
+              "ViewState": "AgIAANsAAAAAAAAAAAAqwOQAAAARAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-03T18:07:16.588Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "NRDController.cs",
+              "DocumentMoniker": "D:\\IDS\\SmartCard\\Township-API_SQL\\Controllers\\NRDController.cs",
+              "RelativeDocumentMoniker": "Controllers\\NRDController.cs",
+              "ToolTip": "D:\\IDS\\SmartCard\\Township-API_SQL\\Controllers\\NRDController.cs",
+              "RelativeToolTip": "Controllers\\NRDController.cs",
+              "ViewState": "AgIAAGYEAAAAAAAAAAAewHUEAAAIAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-03T17:54:12.049Z",
+              "EditorCaption": ""
             }
           ]
         }

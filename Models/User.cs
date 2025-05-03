@@ -255,7 +255,9 @@ namespace Township_API.Models
     {
         [Key]
         public int id { get; set; }
+        [Required]
         public int moduleID { get; set; }
+        [Required] 
         public string CardHolderID { get; set; }
         public DateTime validTillDate { get; set; }
         public bool? sun { get; set; }
@@ -265,8 +267,8 @@ namespace Township_API.Models
         public bool? thu { get; set; }
         public bool? fri { get; set; }
         public bool? sat { get; set; }
-        public string? isactive { get; set; }="0";
-        public string? isdeleted { get; set; }
+        public bool? isactive { get; set; }=true;
+        public bool? isdeleted { get; set; } = false;
         public int? createdby { get; set; }
         public DateTime? createdon { get; set; }
         public int? updatedby { get; set; }

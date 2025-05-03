@@ -1152,6 +1152,12 @@ namespace Township_API.Controllers
             {
                 foreach (var updatedObj in Obj)
                 {
+                    var existingVeh = await _context.Vehicles.Where(p => p.RegNo == updatedObj.RegNo && p.ID != updatedObj.ID).ToListAsync();
+                    if (existingVeh != null)
+                    {
+                        if (existingVeh.Count() > 0)
+                            return BadRequest("Vehicle RegNo {" + updatedObj.RegNo +"} already registered with another user!");
+                    }
                     var existingOBJ = await _context.Vehicles
                         .FirstOrDefaultAsync(v => v.ID == updatedObj.ID);
 
@@ -1167,21 +1173,21 @@ namespace Township_API.Controllers
                         existingOBJ.Logical_Delete = updatedObj.Logical_Delete;
                         existingOBJ.PrintedTagID = updatedObj.PrintedTagID;
                         existingOBJ.StickerNo = updatedObj.StickerNo;
-
-                        existingOBJ.createdby = 1;
-                        existingOBJ.createdon = DateTime.Now;
+                        existingOBJ.updatedby = updatedObj.updatedby;
+                        existingOBJ.updatedon = DateTime.Now;
+                        await _context.SaveChangesAsync();
                     }
                     else
                     {
+                        // Turn IDENTITY_INSERT OFF
+                        _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblVehicle ON");
                         _context.Vehicles.Add(updatedObj);
+                        // Turn IDENTITY_INSERT OFF
+                        _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblVehicle OFF");
+                        await _context.SaveChangesAsync();
                     }
                 }
-
-                await _context.SaveChangesAsync();
-                await transaction.CommitAsync();
-
-                // Turn IDENTITY_INSERT OFF
-                _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblVehicle OFF");
+                await transaction.CommitAsync();                
                 return Ok(new { message = $"{Obj.Count} Vehicles processed successfully" });
             }
             catch (Exception ex)
