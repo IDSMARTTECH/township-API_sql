@@ -26,49 +26,59 @@ namespace Township_API.Controllers
         [HttpPost("{UpdateLandowner}/{id}")]
         public async Task<IActionResult> UpdateLandowner(int id, [FromBody] PrimaryLandowner updatedLandowner)
         {
-            if (id != updatedLandowner.ID)
+            try
             {
-                return BadRequest("Landowner ID mismatch.");
-            }
+                if (id != updatedLandowner.ID)
+                {
+                    return BadRequest("Landowner ID mismatch.");
+                }
 
-            var existingLandowner = await _context.Landowners.FindAsync(id);
-            // var existingLandowner = await _service.UpdateLandownerAsync(updatedLandowner.ID, updatedLandowner);
-            if (existingLandowner == null)
+                var existingLandowner = await _context.Landowners.FindAsync(id);
+                // var existingLandowner = await _service.UpdateLandownerAsync(updatedLandowner.ID, updatedLandowner);
+                if (existingLandowner == null)
+                {
+                    return NotFound();
+                }
+                existingLandowner.CSN = updatedLandowner.CSN;
+                // existingLandowner.IDNumber = updatedLandowner.IDNumber;
+                existingLandowner.TagNumber = updatedLandowner.TagNumber;
+                existingLandowner.PANnumber = updatedLandowner.PANnumber;
+                existingLandowner.PassportNo = updatedLandowner.PassportNo;
+                existingLandowner.LicenseNo = updatedLandowner.LicenseNo;
+                existingLandowner.ICEno = updatedLandowner.ICEno;
+                existingLandowner.AadharCardId = updatedLandowner.AadharCardId;
+                existingLandowner.VoterID = updatedLandowner.VoterID;
+                existingLandowner.FirstName = updatedLandowner.FirstName;
+                existingLandowner.MiddletName = updatedLandowner.MiddletName;
+                existingLandowner.LastName = updatedLandowner.LastName;
+                existingLandowner.ShortName = updatedLandowner.ShortName;
+                existingLandowner.Gender = updatedLandowner.Gender;
+                existingLandowner.BloodGroup = updatedLandowner.BloodGroup;
+                existingLandowner.DOB = updatedLandowner.DOB;
+                existingLandowner.EmailID = updatedLandowner.EmailID;
+                existingLandowner.MobileNo = updatedLandowner.MobileNo;
+                existingLandowner.LandLine = updatedLandowner.LandLine;
+                existingLandowner.NRD = updatedLandowner.NRD;
+                existingLandowner.Building = updatedLandowner.Building;
+                existingLandowner.FlatNumber = updatedLandowner.FlatNumber;
+                existingLandowner.CardIssueDate = updatedLandowner.CardIssueDate;
+                existingLandowner.CardPrintingDate = updatedLandowner.CardIssueDate;
+                existingLandowner.LogicalDeleted = updatedLandowner.LogicalDeleted;
+                existingLandowner.LandOwnerIssueDate = updatedLandowner.LandOwnerIssueDate;
+                _context.Entry(existingLandowner).State = EntityState.Modified;
+
+                await _context.SaveChangesAsync(); 
+            
+                return Ok(existingLandowner);
+            }
+            catch (Exception ex)
             {
-                return NotFound();
+                Console.WriteLine("Exception Error: " + ex.Message.ToString());
+                return BadRequest("Error :"+ ex.Message.ToString());
+
             }
-            existingLandowner.CSN = updatedLandowner.CSN;
-           // existingLandowner.IDNumber = updatedLandowner.IDNumber;
-            existingLandowner.TagNumber = updatedLandowner.TagNumber;
-            existingLandowner.PANnumber = updatedLandowner.PANnumber;
-            existingLandowner.PassportNo = updatedLandowner.PassportNo;
-            existingLandowner.LicenseNo = updatedLandowner.LicenseNo;
-            existingLandowner.ICEno = updatedLandowner.ICEno;
-            existingLandowner.AadharCardId = updatedLandowner.AadharCardId;
-            existingLandowner.VoterID = updatedLandowner.VoterID;
-            existingLandowner.FirstName = updatedLandowner.FirstName;
-            existingLandowner.MiddletName = updatedLandowner.MiddletName;
-            existingLandowner.LastName = updatedLandowner.LastName;
-            existingLandowner.ShortName = updatedLandowner.ShortName;
-            existingLandowner.Gender = updatedLandowner.Gender;
-            existingLandowner.BloodGroup = updatedLandowner.BloodGroup;
-            existingLandowner.DOB = updatedLandowner.DOB;
-            existingLandowner.EmailID = updatedLandowner.EmailID;
-            existingLandowner.MobileNo = updatedLandowner.MobileNo;
-            existingLandowner.LandLine = updatedLandowner.LandLine;
-            existingLandowner.NRD = updatedLandowner.NRD;
-            existingLandowner.Building = updatedLandowner.Building;
-            existingLandowner.FlatNumber = updatedLandowner.FlatNumber;
-            existingLandowner.CardIssueDate = updatedLandowner.CardIssueDate;
-            existingLandowner.CardPrintingDate = updatedLandowner.CardIssueDate;
-            existingLandowner.LogicalDeleted = updatedLandowner.LogicalDeleted;
-            existingLandowner.LandOwnerIssueDate =  updatedLandowner.LandOwnerIssueDate;  
-            _context.Entry(existingLandowner).State = EntityState.Modified;
-
-            await _context.SaveChangesAsync();
-
-            return Ok(existingLandowner);
         }
+             
 
         [HttpPost("AddLandowner")]
         public async Task<IActionResult> AddLandowner([FromBody] PrimaryLandowner obj)
@@ -79,7 +89,8 @@ namespace Township_API.Controllers
                 if (existingLandowner != null)
                 {
                     return BadRequest("Landowner Exists.");
-                }
+                }           
+                
                 _context.Add(obj);
                 await _context.SaveChangesAsync(); 
                  int number = (int)AccessCardHilders.Landowner ;
@@ -91,10 +102,9 @@ namespace Township_API.Controllers
             catch (Exception ex)
             {
                 Console.WriteLine("Exception Error: " + ex.Message.ToString());
-                throw;
+                return BadRequest(ex.Message.ToString());
             }
         }
-
 
         // GET: api/products 
         [HttpGet]
@@ -103,14 +113,13 @@ namespace Township_API.Controllers
             try
             { 
                 var Landowners = await _context.Landowners.ToListAsync();
-                return Ok(Landowners);
+                return Ok(new { message = $"Landowner records not found!" });
             }
             catch (Exception ex)
             {
                 var r = ex.Message.ToString();
-                return Ok();
+                return BadRequest(ex.Message.ToString());
             }
-            return Ok();
         }
 
 
@@ -150,7 +159,7 @@ namespace Township_API.Controllers
             return Ok(new { message = $"Landowner records not found!" });
         }
 
-        [HttpPost("{AddLandOwners}")]
+        [HttpPost("AddLandOwners")]
         public async Task<IActionResult> AddLandOwners([FromBody] List<PrimaryLandowner> Obj)
         {
             if (Obj == null || !Obj.Any())
@@ -203,8 +212,7 @@ namespace Township_API.Controllers
                         await _context.SaveChangesAsync();
                     }
                     else
-                    {
-                         
+                    {                         
                         _context.Landowners.Add(objID);
                         await _context.SaveChangesAsync();
 
@@ -283,7 +291,7 @@ namespace Township_API.Controllers
             return Ok(existingDependentLandOwner);
         }
 
-        [HttpPost("{AddDependentLandOwner}")]
+        [HttpPost("AddDependentLandOwner")]
         public async Task<IActionResult> AddDependentLandOwner([FromBody] DependentLandOwner obj)
         {
             var existingDependentLandOwner = await _context.DependentLandowners.FindAsync(0);

@@ -26,7 +26,7 @@ namespace Township_API.Controllers
                 return BadRequest("User ID mismatch.");
             }
 
-            var existingUser = await _context.UserRegisters.FindAsync(id);
+            var existingUser = await _context.UserRegisters.FindAsync(0);
             if (existingUser == null)
             {
                 return NotFound();

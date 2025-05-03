@@ -16,8 +16,6 @@ namespace Township_API.Controllers
     public class ServiceProviderController : Controller
     {
         private readonly AppDBContext _context;
-
-
         public ServiceProviderController(AppDBContext context)
         {
             _context = context;
@@ -27,52 +25,66 @@ namespace Township_API.Controllers
         [HttpPost("{UpdateServiceProvider}/{id}")]
         public async Task<IActionResult> UpdateServiceProvider(int id, [FromBody] Service_Provider updatedServiceProvider)
         {
-            if (id != updatedServiceProvider.ID)
+            try
             {
-                return BadRequest("ServiceProvider ID mismatch.");
+                if (id != updatedServiceProvider.ID)
+                {
+                    return BadRequest("ServiceProvider ID mismatch.");
+                }
+
+                //var existingServiceProvider = await _service.UpdateServiceProviderAsync(updatedServiceProvider.ID, updatedServiceProvider);
+                var existingServiceProvider = await _context.ServiceProviders.FindAsync(updatedServiceProvider.ID);
+
+                if (existingServiceProvider == null)
+                {
+                    return NotFound();
+                }
+                existingServiceProvider.ID = updatedServiceProvider.ID;
+                existingServiceProvider.code = updatedServiceProvider.code;
+                existingServiceProvider.name = updatedServiceProvider.name;
+                existingServiceProvider.email = updatedServiceProvider.email;
+                existingServiceProvider.phone = updatedServiceProvider.phone;
+                existingServiceProvider.ServiceProviderID = updatedServiceProvider.ServiceProviderID;
+                existingServiceProvider.role = updatedServiceProvider.role;
+                existingServiceProvider.isactive = updatedServiceProvider.isactive;
+                existingServiceProvider.createdby = updatedServiceProvider.createdby;
+                existingServiceProvider.createdon = updatedServiceProvider.createdon;
+                existingServiceProvider.updatedby = updatedServiceProvider.updatedby;
+                existingServiceProvider.updatedon = updatedServiceProvider.updatedon;
+                _context.Entry(existingServiceProvider).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+
+                return Ok(existingServiceProvider);
             }
-
-            //var existingServiceProvider = await _service.UpdateServiceProviderAsync(updatedServiceProvider.ID, updatedServiceProvider);
-            var existingServiceProvider = await _context.ServiceProviders.FindAsync(updatedServiceProvider.ID);
-
-            if (existingServiceProvider == null)
+            catch (Exception ex)
             {
-                return NotFound();
+                return StatusCode(500, new { error = ex.Message });
             }
-            existingServiceProvider.ID = updatedServiceProvider.ID;
-            existingServiceProvider.code = updatedServiceProvider.code;
-            existingServiceProvider.name = updatedServiceProvider.name;
-            existingServiceProvider.email = updatedServiceProvider.email;
-            existingServiceProvider.phone = updatedServiceProvider.phone;
-            existingServiceProvider.ServiceProviderID = updatedServiceProvider.ServiceProviderID;
-            existingServiceProvider.role = updatedServiceProvider.role;
-            existingServiceProvider.isactive = updatedServiceProvider.isactive;
-            existingServiceProvider.createdby = updatedServiceProvider.createdby;
-            existingServiceProvider.createdon = updatedServiceProvider.createdon;
-            existingServiceProvider.updatedby = updatedServiceProvider.updatedby;
-            existingServiceProvider.updatedon = updatedServiceProvider.updatedon;
-            _context.Entry(existingServiceProvider).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-
-            return Ok(existingServiceProvider);
         }
 
 
         [HttpPost("AddServiceProvider")]
         public async Task<IActionResult> AddServiceProvider([FromBody] Service_Provider obj)
         {
-            var existingServiceProvider = await _context.ServiceProviders.FindAsync(0);
-            if (existingServiceProvider != null)
+            try
             {
-                return BadRequest("ServiceProvider Exists.");
-            }
-            _context.Add(obj);
-            await _context.SaveChangesAsync();
-            int number = (int)AccessCardHilders.ServiceProvider;
-            obj.code = number.ToString() + obj.ID.ToString("D10");
+                var existingServiceProvider = await _context.ServiceProviders.FindAsync(0);
+                if (existingServiceProvider != null)
+                {
+                    return BadRequest("ServiceProvider Exists.");
+                }
+                _context.Add(obj);
+                await _context.SaveChangesAsync();
+                int number = (int)AccessCardHilders.ServiceProvider;
+                obj.code = number.ToString() + obj.ID.ToString("D10");
 
-            await _context.SaveChangesAsync();
-            return Ok();
+                await _context.SaveChangesAsync();
+                return Ok(existingServiceProvider);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { error = ex.Message });
+            }
         }
 
 
@@ -116,7 +128,7 @@ namespace Township_API.Controllers
         }
 
 
-        [HttpPost("{AddServiceProviders}")]
+        [HttpPost("AddServiceProviders")]
         public async Task<IActionResult> AddServiceProviders([FromBody] List<Service_Provider> Obj)
         {
             if (Obj == null || !Obj.Any())

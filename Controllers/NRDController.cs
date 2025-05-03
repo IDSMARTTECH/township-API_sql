@@ -27,8 +27,6 @@ namespace Township_API.Controllers
             {
                 return BadRequest("NRD ID mismatch.");
             }
-
-
             var existingOBJ = await _context.ModuleData.FindAsync(id);
             if (existingOBJ == null)
             {
@@ -1118,8 +1116,14 @@ namespace Township_API.Controllers
                 return BadRequest("Vehicle RegNo already registered with another user!");
             }
             obj.createdon = DateTime.Now;
+            // Turn IDENTITY_INSERT ON
+            _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblVehicle ON");
+
             _context.Add(obj);
             await _context.SaveChangesAsync();
+            // Turn IDENTITY_INSERT ON
+            _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblVehicle OFF");
+
 
             return Ok();
         }

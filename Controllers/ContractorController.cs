@@ -186,7 +186,7 @@ namespace Township_API.Controllers
         }
 
 
-        [HttpPost("{AddDependentContractors}")]
+        [HttpPost("AddDependentContractors")]
         public async Task<IActionResult> AddDependentContractors([FromBody] List<DependentContractor> Obj)
         {
             if (Obj == null || !Obj.Any())

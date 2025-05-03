@@ -24,74 +24,90 @@ namespace Township_API.Controllers
         [HttpPost("{UpdateTenent}/{id}")]
         public async Task<IActionResult> UpdateTenent(int id, [FromBody] PrimaryTenent updatedTenent)
         {
-            if (id != updatedTenent.ID)
+            try
             {
-                return BadRequest("Tenent ID mismatch.");
-            }
+                if (id != updatedTenent.ID)
+                {
+                    return BadRequest("Tenent ID mismatch.");
+                }
 
-            //var existingTenent = await _service.UpdatePrimaryTenentAsync(updatedTenent.ID, updatedTenent);
-            var existingTenent = await _context.PrimaryTenents.FindAsync(updatedTenent.ID);
-            if (existingTenent == null)
+                //var existingTenent = await _service.UpdatePrimaryTenentAsync(updatedTenent.ID, updatedTenent);
+                var existingTenent = await _context.PrimaryTenents.FindAsync(updatedTenent.ID);
+                if (existingTenent == null)
+                {
+                    return NotFound();
+                }
+                // existingTenent.ID = updatedTenent.ID;
+                existingTenent.RID = updatedTenent.RID;
+                existingTenent.CSN = updatedTenent.CSN;
+                // existingTenent.IDNumber = updatedTenent.IDNumber;
+                existingTenent.TagNumber = updatedTenent.TagNumber;
+                existingTenent.PANnumber = updatedTenent.PANnumber;
+                existingTenent.PassportNo = updatedTenent.PassportNo;
+                existingTenent.LicenseNo = updatedTenent.LicenseNo;
+                existingTenent.ICEno = updatedTenent.ICEno;
+                existingTenent.AadharCardId = updatedTenent.AadharCardId;
+                existingTenent.VoterID = updatedTenent.VoterID;
+                existingTenent.FirstName = updatedTenent.FirstName;
+                existingTenent.MiddletName = updatedTenent.MiddletName;
+                existingTenent.LastName = updatedTenent.LastName;
+                existingTenent.ShortName = updatedTenent.ShortName;
+                existingTenent.Gender = updatedTenent.Gender;
+                existingTenent.BloodGroup = updatedTenent.BloodGroup;
+                existingTenent.DOB = updatedTenent.DOB;
+                existingTenent.EmailID = updatedTenent.EmailID;
+                existingTenent.MobileNo = updatedTenent.MobileNo;
+                existingTenent.LandLine = updatedTenent.LandLine;
+                existingTenent.NRD = updatedTenent.NRD;
+                existingTenent.Building = updatedTenent.Building;
+                existingTenent.FlatNumber = updatedTenent.FlatNumber;
+                existingTenent.TenentType = updatedTenent.TenentType;
+                existingTenent.CardIssueDate = updatedTenent.CardIssueDate;
+                existingTenent.CardPrintingDate = updatedTenent.CardPrintingDate;
+                existingTenent.RegistrationIssueDate = updatedTenent.RegistrationIssueDate;
+                existingTenent.Aggreement_From = updatedTenent.Aggreement_From;
+                existingTenent.Aggreement_To = updatedTenent.Aggreement_To;
+                existingTenent.LogicalDeleted = updatedTenent.LogicalDeleted;
+
+
+                _context.Entry(existingTenent).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+
+                return Ok(new { message = $"{existingTenent.ID}   Tenent updated successfully" });
+
+            }
+            catch (Exception ex)
             {
-                return NotFound();
+                return BadRequest("Data Error : " + ex.Message.ToString().ToString());
             }
-            existingTenent.ID = updatedTenent.ID;
-            existingTenent.RID = updatedTenent.RID;
-            existingTenent.CSN = updatedTenent.CSN;
-            existingTenent.IDNumber = updatedTenent.IDNumber;
-            existingTenent.TagNumber = updatedTenent.TagNumber;
-            existingTenent.PANnumber = updatedTenent.PANnumber;
-            existingTenent.PassportNo = updatedTenent.PassportNo;
-            existingTenent.LicenseNo = updatedTenent.LicenseNo;
-            existingTenent.ICEno = updatedTenent.ICEno;
-            existingTenent.AadharCardId = updatedTenent.AadharCardId;
-            existingTenent.VoterID = updatedTenent.VoterID;
-            existingTenent.FirstName = updatedTenent.FirstName;
-            existingTenent.MiddletName = updatedTenent.MiddletName;
-            existingTenent.LastName = updatedTenent.LastName;
-            existingTenent.ShortName = updatedTenent.ShortName;
-            existingTenent.Gender = updatedTenent.Gender;
-            existingTenent.BloodGroup = updatedTenent.BloodGroup;
-            existingTenent.DOB = updatedTenent.DOB;
-            existingTenent.EmailID = updatedTenent.EmailID;
-            existingTenent.MobileNo = updatedTenent.MobileNo;
-            existingTenent.LandLine = updatedTenent.LandLine;
-            existingTenent.NRD = updatedTenent.NRD;
-            existingTenent.Building = updatedTenent.Building;
-            existingTenent.FlatNumber = updatedTenent.FlatNumber;
-            existingTenent.TenentType = updatedTenent.TenentType;
-            existingTenent.CardIssueDate = updatedTenent.CardIssueDate;
-            existingTenent.CardPrintingDate = updatedTenent.CardPrintingDate;
-            existingTenent.RegistrationIssueDate = updatedTenent.RegistrationIssueDate;
-            existingTenent.Aggreement_From = updatedTenent.Aggreement_From;
-            existingTenent.Aggreement_To = updatedTenent.Aggreement_To;
-            existingTenent.LogicalDeleted = updatedTenent.LogicalDeleted;
-
-
-            _context.Entry(existingTenent).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-
-            return Ok(existingTenent);
         }
 
 
         [HttpPost("AddTenent")]
         public async Task<IActionResult> AddTenent([FromBody] PrimaryTenent obj)
         {
-            var existingTenent = await _context.PrimaryTenents.FindAsync(0);
-            if (existingTenent != null)
+            try
             {
-                return BadRequest("Tenent Exists.");
+                var existingTenent = await _context.PrimaryTenents.FindAsync(0);
+                if (existingTenent != null)
+                {
+                    return BadRequest("Tenent Exists.");
+                }
+                _context.Add(obj);
+                await _context.SaveChangesAsync();
+
+                int number = (int)AccessCardHilders.Tenent;
+                obj.IDNumber = number.ToString() + obj.ID.ToString("D10");
+                await _context.SaveChangesAsync();
+
+                return Ok(new { message = $"{obj.ID} Tenent created successfully" });
+
             }
-            _context.Add(obj);
-            await _context.SaveChangesAsync();
-
-            int number = (int)AccessCardHilders.Tenent;
-            obj.IDNumber = number.ToString() + obj.ID.ToString("D10");
-            await _context.SaveChangesAsync();
-
-            return Ok();
-        }
+            catch (Exception ex)
+            {
+                return BadRequest("Data Error : " + ex.Message.ToString().ToString());
+            }
+         }
 
 
         // GET: api/products 
@@ -237,72 +253,87 @@ namespace Township_API.Controllers
         [HttpPost("{UpdateDependentTenent}/{id}")] 
         public async Task<IActionResult> UpdateDependentTenent(int id, [FromBody] DependentTenent updatedDTenent)
         {
-            if (id != updatedDTenent.ID)
+            try
             {
-                return BadRequest("Tenent ID mismatch.");
+                if (id != updatedDTenent.ID)
+                {
+                    return BadRequest("Tenent ID mismatch.");
+                }
+
+                //var existingDependentTenent = await _service.UpdateDependentTenentAsync(id, updatedDTenent);
+                var existingDependentTenent = await _context.DependentTenents.FindAsync(0);
+                if (existingDependentTenent == null)
+                {
+                    return NotFound();
+                }
+                existingDependentTenent.PID = updatedDTenent.PID;
+                existingDependentTenent.CSN = updatedDTenent.CSN;
+                existingDependentTenent.TagNumber = updatedDTenent.TagNumber;
+                existingDependentTenent.PANnumber = updatedDTenent.PANnumber;
+                existingDependentTenent.PassportNo = updatedDTenent.PassportNo;
+                existingDependentTenent.LicenseNo = updatedDTenent.LicenseNo;
+                existingDependentTenent.ICEno = updatedDTenent.ICEno;
+                existingDependentTenent.AadharCardId = updatedDTenent.AadharCardId;
+                existingDependentTenent.VoterID = updatedDTenent.VoterID;
+                existingDependentTenent.FirstName = updatedDTenent.FirstName;
+                existingDependentTenent.MiddletName = updatedDTenent.MiddletName;
+                existingDependentTenent.LastName = updatedDTenent.LastName;
+                existingDependentTenent.ShortName = updatedDTenent.ShortName;
+                existingDependentTenent.Gender = updatedDTenent.Gender;
+                existingDependentTenent.BloodGroup = updatedDTenent.BloodGroup;
+                existingDependentTenent.DOB = updatedDTenent.DOB;
+                existingDependentTenent.EmailID = updatedDTenent.EmailID;
+                existingDependentTenent.MobileNo = updatedDTenent.MobileNo;
+                existingDependentTenent.LandLine = updatedDTenent.LandLine;
+                existingDependentTenent.Building = updatedDTenent.Building;
+                existingDependentTenent.FlatNumber = updatedDTenent.FlatNumber;
+                existingDependentTenent.CardIssueDate = updatedDTenent.CardIssueDate;
+                existingDependentTenent.CardPrintingDate = updatedDTenent.CardPrintingDate;
+                existingDependentTenent.RegistrationIssueDate = updatedDTenent.RegistrationIssueDate;
+                existingDependentTenent.Aggreement_From = updatedDTenent.Aggreement_From;
+                existingDependentTenent.Aggreement_To = updatedDTenent.Aggreement_To;
+                existingDependentTenent.LogicalDeleted = updatedDTenent.LogicalDeleted;
+                await _context.SaveChangesAsync();
+                _context.Entry(existingDependentTenent).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+
+                return Ok(new { message = $"{existingDependentTenent.ID} Depenent Tenent updated successfully" });
             }
-
-            //var existingDependentTenent = await _service.UpdateDependentTenentAsync(id, updatedDTenent);
-            var existingDependentTenent = await _context.DependentTenents.FindAsync(id);
-            if (existingDependentTenent == null)
+            catch (Exception ex)
             {
-                return NotFound();
-            } 
-            existingDependentTenent.PID = updatedDTenent.PID;
-            existingDependentTenent.CSN = updatedDTenent.CSN; 
-            existingDependentTenent.TagNumber = updatedDTenent.TagNumber;
-            existingDependentTenent.PANnumber = updatedDTenent.PANnumber;
-            existingDependentTenent.PassportNo = updatedDTenent.PassportNo;
-            existingDependentTenent.LicenseNo = updatedDTenent.LicenseNo;
-            existingDependentTenent.ICEno = updatedDTenent.ICEno;
-            existingDependentTenent.AadharCardId = updatedDTenent.AadharCardId;
-            existingDependentTenent.VoterID = updatedDTenent.VoterID;
-            existingDependentTenent.FirstName = updatedDTenent.FirstName;
-            existingDependentTenent.MiddletName = updatedDTenent.MiddletName;
-            existingDependentTenent.LastName = updatedDTenent.LastName;
-            existingDependentTenent.ShortName = updatedDTenent.ShortName;
-            existingDependentTenent.Gender = updatedDTenent.Gender;
-            existingDependentTenent.BloodGroup = updatedDTenent.BloodGroup;
-            existingDependentTenent.DOB = updatedDTenent.DOB;
-            existingDependentTenent.EmailID = updatedDTenent.EmailID;
-            existingDependentTenent.MobileNo = updatedDTenent.MobileNo;
-            existingDependentTenent.LandLine = updatedDTenent.LandLine;
-            existingDependentTenent.Building = updatedDTenent.Building;
-            existingDependentTenent.FlatNumber = updatedDTenent.FlatNumber;
-            existingDependentTenent.CardIssueDate = updatedDTenent.CardIssueDate;
-            existingDependentTenent.CardPrintingDate = updatedDTenent.CardPrintingDate;
-            existingDependentTenent.RegistrationIssueDate = updatedDTenent.RegistrationIssueDate;
-            existingDependentTenent.Aggreement_From = updatedDTenent.Aggreement_From;
-            existingDependentTenent.Aggreement_To = updatedDTenent.Aggreement_To;
-            existingDependentTenent.LogicalDeleted = updatedDTenent.LogicalDeleted;
-            await _context.SaveChangesAsync();
-            _context.Entry(existingDependentTenent).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-
-            return Ok(existingDependentTenent);
+                return BadRequest("Data Error : " + ex.Message.ToString().ToString());
+            }
         }
 
 
         [HttpPost("AddDependentTenent")]
         public async Task<IActionResult> AddDependentTenent([FromBody] DependentTenent obj)
         {
-            var existingDependentTenent = await _context.DependentTenents.FindAsync(0);
-            if (existingDependentTenent != null)
+            try
             {
-                return BadRequest("DependentTenent Exists.");
+                var existingDependentTenent = await _context.DependentTenents.FindAsync(0);
+                if (existingDependentTenent != null)
+                {
+                    return BadRequest("DependentTenent Exists.");
+                }
+
+                // Turn IDENTITY_INSERT OFF
+                _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT DependentTenent  ON");
+                _context.Add(obj);
+                await _context.SaveChangesAsync();
+
+                // Turn IDENTITY_INSERT OFF
+                _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT DependentTenent  OFF");
+                int number = (int)AccessCardHilders.DependentTenent;
+                obj.IDNumber = number.ToString() + obj.ID.ToString("D10");
+                await _context.SaveChangesAsync();
+                return Ok(new { message = $"{obj.ID} Depenent Tenent created successfully" });
             }
+            catch (Exception ex)
+            {
 
-            // Turn IDENTITY_INSERT OFF
-            _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT DependentTenent  ON");
-            _context.Add(obj);
-            await _context.SaveChangesAsync();
-
-            // Turn IDENTITY_INSERT OFF
-            _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT DependentTenent  OFF");
-            int number = (int)AccessCardHilders.DependentTenent;
-            obj.IDNumber = number.ToString() + obj.ID.ToString("D10");
-            await _context.SaveChangesAsync();
-            return Ok();
+                return BadRequest("Data Error : " + ex.Message.ToString().ToString());
+            }
         }
 
 
@@ -316,7 +347,7 @@ namespace Township_API.Controllers
 
 
 
-        [HttpPost("{AddDependentTenents}")]
+        [HttpPost("AddDependentTenents")]
         public async Task<IActionResult> AddTenents([FromBody] List<DependentTenent> Obj)
         {
             if (Obj == null || !Obj.Any())

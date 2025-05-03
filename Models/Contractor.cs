@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Township_API.Models
 {
@@ -30,13 +31,15 @@ namespace Township_API.Models
         public DateTime? CardIssueDate { get; set; }
         public DateTime? CardPrintingDate { get; set; }
         public DateTime? RegistrationIssueDate { get; set; }
-        public int? LogicalDeleted { get; set; }
+        public int? LogicalDeleted { get; set; } = 0;
     }
 
     [Table("DependentContractor")]
     public class DependentContractor
     {
+        [Key]
         public int ID { get; set; }
+        [Required]
         public int PID { get; set; }        //Primary-ResidentID
         public string? CSN { get; set; }
         public string? IDNumber { get; set; }
@@ -46,8 +49,10 @@ namespace Township_API.Models
         public string? LicenseNo { get; set; }
         public string? AadharCardId { get; set; }
         public string? VoterID { get; set; }
+        [Required] 
         public string? FirstName { get; set; }
         public string? MiddletName { get; set; }
+        [Required] 
         public string? LastName { get; set; }
         public string? ShortName { get; set; }
         public string? Gender { get; set; }

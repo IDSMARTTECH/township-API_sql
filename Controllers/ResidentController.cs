@@ -22,50 +22,65 @@ namespace Township_API.Controllers
         public async Task<IActionResult> UpdateResident(int id, [FromBody] PrimaryResident updatedResident)
         {
 
-            if (id != updatedResident.ID)
+            try
             {
-                return BadRequest("Resident ID mismatch.");
-            }
+                if (id != updatedResident.ID)
+                {
+                    return BadRequest("Resident ID mismatch.");
+                }
 
-           var existingResident = await _context.PrimaryResidents.FindAsync(id);
-            if (existingResident == null)
+                var existingResident = await _context.PrimaryResidents.FindAsync(id);
+                if (existingResident == null)
+                {
+                    return NotFound();
+                }
+                //flatnumber validation                
+                var existing = await _context.PrimaryResidents.Where(p => p.FlatNumber == updatedResident.FlatNumber && p.Building == updatedResident.Building && p.ID != updatedResident.ID).ToListAsync();
+                if (existing != null)
+                {
+                    if (existing.Count() > 0)
+                        return BadRequest("FlatNumber is already register with other owner!");
+                }
+
+                //var existingResident = await _service.UpdatePrimaryResidentAsync(updatedResident.ID, updatedResident); 
+                //existingResident.ID = updatedResident.ID;
+                existingResident.CSN = updatedResident.CSN;
+                // existingResident.IDNumber = updatedResident.IDNumber;
+                existingResident.TagNumber = updatedResident.TagNumber;
+                existingResident.PANnumber = updatedResident.PANnumber;
+                existingResident.PassportNo = updatedResident.PassportNo;
+                existingResident.LicenseNo = updatedResident.LicenseNo;
+                existingResident.ICEno = updatedResident.ICEno;
+                existingResident.AadharCardId = updatedResident.AadharCardId;
+                existingResident.VoterID = updatedResident.VoterID;
+                existingResident.FirstName = updatedResident.FirstName;
+                existingResident.MiddletName = updatedResident.MiddletName;
+                existingResident.LastName = updatedResident.LastName;
+                existingResident.ShortName = updatedResident.ShortName;
+                existingResident.Gender = updatedResident.Gender;
+                existingResident.BloodGroup = updatedResident.BloodGroup;
+                existingResident.DOB = updatedResident.DOB;
+                existingResident.EmailID = updatedResident.EmailID;
+                existingResident.MobileNo = updatedResident.MobileNo;
+                existingResident.LandLine = updatedResident.LandLine;
+                existingResident.NRD = updatedResident.NRD;
+                existingResident.Building = updatedResident.Building;
+                existingResident.FlatNumber = updatedResident.FlatNumber;
+                existingResident.CardIssueDate = updatedResident.CardIssueDate;
+                existingResident.CardPrintingDate = updatedResident.CardPrintingDate;
+                existingResident.RegistrationIssueDate = updatedResident.RegistrationIssueDate;
+
+
+                _context.Entry(existingResident).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+
+                return Ok(existingResident);
+            }
+            catch (Exception ex)
             {
-                return NotFound();
+                return BadRequest();
+
             }
-
-            //var existingResident = await _service.UpdatePrimaryResidentAsync(updatedResident.ID, updatedResident); 
-            existingResident.ID = updatedResident.ID;
-            existingResident.CSN = updatedResident.CSN;
-           // existingResident.IDNumber = updatedResident.IDNumber;
-            existingResident.TagNumber = updatedResident.TagNumber;
-            existingResident.PANnumber = updatedResident.PANnumber;
-            existingResident.PassportNo = updatedResident.PassportNo;
-            existingResident.LicenseNo = updatedResident.LicenseNo;
-            existingResident.ICEno = updatedResident.ICEno;
-            existingResident.AadharCardId = updatedResident.AadharCardId;
-            existingResident.VoterID = updatedResident.VoterID;
-            existingResident.FirstName = updatedResident.FirstName;
-            existingResident.MiddletName = updatedResident.MiddletName;
-            existingResident.LastName = updatedResident.LastName;
-            existingResident.ShortName = updatedResident.ShortName;
-            existingResident.Gender = updatedResident.Gender;
-            existingResident.BloodGroup = updatedResident.BloodGroup;
-            existingResident.DOB = updatedResident.DOB;
-            existingResident.EmailID = updatedResident.EmailID;
-            existingResident.MobileNo = updatedResident.MobileNo;
-            existingResident.LandLine = updatedResident.LandLine;
-            existingResident.NRD = updatedResident.NRD;
-            existingResident.Building = updatedResident.Building;
-            existingResident.FlatNumber = updatedResident.FlatNumber;
-            existingResident.CardIssueDate = updatedResident.CardIssueDate;
-            existingResident.CardPrintingDate = updatedResident.CardPrintingDate;
-            existingResident.RegistrationIssueDate = updatedResident.RegistrationIssueDate;
-
-
-            _context.Entry(existingResident).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-
-            return Ok(existingResident);
         }
 
 
@@ -132,7 +147,7 @@ namespace Township_API.Controllers
             return Ok(new { message = $"Resident records not found!" });
         }
 
-        [HttpPost("{AddPrimaryResidents}")]
+        [HttpPost("AddPrimaryResidents")]
         public async Task<IActionResult> AddPrimaryResidents([FromBody] List<PrimaryResident> Obj)
         {
             if (Obj == null || !Obj.Any())
@@ -301,7 +316,7 @@ namespace Township_API.Controllers
         }
 
 
-        [HttpPost("{AddDependentResidents}")]
+        [HttpPost("AddDependentResidents")]
         public async Task<IActionResult> AddDependentResidents([FromBody] List<DependentResident> Obj)
         {
             if (Obj == null || !Obj.Any())

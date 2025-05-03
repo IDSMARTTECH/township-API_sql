@@ -42,8 +42,7 @@ namespace Township_API.Models
 
     [Table("DependentResident")]
     public class DependentResident
-    {
-        [Key]
+    {    
         public int ID { get; set; }
         [Required]
         public int PID { get; set; }        //Primary-ResidentID
