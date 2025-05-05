@@ -41,7 +41,7 @@ namespace Township_API.Controllers
 
 
         [HttpPost("AddContractor")]
-        public async Task<IActionResult> AddContractor([FromBody]  Contractor obj)
+        public async Task<IActionResult> AddContractor([FromBody] Contractor obj)
         {
             if (!ModelState.IsValid)
             {
@@ -71,8 +71,15 @@ namespace Township_API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllContractors()
         {
-            var Contractors = await _context.ContractorTypes.OrderByDescending(p => p.ID).ToListAsync();
-            return Ok(Contractors);
+            try
+            {
+                var Contractors = await _context.Contractors.OrderByDescending(p => p.ID).ToListAsync();
+                return Ok(Contractors);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Error :" + ex.Message.ToString());
+            }
         }
 
         [HttpPost("{AddContractors}")]

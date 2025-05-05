@@ -29,8 +29,6 @@ namespace Township_API.Data
 
         public DbSet<PrimaryResident> PrimaryResidents { get; set; }
         public DbSet<DependentResident> DependentResidents { get; set; }
-
-
         public DbSet<Contractor>Contractors { get; set; }
         public DbSet<DependentContractor>DependentContractors { get; set; }
 

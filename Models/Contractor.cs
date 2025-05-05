@@ -4,7 +4,6 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Township_API.Models
 {
     //  Contractor
-
     [Table("Contractor")]
     public class Contractor
     {
@@ -27,7 +26,7 @@ namespace Township_API.Models
         public DateTime? DOB { get; set; }
         public string? EmailID { get; set; }
         public string? MobileNo { get; set; }
-        public string LandLine { get; set; } 
+        public string? LandLine { get; set; } 
         public DateTime? CardIssueDate { get; set; }
         public DateTime? CardPrintingDate { get; set; }
         public DateTime? RegistrationIssueDate { get; set; }
