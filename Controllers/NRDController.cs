@@ -939,7 +939,7 @@ namespace Township_API.Controllers
 
         public AmenitiesController(AppDBContext context)
         {
-            _context = context;
+            _context = context; 
         }
 
 
@@ -1134,7 +1134,7 @@ namespace Township_API.Controllers
         public async Task<IActionResult> GetAllVehicles()
         {
             var Vehicles = await _context.Vehicles.ToListAsync();
-            return Ok(Vehicles);
+            return Ok(Vehicles); 
         }
 
         [HttpPost("bulkSaveVehicles")]
@@ -1146,7 +1146,6 @@ namespace Township_API.Controllers
             using var transaction = await _context.Database.BeginTransactionAsync();
             // Turn IDENTITY_INSERT ON
             _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblVehicle ON");
-
 
             try
             {
