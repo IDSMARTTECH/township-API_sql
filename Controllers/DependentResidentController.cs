@@ -68,6 +68,6 @@ namespace Township_API.Controllers
         {
             var DependentResidents = await _context.DependentResidents.OrderByDescending(p => p.ID).ToListAsync();
             return Ok(DependentResidents.OrderByDescending(e => e.ID));
-        } 
+        }         
     }
 }

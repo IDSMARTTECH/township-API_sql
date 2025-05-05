@@ -71,7 +71,7 @@ namespace Township_API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllContractors()
         {
-            var Contractors = await _context.ContractorTypes.OrderByDescending(p => p.ID).ToListAsync();
+            var Contractors = await _context.Contractors.OrderByDescending(p => p.ID).ToListAsync();
             return Ok(Contractors);
         }
 
