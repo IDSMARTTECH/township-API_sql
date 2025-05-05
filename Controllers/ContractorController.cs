@@ -71,7 +71,7 @@ namespace Township_API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllContractors()
         {
-            var Contractors = await _context.ContractorTypes.ToListAsync();
+            var Contractors = await _context.ContractorTypes.OrderByDescending(p => p.ID).ToListAsync();
             return Ok(Contractors);
         }
 
@@ -181,7 +181,7 @@ namespace Township_API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllDependentContractors()
         {
-            var DependentContractors = await _context.DependentContractors.ToListAsync();
+            var DependentContractors = await _context.DependentContractors.OrderByDescending(p => p.ID).ToListAsync();
             return Ok(DependentContractors);
         }
 

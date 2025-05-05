@@ -92,7 +92,7 @@ namespace Township_API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllServiceProviders()
         {
-            var ServiceProviders = await _context.ServiceProviders.ToListAsync();
+            var ServiceProviders = await _context.ServiceProviders.OrderByDescending(p => p.ID).ToListAsync();
             return Ok(ServiceProviders);
         }
 

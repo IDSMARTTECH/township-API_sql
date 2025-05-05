@@ -3,6 +3,7 @@ using Township_API.Models;
 using Township_API.Services;
 using Township_API.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 
 namespace Township_API.Controllers
 {
@@ -67,7 +68,7 @@ namespace Township_API.Controllers
         public async Task<IActionResult> GetAll()
         {
             //var users = await _service.GetAllAsync();
-            var users = await _context.UserRegisters.ToListAsync();
+            var users = await _context.UserRegisters.OrderByDescending(p => p.Id).ToListAsync();
             return Ok(users);
         }
 
@@ -110,36 +111,48 @@ namespace Township_API.Controllers
             {
                 foreach (var objID in Obj)
                 {
-                    var existingobj = await _context._userDoorAccess.Where(p => p.CardHolderID == objID.CardHolderID && p.moduleID.ToString() == objID.moduleID.ToString())
-                        .FirstOrDefaultAsync();
+                    DoorAccess? existingobj;
+                    bool isEdit=false;
+                    
+                        existingobj = await _context._userDoorAccess.Where(p => p.CardHolderID == objID.CardHolderID && p.moduleID.ToString() == objID.moduleID.ToString())
+                                 .FirstOrDefaultAsync();
 
-                    if (existingobj != null)
+                    if (existingobj != null) 
+                        isEdit = true;
+                    
+                    if (isEdit == false && objID.id > 0)
                     {
-                        var existingDtls = await _context._userDoorAccess.FindAsync(objID.id);
-                        if (existingDtls == null)
+                         existingobj = await _context._userDoorAccess.FindAsync(objID.id);
+                        if (existingobj == null)
                         {
-                            return NotFound();
+                           return BadRequest(new { message = $"Card Access Details mismatch found" });
                         }
-                        existingDtls.moduleID = objID.moduleID;
-                        existingDtls.CardHolderID = objID.CardHolderID;
-                        existingDtls.sun = objID.sun;
-                        existingDtls.mon = objID.mon;
-                        existingDtls.tus = objID.tus;
-                        existingDtls.wed = objID.wed;
-                        existingDtls.thu = objID.thu;
-                        existingDtls.fri = objID.fri;
-                        existingDtls.sat = objID.sat;
-                        existingDtls.validTillDate = objID.validTillDate;
-                        existingDtls.isactive = objID.isactive;
-                        existingDtls.updatedby = objID.updatedby;
-                        existingDtls.updatedon = objID.updatedon;
-                        await _context.SaveChangesAsync();
+                        isEdit = true;
                     }
-                    else
+                    if (!isEdit)
                     {
                         _context._userDoorAccess.Add(objID);
                         await _context.SaveChangesAsync();
                     }
+                    else
+                    {
+                       if (existingobj != null) { 
+                        existingobj.moduleID = objID.moduleID;
+                        existingobj.CardHolderID = objID.CardHolderID;
+                        existingobj.sun = objID.sun;
+                        existingobj.mon = objID.mon;
+                        existingobj.tue = objID.tue;
+                        existingobj.wed = objID.wed;
+                        existingobj.thu = objID.thu;
+                        existingobj.fri = objID.fri;
+                        existingobj.sat = objID.sat;
+                        existingobj.validTillDate = objID.validTillDate;
+                        existingobj.isactive = objID.isactive;
+                        existingobj.updatedby = objID.updatedby;
+                        existingobj.updatedon = objID.updatedon;
+                        await _context.SaveChangesAsync();
+                        }
+                    } 
                 }
 
                 //   await transaction.CommitAsync();

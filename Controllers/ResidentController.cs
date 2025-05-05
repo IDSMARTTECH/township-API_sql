@@ -111,7 +111,7 @@ namespace Township_API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllResidents()
         {
-            var Residents = await _context.PrimaryResidents.ToListAsync();
+            var Residents = await _context.PrimaryResidents.OrderByDescending(p => p.ID).ToListAsync();
             return Ok(Residents);
         }
 
@@ -311,7 +311,7 @@ namespace Township_API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllDependentResidents()
         {
-            var DependentResidents = await _context.DependentResidents.ToListAsync();
+            var DependentResidents = await _context.DependentResidents.OrderByDescending(p => p.ID).ToListAsync();
             return Ok(DependentResidents);
         }
 

@@ -154,22 +154,22 @@ namespace Township_API.Models
         public int ID { get; set; }
         [Required, MaxLength(100)]
         public string Name { get; set; }
-        [Required, MaxLength(50)]
+        [Required]
         public string Code { get; set; }
-        [Required, MaxLength(50)]
-        public int? TypeID { get; set; } = null;
+        [Required]
+        public int? TypeID { get; set; } = 0;
         public int ParentID { get; set; } = 0;
         public string? ModuleType { get; set; } = null;
         public string? Discriminator { get; set; } = null;
 
         public bool? isactive { get; set; } = false;
-        public int? createdby { get; set; } = null;
+        public int? createdby { get; set; } = 0;
         public DateTime? createdon { get; set; } = null;
-        public int? updatedby { get; set; } = null;
+        public int? updatedby { get; set; } = 0;
         public DateTime? updatedon { get; set; } = null;
 
     }
-
+        
     public abstract class ModuleDataTemplate : ModuleData
     {
         [Key]
@@ -178,7 +178,7 @@ namespace Township_API.Models
         public string Name { get; set; }
         [Required, MaxLength(50)]
         public string Code { get; set; }
-        [Required, MaxLength(50)]
+        [Required]
         public int ParentID { get; set; } = 0;
 
         public int status { get; set; }
@@ -190,7 +190,7 @@ namespace Township_API.Models
 
     public class NRD : ModuleData
     {
-        public List<Building> Buildings { get; set; }
+        //public List<Building> Buildings { get; set; }
     }
     public class Building : ModuleData
     {
@@ -262,7 +262,7 @@ namespace Township_API.Models
         public DateTime validTillDate { get; set; }
         public bool? sun { get; set; }
         public bool? mon { get; set; }
-        public bool? tus { get; set; }
+        public bool? tue { get; set; }
         public bool? wed { get; set; }
         public bool? thu { get; set; }
         public bool? fri { get; set; }
@@ -277,13 +277,14 @@ namespace Township_API.Models
 
     public class UserALLAccess
     {
+        public int? id { get; set; }
         public string? ModuleName { get; set; }
         public int? moduleID { get; set; }
         public string? CardHolderID { get; set; }
         public DateTime? validTillDate { get; set; }
         public string? sun { get; set; }
-        public string? mon { get; set; }
-        public string? tus { get; set; }
+        public string? mon { get; set; }       
+        public string? tue { get; set; }
         public string? wed { get; set; }
         public string? thu { get; set; }
         public string? fri { get; set; }
@@ -301,7 +302,7 @@ namespace Township_API.Models
         public DateTime? validTillDate { get; set; }
         public string? sun { get; set; }
         public string? mon { get; set; }
-        public string? tus { get; set; }
+        public string? tue { get; set; }
         public string? wed { get; set; }
         public string? thu { get; set; }
         public string? fri { get; set; }
@@ -319,7 +320,7 @@ namespace Township_API.Models
         public DateTime? validTillDate { get; set; }
         public string? sun { get; set; }
         public string? mon { get; set; }
-        public string? tus { get; set; }
+        public string? tue { get; set; }
         public string? wed { get; set; }
         public string? thu { get; set; }
         public string? fri { get; set; }
@@ -336,7 +337,7 @@ namespace Township_API.Models
         public DateTime? validTillDate { get; set; }
         public string? sun { get; set; }
         public string? mon { get; set; }
-        public string? tus { get; set; }
+        public string? tue { get; set; }
         public string? wed { get; set; }
         public string? thu { get; set; }
         public string? fri { get; set; }

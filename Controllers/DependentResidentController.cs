@@ -66,9 +66,8 @@ namespace Township_API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllDependentResidents()
         {
-            var DependentResidents = await _context.DependentResidents.ToListAsync();
-            return Ok(DependentResidents);
-        }
-        
+            var DependentResidents = await _context.DependentResidents.OrderByDescending(p => p.ID).ToListAsync();
+            return Ok(DependentResidents.OrderByDescending(e => e.ID));
+        } 
     }
 }

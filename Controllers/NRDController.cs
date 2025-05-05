@@ -76,7 +76,7 @@ namespace Township_API.Controllers
             {
                 int objval = (int)commonTypes.ModuleTypes.NRD;
 
-                var OBJs = await _context.ModuleData.Where(n => n.TypeID == objval && n.ID > objval).ToListAsync();
+                var OBJs = await _context.ModuleData.Where(n => n.TypeID == objval && n.ID > objval).OrderByDescending(p => p.ID).ToListAsync();
 
                 return Ok(OBJs);
             }
@@ -95,7 +95,7 @@ namespace Township_API.Controllers
             {  
                 List<tmpNRD>  nrdlist = new List<tmpNRD>();
                 int objval = (int)commonTypes.ModuleTypes.NRD;
-                var OBJs = await _context.ModuleData.Where(n => n.TypeID == objval && n.ID > objval  ).ToListAsync();
+                var OBJs = await _context.ModuleData.Where(n => n.TypeID == objval && n.ID > objval  ).OrderByDescending(p => p.ID).ToListAsync();
                
                
                 foreach (var NRDItem in OBJs)
@@ -230,7 +230,7 @@ namespace Township_API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllPhases()
         {
-            var Phases = await _context.ModuleData.Where(p => (p.TypeID == (int)commonTypes.ModuleTypes.Phases && p.ID > (int)commonTypes.ModuleTypes.Phases)).ToListAsync();
+            var Phases = await _context.ModuleData.Where(p => (p.TypeID == (int)commonTypes.ModuleTypes.Phases && p.ID > (int)commonTypes.ModuleTypes.Phases)).OrderByDescending(p => p.ID).ToListAsync();
             return Ok(Phases);
         }
 
@@ -337,7 +337,7 @@ namespace Township_API.Controllers
         {
             //var ContractorTypes = await _context.ContractorTypes.ToListAsync();
             int objval = (int)commonTypes.ModuleTypes.ContractorType;
-            var OBJs = await _context.ModuleData.Where(n => n.TypeID == objval && n.ID > objval).ToListAsync();
+            var OBJs = await _context.ModuleData.Where(n => n.TypeID == objval && n.ID > objval).OrderByDescending(p => p.ID).ToListAsync();
             return Ok(OBJs);
         }
 
@@ -447,7 +447,7 @@ namespace Township_API.Controllers
         public async Task<IActionResult> GetAllVehicleMakes()
         {
             int objval = (int)commonTypes.ModuleTypes.VehicleMake;
-            var OBJs = await _context.ModuleData.Where(n => n.TypeID == objval && n.ID > objval).ToListAsync();
+            var OBJs = await _context.ModuleData.Where(n => n.TypeID == objval && n.ID > objval).OrderByDescending(p => p.ID).ToListAsync();
             return Ok(OBJs);
         }
 
@@ -558,7 +558,7 @@ namespace Township_API.Controllers
         public async Task<IActionResult> GetAllReaderLocations()
         {
             int objval = (int)commonTypes.ModuleTypes.ReaderLocations;
-            var OBJs = await _context.ModuleData.Where(n => n.TypeID == objval && n.ID > objval).ToListAsync();
+            var OBJs = await _context.ModuleData.Where(n => n.TypeID == objval && n.ID > objval).OrderByDescending(p => p.ID).ToListAsync();
             return Ok(OBJs);
         }
 
@@ -667,7 +667,7 @@ namespace Township_API.Controllers
         public async Task<IActionResult> GetAllReaderRelays()
         {
             int objval = (int)commonTypes.ModuleTypes.ReaderRelays;
-            var OBJs = await _context.ModuleData.Where(n => n.TypeID == objval && n.ID > objval).ToListAsync();
+            var OBJs = await _context.ModuleData.Where(n => n.TypeID == objval && n.ID > objval).OrderByDescending(p => p.ID).ToListAsync();
             return Ok(OBJs);
         }
 
@@ -774,7 +774,7 @@ namespace Township_API.Controllers
         public async Task<IActionResult> GetAllServiceTypes()
         {
             int objval = (int)commonTypes.ModuleTypes.ServiceType;
-            var OBJs = await _context.ModuleData.Where(n => n.TypeID == objval && n.ID > objval).ToListAsync();
+            var OBJs = await _context.ModuleData.Where(n => n.TypeID == objval && n.ID > objval).OrderByDescending(p => p.ID).ToListAsync();
             return Ok(OBJs);
         }
 
@@ -882,7 +882,7 @@ namespace Township_API.Controllers
         public async Task<IActionResult> GetAllBuildings()
         {
             int objval = (int)commonTypes.ModuleTypes.Building;
-            var OBJs = await _context.ModuleData.Where(n => n.TypeID == objval && n.ID > objval).ToListAsync();
+            var OBJs = await _context.ModuleData.Where(n => n.TypeID == objval && n.ID > objval).OrderByDescending(p => p.ID).ToListAsync();
 
             return Ok(OBJs);
         }
@@ -939,7 +939,7 @@ namespace Township_API.Controllers
 
         public AmenitiesController(AppDBContext context)
         {
-            _context = context;
+            _context = context; 
         }
 
 
@@ -999,7 +999,7 @@ namespace Township_API.Controllers
         public async Task<IActionResult> GetAllAmenities()
         {
             int objval = (int)commonTypes.ModuleTypes.Amenities;
-            var OBJs = await _context.ModuleData.Where(n => n.TypeID == objval && n.ID > objval).ToListAsync();
+            var OBJs = await _context.ModuleData.Where(n => n.TypeID == objval && n.ID > objval).OrderByDescending(p => p.ID).ToListAsync();
             return Ok(OBJs);
         }
 
@@ -1133,8 +1133,8 @@ namespace Township_API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllVehicles()
         {
-            var Vehicles = await _context.Vehicles.ToListAsync();
-            return Ok(Vehicles);
+            var Vehicles = await _context.Vehicles.OrderByDescending(p => p.ID).ToListAsync();
+            return Ok(Vehicles); 
         }
 
         [HttpPost("bulkSaveVehicles")]
@@ -1146,7 +1146,6 @@ namespace Township_API.Controllers
             using var transaction = await _context.Database.BeginTransactionAsync();
             // Turn IDENTITY_INSERT ON
             _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblVehicle ON");
-
 
             try
             {

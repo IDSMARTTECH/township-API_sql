@@ -112,7 +112,7 @@ namespace Township_API.Controllers
         {
             try
             { 
-                var Landowners = await _context.Landowners.ToListAsync();
+                var Landowners = await _context.Landowners.OrderByDescending(p=>p.ID).ToListAsync();
                 return Ok(Landowners);
             }
             catch (Exception ex)
@@ -312,7 +312,7 @@ namespace Township_API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllDependentLandowners()
         {
-            var DependentLandOwners = await _context.DependentLandowners.ToListAsync();
+            var DependentLandOwners = await _context.DependentLandowners.OrderByDescending(p => p.ID).ToListAsync();
             return Ok(DependentLandOwners);
         }
 

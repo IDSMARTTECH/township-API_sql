@@ -114,7 +114,7 @@ namespace Township_API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllTenents()
         {
-            var Tenents = await _context.PrimaryTenents.ToListAsync();
+            var Tenents = await _context.PrimaryTenents.OrderByDescending(p => p.ID).ToListAsync();
             return Ok(Tenents);
         }
 
@@ -341,7 +341,7 @@ namespace Township_API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllDependentTenents()
         {
-            var DependentTenents = await _context.DependentTenents.ToListAsync();
+            var DependentTenents = await _context.DependentTenents.OrderByDescending(p => p.ID).ToListAsync();
             return Ok(DependentTenents);
         }
 
