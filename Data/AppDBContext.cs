@@ -33,6 +33,8 @@ namespace Township_API.Data
         public DbSet<DependentContractor>DependentContractors { get; set; }
 
         public DbSet<Service_Provider> ServiceProviders { get; set; }
+        public DbSet<Employee> Employees { get; set; }
+        
         public DbSet<ModuleData> ModuleDatas { get; set; }
 
          

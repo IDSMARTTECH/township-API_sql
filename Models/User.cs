@@ -1,4 +1,5 @@
 ﻿
+using Microsoft.AspNetCore.Http.HttpResults;
 using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -207,12 +208,37 @@ namespace Township_API.Models
     public class ReaderMode : ModuleData { }
     public class ReaderLocations : ModuleData { }
 
+    [Table("tblEmployee")]
+    public class Employee
+    {      
+        [Key]
+        public int ID { get; set; }
+        [Required]
+        [MaxLength(50)]
+        public string? code { get; set; }
+        [Required]
+        [MaxLength(100)] 
+        public string name { get; set; }
+        public string? phone { get; set; } 
+        public string? email { get; set; }
+        [MaxLength(25)]
+        public string? cardCSN { get; set; }
+        public int? siteid { get; set; }
+        public string? role { get; set; }
+        public bool? isactive { get; set; } = false;
+        public int? createdby { get; set; } = 0;
+        public DateTime? createdon { get; set; } = null;
+        public int? updatedby { get; set; } = 0;
+        public DateTime? updatedon { get; set; } = null;
 
+    }
     [Table("tblServiceProvider")]
     public class Service_Provider
-    {
-        public int ID { get; set; }
+    {    public int ID { get; set; }
+        [MaxLength(50)] 
         public string? code { get; set; }
+        [Required]
+        [MaxLength(100)] 
         public string? name { get; set; }
         public string? email { get; set; }
         public string? phone { get; set; }

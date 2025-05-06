@@ -28,8 +28,8 @@
             DependentTenent=6,
             ServiceProvider=7,
             contractor=8,
-            Guest = 9
-
+            Guest = 9, 
+            Employee = 11
         };
     }
     public class profileRegister

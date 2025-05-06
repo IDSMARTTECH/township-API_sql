@@ -13,48 +13,47 @@ namespace Township_API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ServiceProviderController : Controller
+    public class EmployeeController : Controller
     {
         private readonly AppDBContext _context;
-        public ServiceProviderController(AppDBContext context)
+        public EmployeeController(AppDBContext context)
         {
             _context = context;
         }
 
         // PUT: api/products/5
-        [HttpPost("{UpdateServiceProvider}/{id}")]
-        public async Task<IActionResult> UpdateServiceProvider(int id, [FromBody] Service_Provider updatedServiceProvider)
+        [HttpPost("{UpdateEmployee}/{id}")]
+        public async Task<IActionResult> UpdateEmployee(int id, [FromBody] Employee updatedEmployee)
         {
             try
             {
-                if (id != updatedServiceProvider.ID)
+                if (id != updatedEmployee.ID)
                 {
-                    return BadRequest("ServiceProvider ID mismatch.");
+                    return BadRequest("Employee ID mismatch.");
                 }
 
-                //var existingServiceProvider = await _service.UpdateServiceProviderAsync(updatedServiceProvider.ID, updatedServiceProvider);
-                var existingServiceProvider = await _context.ServiceProviders.FindAsync(updatedServiceProvider.ID);
+                //var existingEmployee = await _service.UpdateEmployeeAsync(updatedEmployee.ID, updatedEmployee);
+                var existingEmployee = await _context.Employees.FindAsync(updatedEmployee.ID);
 
-                if (existingServiceProvider == null)
+                if (existingEmployee == null)
                 {
                     return NotFound();
                 }
-                existingServiceProvider.ID = updatedServiceProvider.ID;
-                existingServiceProvider.code = updatedServiceProvider.code;
-                existingServiceProvider.name = updatedServiceProvider.name;
-                existingServiceProvider.email = updatedServiceProvider.email;
-                existingServiceProvider.phone = updatedServiceProvider.phone;
-                existingServiceProvider.ServiceProviderID = updatedServiceProvider.ServiceProviderID;
-                existingServiceProvider.role = updatedServiceProvider.role;
-                existingServiceProvider.isactive = updatedServiceProvider.isactive;
-                existingServiceProvider.createdby = updatedServiceProvider.createdby;
-                existingServiceProvider.createdon = updatedServiceProvider.createdon;
-                existingServiceProvider.updatedby = updatedServiceProvider.updatedby;
-                existingServiceProvider.updatedon = updatedServiceProvider.updatedon;
-                _context.Entry(existingServiceProvider).State = EntityState.Modified;
+                existingEmployee.ID = updatedEmployee.ID;
+                existingEmployee.code = updatedEmployee.code;
+                existingEmployee.name = updatedEmployee.name;
+                existingEmployee.email = updatedEmployee.email;
+                existingEmployee.phone = updatedEmployee.phone; 
+                existingEmployee.role = updatedEmployee.role;
+                existingEmployee.isactive = updatedEmployee.isactive;
+                existingEmployee.createdby = updatedEmployee.createdby;
+                existingEmployee.createdon = updatedEmployee.createdon;
+                existingEmployee.updatedby = updatedEmployee.updatedby;
+                existingEmployee.updatedon = updatedEmployee.updatedon;
+                _context.Entry(existingEmployee).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
 
-                return Ok(existingServiceProvider);
+                return Ok(existingEmployee);
             }
             catch (Exception ex)
             {
@@ -63,23 +62,23 @@ namespace Township_API.Controllers
         }
 
 
-        [HttpPost("AddServiceProvider")]
-        public async Task<IActionResult> AddServiceProvider([FromBody] Service_Provider obj)
+        [HttpPost("AddEmployee")]
+        public async Task<IActionResult> AddEmployee([FromBody] Employee obj)
         {
             try
             {
-                var existingServiceProvider = await _context.ServiceProviders.FindAsync(0);
-                if (existingServiceProvider != null)
+                var existingEmployee = await _context.Employees.FindAsync(0);
+                if (existingEmployee != null)
                 {
-                    return BadRequest("ServiceProvider Exists.");
+                    return BadRequest("Employee Exists.");
                 }
                 _context.Add(obj);
                 await _context.SaveChangesAsync();
-                int number = (int)AccessCardHilders.ServiceProvider;
-                obj.code = number.ToString() + obj.ID.ToString("D10");
+                int number = (int)AccessCardHilders.Employee;
+                obj.code = number.ToString() + obj.ID.ToString("D9");
 
                 await _context.SaveChangesAsync();
-                return Ok(existingServiceProvider);
+                return Ok(existingEmployee);
             }
             catch (Exception ex)
             {
@@ -90,10 +89,10 @@ namespace Township_API.Controllers
 
         // GET: api/products 
         [HttpGet]
-        public async Task<IActionResult> GetAllServiceProviders()
+        public async Task<IActionResult> GetAllEmployees()
         {
-            var ServiceProviders = await _context.ServiceProviders.OrderByDescending(p => p.ID).ToListAsync();
-            return Ok(ServiceProviders);
+            var Employees = await _context.Employees.OrderByDescending(p => p.ID).ToListAsync();
+            return Ok(Employees);
         }
 
         // GET: api/products 
@@ -128,37 +127,37 @@ namespace Township_API.Controllers
         }
 
 
-        [HttpPost("AddServiceProviders")]
-        public async Task<IActionResult> AddServiceProviders([FromBody] List<Service_Provider> Obj)
+        [HttpPost("AddEmployees")]
+        public async Task<IActionResult> AddEmployees([FromBody] List<Employee> Obj)
         {
             if (Obj == null || !Obj.Any())
                 return BadRequest("No Data provided");
 
             using var transaction = await _context.Database.BeginTransactionAsync();
             // Turn IDENTITY_INSERT ON
-            _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblServiceProvider ON");
+            _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblEmployee ON");
 
             try
             {
                 foreach (var objID in Obj)
                 {
-                    var existingobj = await _context.ServiceProviders
+                    var existingobj = await _context.Employees
                         .FirstOrDefaultAsync(p => p.ID == objID.ID);
 
                     if (existingobj != null)
                     {
-                        //  var existingServiceProvider = await _service.UpdateServiceProviderAsync(objID.ID, existingobj);
-                        var existingServiceProvider = await _context.ServiceProviders.FindAsync(0);
-                        if (existingServiceProvider == null)
+                        //  var existingEmployee = await _service.UpdateEmployeeAsync(objID.ID, existingobj);
+                        var existingEmployee = await _context.Employees.FindAsync(0);
+                        if (existingEmployee == null)
                         {
                             return NotFound();
                         }
                     }
                     else
                     {
-                        _context.ServiceProviders.Add(objID);
+                        _context.Employees.Add(objID);
                         await _context.SaveChangesAsync();
-                        int number = (int)AccessCardHilders.ServiceProvider;
+                        int number = (int)AccessCardHilders.Employee;
                         objID.code = number.ToString() + objID.ID.ToString("D10");
                         await _context.SaveChangesAsync();
                     }
@@ -167,9 +166,9 @@ namespace Township_API.Controllers
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
                 // Turn IDENTITY_INSERT OFF
-                _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblServiceProvider  OFF");
+                _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblEmployee  OFF");
 
-                return Ok(new { message = $"{Obj.Count} ServiceProvider processed successfully" });
+                return Ok(new { message = $"{Obj.Count} Employee processed successfully" });
             }
             catch (Exception ex)
             {
