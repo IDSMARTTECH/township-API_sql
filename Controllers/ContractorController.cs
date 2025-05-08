@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Township_API.Models; 
+using Township_API.Models;
 using Township_API.Data;
 using Microsoft.EntityFrameworkCore;
 using Township_API.Services;
+using static Township_API.Models.commonTypes;
 
 namespace Township_API.Controllers
 {
@@ -10,16 +11,16 @@ namespace Township_API.Controllers
     [ApiController]
     public class ContractorController : Controller
     {
-        private readonly AppDBContext _context; 
-        public ContractorController(AppDBContext context )
+        private readonly AppDBContext _context;
+        public ContractorController(AppDBContext context)
         {
-            _context = context;  
+            _context = context;
         }
-         
+
 
         // PUT: api/products/5
         [HttpPost("{UpdateContractor}/{id}")]
-        public async Task<IActionResult> UpdateContractor(int id, [FromBody]  Contractor updatedContractor)
+        public async Task<IActionResult> UpdateContractor(int id, [FromBody] Contractor updatedContractor)
         {
             if (id != updatedContractor.ID)
             {
@@ -27,18 +28,38 @@ namespace Township_API.Controllers
             }
 
             //var existingContractor = await _service.UpdateDependentLandownerAsync(updatedContractor.ID, updatedContractor);
-            var existingContractor = await _context.ModuleData.FindAsync(updatedContractor.ID); 
+            var existingContractor = await _context.Contractors.FindAsync(updatedContractor.ID);
             if (existingContractor == null)
             {
                 return NotFound();
             }
-
+            existingContractor.CSN = updatedContractor.CSN;
+            existingContractor.IDNumber = updatedContractor.IDNumber;
+            existingContractor.TagNumber = updatedContractor.TagNumber;
+            existingContractor.PANnumber = updatedContractor.PANnumber;
+            existingContractor.PassportNo = updatedContractor.PassportNo;
+            existingContractor.LicenseNo = updatedContractor.LicenseNo;
+            existingContractor.ICEno = updatedContractor.ICEno;
+            existingContractor.AadharCardId = updatedContractor.AadharCardId;
+            existingContractor.VoterID = updatedContractor.VoterID;
+            existingContractor.FirstName = updatedContractor.FirstName;
+            existingContractor.MiddletName = updatedContractor.MiddletName;
+            existingContractor.LastName = updatedContractor.LastName;
+            existingContractor.ShortName = updatedContractor.ShortName;
+            existingContractor.Gender = updatedContractor.Gender;
+            existingContractor.BloodGroup = updatedContractor.BloodGroup;
+            existingContractor.DOB = updatedContractor.DOB;
+            existingContractor.EmailID = updatedContractor.EmailID;
+            existingContractor.MobileNo = updatedContractor.MobileNo;
+            existingContractor.LandLine = updatedContractor.LandLine;
+            existingContractor.CardIssueDate = updatedContractor.CardIssueDate;
+            existingContractor.CardPrintingDate = updatedContractor.CardPrintingDate;
+            existingContractor.RegistrationIssueDate = updatedContractor.RegistrationIssueDate;
+            existingContractor.LogicalDeleted = updatedContractor.LogicalDeleted;
             _context.Entry(existingContractor).State = EntityState.Modified;
             await _context.SaveChangesAsync();
-
             return Ok(existingContractor);
         }
-
 
         [HttpPost("AddContractor")]
         public async Task<IActionResult> AddContractor([FromBody] Contractor obj)
@@ -60,6 +81,11 @@ namespace Township_API.Controllers
             {
                 return BadRequest("Contractor Exists.");
             }
+
+            await _context.SaveChangesAsync();
+            int number = (int)AccessCardHilders.contractor;
+            obj.IDNumber = number.ToString() + obj.ID.ToString("D10");
+
             _context.Add(obj);
             await _context.SaveChangesAsync();
 
@@ -109,14 +135,39 @@ namespace Township_API.Controllers
                         {
                             return NotFound();
                         }
+                        existingContractor.CSN = objID.CSN;
+                        existingContractor.IDNumber = objID.IDNumber;
+                        existingContractor.TagNumber = objID.TagNumber;
+                        existingContractor.PANnumber = objID.PANnumber;
+                        existingContractor.PassportNo = objID.PassportNo;
+                        existingContractor.LicenseNo = objID.LicenseNo;
+                        existingContractor.ICEno = objID.ICEno;
+                        existingContractor.AadharCardId = objID.AadharCardId;
+                        existingContractor.VoterID = objID.VoterID;
+                        existingContractor.FirstName = objID.FirstName;
+                        existingContractor.MiddletName = objID.MiddletName;
+                        existingContractor.LastName = objID.LastName;
+                        existingContractor.ShortName = objID.ShortName;
+                        existingContractor.Gender = objID.Gender;
+                        existingContractor.BloodGroup = objID.BloodGroup;
+                        existingContractor.DOB = objID.DOB;
+                        existingContractor.EmailID = objID.EmailID;
+                        existingContractor.MobileNo = objID.MobileNo;
+                        existingContractor.LandLine = objID.LandLine;
+                        existingContractor.CardIssueDate = objID.CardIssueDate;
+                        existingContractor.CardPrintingDate = objID.CardPrintingDate;
+                        existingContractor.RegistrationIssueDate = objID.RegistrationIssueDate;
+                        existingContractor.LogicalDeleted = objID.LogicalDeleted;
+                        _context.Entry(existingContractor).State = EntityState.Modified;
+                        await _context.SaveChangesAsync();
                     }
                     else
                     {
                         _context.Contractors.Add(objID);
+                        await _context.SaveChangesAsync();
                     }
                 }
 
-                await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
                 // Turn IDENTITY_INSERT OFF
                 _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Contractor  OFF");
@@ -129,7 +180,7 @@ namespace Township_API.Controllers
                 return StatusCode(500, new { error = ex.Message });
             }
         }
-         
+
 
     }
 
@@ -239,7 +290,7 @@ namespace Township_API.Controllers
             }
         }
 
-        
+
     }
 
 }

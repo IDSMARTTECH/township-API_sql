@@ -111,32 +111,41 @@ namespace Township_API.Controllers
             {
                 foreach (var objID in Obj)
                 {
-                    DoorAccess? existingobj;
+                    DoorAccess? existingobj=new DoorAccess();
                     bool isEdit=false;
-                    
-                        existingobj = await _context._userDoorAccess.Where(p => p.CardHolderID == objID.CardHolderID && p.moduleID.ToString() == objID.moduleID.ToString())
-                                 .FirstOrDefaultAsync();
-
-                    if (existingobj != null) 
-                        isEdit = true;
-                    
-                    if (isEdit == false && objID.id > 0)
+                    if (objID.id != 0)
                     {
-                         existingobj = await _context._userDoorAccess.FindAsync(objID.id);
+                        var obj = await _context._userDoorAccess.Where (p=>p.id.ToString()==objID.id.ToString()).FirstOrDefaultAsync();
                         if (existingobj == null)
                         {
-                           return BadRequest(new { message = $"Card Access Details mismatch found" });
+                            return BadRequest(new { message = $"Card Access Details mismatch found" });
                         }
-                        isEdit = true;
                     }
+                    else
+                    {
+                        existingobj = await _context._userDoorAccess.Where(p => p.CardHolderID == objID.CardHolderID && p.moduleID.ToString() == objID.moduleID.ToString())
+                                     .FirstOrDefaultAsync();
+
+                        if (existingobj != null)
+                            isEdit = true;
+                    }
+                   
                     if (!isEdit)
                     {
+                        // Turn IDENTITY_INSERT ON
+                        _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblDoorAccess ON");
+
                         _context._userDoorAccess.Add(objID);
                         await _context.SaveChangesAsync();
+
+                        // Turn IDENTITY_INSERT OFF
+                        _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblDoorAccess OFF");
+
                     }
                     else
                     {
                        if (existingobj != null) { 
+
                         existingobj.moduleID = objID.moduleID;
                         existingobj.CardHolderID = objID.CardHolderID;
                         existingobj.sun = objID.sun;
@@ -148,7 +157,8 @@ namespace Township_API.Controllers
                         existingobj.sat = objID.sat;
                         existingobj.validTillDate = objID.validTillDate;
                         existingobj.isactive = objID.isactive;
-                        existingobj.updatedby = objID.updatedby;
+                            existingobj. isdeleted = objID.isdeleted;
+                            existingobj.updatedby = objID.updatedby;
                         existingobj.updatedon = objID.updatedon;
                         await _context.SaveChangesAsync();
                         }

@@ -154,7 +154,7 @@ namespace Township_API.Models
         [Key]
         public int ID { get; set; }
         [Required, MaxLength(100)]
-        public string Name { get; set; }
+        public string? Name { get; set; }
         [Required]
         public string Code { get; set; }
         [Required]
@@ -294,7 +294,7 @@ namespace Township_API.Models
         public bool? fri { get; set; }
         public bool? sat { get; set; }
         public bool? isactive { get; set; }=true;
-        public bool? isdeleted { get; set; } = false;
+        public bool? isdeleted { get; set; } =false;
         public int? createdby { get; set; }
         public DateTime? createdon { get; set; }
         public int? updatedby { get; set; }
