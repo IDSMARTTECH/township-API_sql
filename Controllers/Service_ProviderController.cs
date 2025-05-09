@@ -134,8 +134,6 @@ namespace Township_API.Controllers
                 return BadRequest("No Data provided");
 
             using var transaction = await _context.Database.BeginTransactionAsync();
-            // Turn IDENTITY_INSERT ON
-            _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblServiceProvider ON");
 
             try
             {
@@ -155,7 +153,11 @@ namespace Township_API.Controllers
                     }
                     else
                     {
+                        // Turn IDENTITY_INSERT ON
+                        _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblServiceProvider ON");
                         _context.ServiceProviders.Add(objID);
+                        // Turn IDENTITY_INSERT OFF
+                        _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblServiceProvider  OFF");
                         await _context.SaveChangesAsync();
                         int number = (int)AccessCardHilders.ServiceProvider;
                         objID.code = number.ToString() + objID.ID.ToString("D10");
@@ -165,8 +167,6 @@ namespace Township_API.Controllers
 
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
-                // Turn IDENTITY_INSERT OFF
-                _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblServiceProvider  OFF");
 
                 return Ok(new { message = $"{Obj.Count} ServiceProvider processed successfully" });
             }

@@ -94,11 +94,10 @@ namespace Township_API.Controllers
             }
             // Turn IDENTITY_INSERT ON
             _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT PrimaryResident ON");
-
             _context.Add(obj);
-            await _context.SaveChangesAsync();
             // Turn IDENTITY_INSERT OFF
             _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT PrimaryResident OFF");
+            await _context.SaveChangesAsync();
 
             int number = (int)AccessCardHilders.Resident;
             obj.IDNumber = number.ToString() + obj.ID.ToString("D10");
@@ -198,15 +197,14 @@ namespace Township_API.Controllers
                     {
                         // Turn IDENTITY_INSERT ON
                         _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT PrimaryResident ON");
-
                         _context.PrimaryResidents.Add(objID);
+                        // Turn IDENTITY_INSERT OFF
+                        _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT PrimaryResident  OFF");
                         await _context.SaveChangesAsync();
 
                         int number = (int)AccessCardHilders.Resident;
                         objID.IDNumber = number.ToString() + objID.ID.ToString("D10");
                         await _context.SaveChangesAsync();
-                        // Turn IDENTITY_INSERT OFF
-                        _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT PrimaryResident  OFF");
 
                     }
                 }
@@ -294,11 +292,11 @@ namespace Township_API.Controllers
             }
 
             // Turn IDENTITY_INSERT OFF
-            _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT DependentResident  OFF");
+            _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT DependentResident  ON");
             _context.Add(obj);
-            await _context.SaveChangesAsync(); 
             // Turn IDENTITY_INSERT OFF
             _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT DependentResident  OFF");
+            await _context.SaveChangesAsync(); 
 
             int number = (int)AccessCardHilders.DependentResident;
             obj.IDNumber = number.ToString() + obj.ID.ToString("D10");
@@ -323,8 +321,6 @@ namespace Township_API.Controllers
                 return BadRequest("No Data provided");
 
             using var transaction = await _context.Database.BeginTransactionAsync();
-            // Turn IDENTITY_INSERT ON
-            _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT DependentResident ON");
 
             try
             {
@@ -373,7 +369,11 @@ namespace Township_API.Controllers
                     }
                     else
                     {
-                        _context.DependentResidents.Add(objID); 
+                        // Turn IDENTITY_INSERT ON
+                        _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT DependentResident ON");
+                        _context.DependentResidents.Add(objID);
+                        // Turn IDENTITY_INSERT OFF
+                        _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT DependentResident  OFF");
                         await _context.SaveChangesAsync();
 
                         int number = (int)AccessCardHilders.DependentResident;
@@ -383,8 +383,6 @@ namespace Township_API.Controllers
                 }
 
                 await transaction.CommitAsync();
-                // Turn IDENTITY_INSERT OFF
-                _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT DependentResident  OFF");
 
                 return Ok(new { message = $"{Obj.Count} DependentResident processed successfully" });
             }

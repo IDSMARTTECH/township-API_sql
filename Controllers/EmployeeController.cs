@@ -78,7 +78,7 @@ namespace Township_API.Controllers
                 obj.code = number.ToString() + obj.ID.ToString("D9");
 
                 await _context.SaveChangesAsync();
-                return Ok(existingEmployee);
+                return Ok(new { message = $"{obj.ID} Employee Added successfully" });
             }
             catch (Exception ex)
             {
@@ -96,7 +96,7 @@ namespace Township_API.Controllers
         }
 
         // GET: api/products 
-        [HttpGet("{ID}")]
+        [HttpGet("GetContractorDetails/{ID}")]
         public async Task<IActionResult> GetContractorDetails(int ID)
         {
             var Contractors = await _context.Contractors.Where(p => p.ID == ID).ToListAsync();
@@ -134,9 +134,7 @@ namespace Township_API.Controllers
                 return BadRequest("No Data provided");
 
             using var transaction = await _context.Database.BeginTransactionAsync();
-            // Turn IDENTITY_INSERT ON
-            _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblEmployee ON");
-
+            
             try
             {
                 foreach (var objID in Obj)
@@ -154,19 +152,18 @@ namespace Township_API.Controllers
                         }
                     }
                     else
-                    {
+                    { 
+                        _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblEmployee ON");
                         _context.Employees.Add(objID);
+                        _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblEmployee  OFF");
                         await _context.SaveChangesAsync();
                         int number = (int)AccessCardHilders.Employee;
                         objID.code = number.ToString() + objID.ID.ToString("D10");
                         await _context.SaveChangesAsync();
                     }
                 }
-
                 await _context.SaveChangesAsync();
-                await transaction.CommitAsync();
-                // Turn IDENTITY_INSERT OFF
-                _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblEmployee  OFF");
+                await transaction.CommitAsync(); 
 
                 return Ok(new { message = $"{Obj.Count} Employee processed successfully" });
             }

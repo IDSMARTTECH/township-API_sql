@@ -52,7 +52,7 @@ namespace Township_API.Models
     }
 
     // Profile
-    [Table("[tblProfile]")]
+    [Table("tblProfile")]
     public class Profile
     {
         // [ID],[profilename]     ,[uid]      ,[isactive]      ,[isdeleted]      ,[createdby]      ,[createdon]      ,[updatedby]      ,[updatedon]
@@ -65,7 +65,6 @@ namespace Township_API.Models
         [ForeignKey("User")]
         public int uid { get; set; }
 
-        public User? user { get; set; }
         public bool? isactive { get; set; } = false;
         public bool? isdeleted { get; set; } = false;
         public int? createdby { get; set; }
@@ -73,10 +72,12 @@ namespace Township_API.Models
         public int? updatedby { get; set; }
         public DateTime? updatedon { get; set; } = null;
 
+        public User? user { get; set; }
+
     }
 
     //ProfileDetails tblProfileDetails
-    [Table("[tblProfileDetails]")]
+    [Table("tblProfileDetails")]
     public class ProfileDetails
     {
         [Key]
@@ -127,7 +128,7 @@ namespace Township_API.Models
     //    public int? updatedby { get; set; }
     //    public DateTime? updatedon { get; set; } = null;
     //}
-    [Table("[tblModules]")]
+    [Table("tblModules")]
     public class Module
     {
         [Key]
@@ -137,7 +138,7 @@ namespace Township_API.Models
         public string? ModuleName { get; set; }
     }
 
-    [Table("[tblRole]")]
+    [Table("tblRole")]
     public class Role
     {
         [Key]
@@ -282,7 +283,7 @@ namespace Township_API.Models
         [Key]
         public int id { get; set; }
         [Required]
-        public int moduleID { get; set; }
+        public string moduleID { get; set; }
         [Required] 
         public string CardHolderID { get; set; }
         public DateTime validTillDate { get; set; }
@@ -305,7 +306,7 @@ namespace Township_API.Models
     {
         public int? id { get; set; }
         public string? ModuleName { get; set; }
-        public int? moduleID { get; set; }
+        public string? moduleID { get; set; }
         public string? CardHolderID { get; set; }
         public DateTime? validTillDate { get; set; }
         public string? sun { get; set; }

@@ -325,8 +325,6 @@ namespace Township_API.Controllers
             using var transaction = await _context.Database.BeginTransactionAsync();
             try
             {
-                // Turn IDENTITY_INSERT ON
-                _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT DependentLandowner ON");
 
                 foreach (var objID in Obj)
                 {
@@ -369,7 +367,11 @@ namespace Township_API.Controllers
                     }
                     else
                     {
+                        // Turn IDENTITY_INSERT ON
+                        _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT DependentLandowner ON"); 
                         _context.DependentLandowners.Add(objID);
+                        // Turn IDENTITY_INSERT OFF
+                        _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT DependentLandowner OFF");
                         await _context.SaveChangesAsync();
 
                         int number = (int)AccessCardHilders.DependentLandowner;
@@ -378,8 +380,6 @@ namespace Township_API.Controllers
                     }
                 }
 
-                // Turn IDENTITY_INSERT OFF
-                _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT DependentLandowner OFF");
 
                 await transaction.CommitAsync();
 

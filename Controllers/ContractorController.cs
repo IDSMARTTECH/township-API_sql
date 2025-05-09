@@ -108,6 +108,20 @@ namespace Township_API.Controllers
             }
         }
 
+        [HttpGet("GetContractor/{id}")]
+        public async Task<IActionResult> GetContractor(int id)
+        {
+            try
+            {
+                var Contractors = await _context.Contractors.Where(p=>p.ID==id) .OrderByDescending(p => p.ID).ToListAsync();
+                return Ok(Contractors);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Error :" + ex.Message.ToString());
+            }
+        }
+
         [HttpPost("{AddContractors}")]
         public async Task<IActionResult> AddContractors([FromBody] List<Contractor> Obj)
         {
@@ -116,9 +130,7 @@ namespace Township_API.Controllers
 
             using var transaction = await _context.Database.BeginTransactionAsync();
 
-            // Turn IDENTITY_INSERT ON
-            _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Contractor ON");
-
+           
 
             try
             {
@@ -163,14 +175,15 @@ namespace Township_API.Controllers
                     }
                     else
                     {
-                        _context.Contractors.Add(objID);
+                        // Turn IDENTITY_INSERT OFF
+                        _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Contractor  ON");
+                        _context.Contractors.Add(objID); // Turn IDENTITY_INSERT ON
+                        _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Contractor OFF");
+
                         await _context.SaveChangesAsync();
                     }
                 }
-
                 await transaction.CommitAsync();
-                // Turn IDENTITY_INSERT OFF
-                _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Contractor  OFF");
 
                 return Ok(new { message = $"{Obj.Count} Contractor processed successfully" });
             }
@@ -251,8 +264,6 @@ namespace Township_API.Controllers
                 return BadRequest("No Data provided");
 
             using var transaction = await _context.Database.BeginTransactionAsync();
-            // Turn IDENTITY_INSERT ON
-            _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT DependentContractor ON");
 
             try
             {
@@ -271,15 +282,15 @@ namespace Township_API.Controllers
                         }
                     }
                     else
-                    {
-                        _context.DependentContractors.Add(objID);
+                    { 
+                        _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT DependentContractor ON");
+                        _context.DependentContractors.Add(objID); 
+                        _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT DependentContractor  OFF");
                     }
                 }
 
                 await _context.SaveChangesAsync();
                 await transaction.CommitAsync();
-                // Turn IDENTITY_INSERT OFF
-                _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT DependentContractor  OFF");
 
                 return Ok(new { message = $"{Obj.Count} DependentContractor processed successfully" });
             }

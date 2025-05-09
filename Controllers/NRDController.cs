@@ -81,9 +81,10 @@ namespace Township_API.Controllers
                 // Turn IDENTITY_INSERT ON
                 _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblModuleData ON");
                 _context.Add(obj);
-                await _context.SaveChangesAsync();
+
                 // Turn IDENTITY_INSERT ON
                 _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblModuleData OFF");
+                await _context.SaveChangesAsync();
 
                 return Ok(new { message = $"NRD processed successfully" });
             }
@@ -112,7 +113,25 @@ namespace Township_API.Controllers
                 throw;
             }
         }
+        
+        [HttpGet("GetNRD/{ID}")]
+        public async Task<IActionResult> GetNRD(int id)
+        {
+            try
+            {
+                int objval = (int)commonTypes.ModuleTypes.NRD;
 
+                var OBJs = await _context.ModuleData.Where(n => n.TypeID == objval && n.ID > objval && n.ID==id).OrderByDescending(p => p.ID).ToListAsync();
+
+                return Ok(OBJs);
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+         
 
         [HttpGet("NRDBuildingDetails")]
         public async Task<IActionResult> GetAllNRDData()
@@ -182,12 +201,10 @@ namespace Township_API.Controllers
                         // Turn IDENTITY_INSERT ON
                         _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblModuleData ON");
                         _context.ModuleData.Add(updatedObj);
-
-                        await _context.SaveChangesAsync();
                         //  await transaction.CommitAsync();
                         // Turn IDENTITY_INSERT ON
                         _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblModuleData OFF");
-
+                        await _context.SaveChangesAsync();
                     }
                 }
 
@@ -202,8 +219,6 @@ namespace Township_API.Controllers
         }
 
     }
-
-
 
     [Route("api/[controller]")]
     [ApiController]
@@ -280,8 +295,8 @@ namespace Township_API.Controllers
 
                 _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblModuleData ON");
                 _context.Add(obj);
-                await _context.SaveChangesAsync();
                 _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblModuleData OFF");
+                await _context.SaveChangesAsync();
 
                 return Ok(new { message = $"{obj.ID} Phase processed successfully" });
             }
@@ -298,6 +313,14 @@ namespace Township_API.Controllers
         public async Task<IActionResult> GetAllPhases()
         {
             var Phases = await _context.ModuleData.Where(p => (p.TypeID == (int)commonTypes.ModuleTypes.Phases && p.ID > (int)commonTypes.ModuleTypes.Phases)).OrderByDescending(p => p.ID).ToListAsync();
+            return Ok(Phases);
+        }
+
+        // GET: api/products 
+        [HttpGet("GetPhase/{id}")]
+        public async Task<IActionResult> GetPhase(int id)
+        {
+            var Phases = await _context.ModuleData.Where(p => (p.TypeID == (int)commonTypes.ModuleTypes.Phases && p.ID==id && p.ID > (int)commonTypes.ModuleTypes.Phases)).OrderByDescending(p => p.ID).ToListAsync();
             return Ok(Phases);
         }
 
@@ -328,8 +351,8 @@ namespace Township_API.Controllers
                     {
                         _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblModuleData ON");
                         _context.ModuleData.Add(updatedObj);
-                        await _context.SaveChangesAsync();
                         _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblModuleData OFF");
+                        await _context.SaveChangesAsync();
                     }
                 } 
                 return Ok(new { message = $"{Obj.Count} Phase(s) processed successfully" });
@@ -417,9 +440,9 @@ namespace Township_API.Controllers
                 // Turn IDENTITY_INSERT ON
                 _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblModuleData ON");
                 _context.Add(obj);
-                await _context.SaveChangesAsync();
                 // Turn IDENTITY_INSERT ON
-                _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblModuleData OFF");                
+                _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblModuleData OFF");
+                await _context.SaveChangesAsync();          
                 return Ok(new { message = $"{obj.ID} Contractor Type processed successfully" });
             }
             catch (Exception ex)
@@ -437,6 +460,16 @@ namespace Township_API.Controllers
             //var ContractorTypes = await _context.ContractorTypes.ToListAsync();
             int objval = (int)commonTypes.ModuleTypes.ContractorType;
             var OBJs = await _context.ModuleData.Where(n => n.TypeID == objval && n.ID > objval).OrderByDescending(p => p.ID).ToListAsync();
+            return Ok(OBJs);
+        }
+
+        // GET: api/products 
+        [HttpGet("ContractorType/{id}")]
+        public async Task<IActionResult> ContractorType(int id)
+        {
+            //var ContractorTypes = await _context.ContractorTypes.ToListAsync();
+            int objval = (int)commonTypes.ModuleTypes.ContractorType;
+            var OBJs = await _context.ModuleData.Where(n => n.TypeID == objval && n.ID ==id && n.ID > objval).OrderByDescending(p => p.ID).ToListAsync();
             return Ok(OBJs);
         }
 
@@ -467,11 +500,10 @@ namespace Township_API.Controllers
                     }
                     else
                     {
-
                         _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblModuleData ON");
                         _context.ModuleData.Add(updatedObj);
-                        await _context.SaveChangesAsync();
                         _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblModuleData OFF");
+                        await _context.SaveChangesAsync();
                        
                     }
                 }
@@ -553,8 +585,8 @@ namespace Township_API.Controllers
             }
             _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblModuleData ON");
             _context.Add(obj);
-            await _context.SaveChangesAsync();
             _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblModuleData OFF");
+            await _context.SaveChangesAsync();
 
             return Ok();
         }
@@ -568,6 +600,16 @@ namespace Township_API.Controllers
             var OBJs = await _context.ModuleData.Where(n => n.TypeID == objval && n.ID > objval).OrderByDescending(p => p.ID).ToListAsync();
             return Ok(OBJs);
         }
+
+        // GET: api/products 
+        [HttpGet("GetVehicle/{id}")]
+        public async Task<IActionResult> GetVehicle(int id)
+        {
+            int objval = (int)commonTypes.ModuleTypes.VehicleMake;
+            var OBJs = await _context.ModuleData.Where(n => n.TypeID == objval && n.ID==id && n.ID > objval).OrderByDescending(p => p.ID).ToListAsync();
+            return Ok(OBJs);
+        }
+
 
         [HttpPost("bulkSaveVehicleMake")]
         public async Task<IActionResult> BulkSave([FromBody] List<VehicleMake> Obj)
@@ -599,8 +641,8 @@ namespace Township_API.Controllers
                     {
                         _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblModuleData ON");
                         _context.ModuleData.Add(updatedObj);
-                        await _context.SaveChangesAsync();
                         _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblModuleData OFF");
+                        await _context.SaveChangesAsync();
 
                     }
                 }
@@ -682,8 +724,8 @@ namespace Township_API.Controllers
 
             _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblModuleData ON");
             _context.Add(obj);
-            await _context.SaveChangesAsync();
             _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblModuleData OFF");
+            await _context.SaveChangesAsync();
 
             return Ok();
         }
@@ -697,6 +739,16 @@ namespace Township_API.Controllers
             var OBJs = await _context.ModuleData.Where(n => n.TypeID == objval && n.ID > objval).OrderByDescending(p => p.ID).ToListAsync();
             return Ok(OBJs);
         }
+
+        // GET: api/products 
+        [HttpGet("GetReaderLocation/{id}")]
+        public async Task<IActionResult> GetReaderLocation(int id)
+        {
+            int objval = (int)commonTypes.ModuleTypes.ReaderLocations;
+            var OBJs = await _context.ModuleData.Where(n => n.TypeID == objval && n.ID==id && n.ID > objval).OrderByDescending(p => p.ID).ToListAsync();
+            return Ok(OBJs);
+        }
+
 
         [HttpPost("bulkSaveReaderLocation")]
         public async Task<IActionResult> BulkSave([FromBody] List<ReaderLocation> Obj)
@@ -726,8 +778,8 @@ namespace Township_API.Controllers
                     {
                         _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblModuleData ON");
                         _context.ModuleData.Add(updatedObj);
-                        await _context.SaveChangesAsync();
                         _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblModuleData OFF");
+                        await _context.SaveChangesAsync();
                     }
                 }
 
@@ -813,8 +865,8 @@ namespace Township_API.Controllers
                 }
                 _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblModuleData ON");
                 _context.Add(obj);
-                await _context.SaveChangesAsync();
                 _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblModuleData OFF");
+                await _context.SaveChangesAsync();
                 return Ok(new { message = $"{obj.ID} Reader Relay created successfully" });
             }
             catch (Exception ex)
@@ -830,6 +882,14 @@ namespace Township_API.Controllers
         {
             int objval = (int)commonTypes.ModuleTypes.ReaderRelays;
             var OBJs = await _context.ModuleData.Where(n => n.TypeID == objval && n.ID > objval).OrderByDescending(p => p.ID).ToListAsync();
+            return Ok(OBJs);
+        }
+
+        [HttpGet("GetReaderRelay/{id}")]
+        public async Task<IActionResult> GetReaderRelay(int id)
+        {
+            int objval = (int)commonTypes.ModuleTypes.ReaderRelays;
+            var OBJs = await _context.ModuleData.Where(n => n.TypeID == objval && n.ID==id && n.ID > objval).OrderByDescending(p => p.ID).ToListAsync();
             return Ok(OBJs);
         }
 
@@ -861,8 +921,8 @@ namespace Township_API.Controllers
                     {
                         _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblModuleData ON");
                         _context.ModuleData.Add(updatedObj);
-                        await _context.SaveChangesAsync();
                         _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblModuleData OFF");
+                        await _context.SaveChangesAsync();
                     }
                 } 
                 // await transaction.CommitAsync();
@@ -943,8 +1003,8 @@ namespace Township_API.Controllers
                 }
                 _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblModuleData ON");
                 _context.Add(obj);
-                await _context.SaveChangesAsync();
                 _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblModuleData OFF");
+                await _context.SaveChangesAsync();
  
                 return Ok(new { message = $"{obj.ID} ServiceType processed successfully" });
             }
@@ -964,6 +1024,15 @@ namespace Township_API.Controllers
             var OBJs = await _context.ModuleData.Where(n => n.TypeID == objval && n.ID > objval).OrderByDescending(p => p.ID).ToListAsync();
             return Ok(OBJs);
         }
+
+        [HttpGet("GetServiceType/{id}")]
+        public async Task<IActionResult> GetServiceType(int id)
+        {
+            int objval = (int)commonTypes.ModuleTypes.ServiceType;
+            var OBJs = await _context.ModuleData.Where(n => n.TypeID == objval && n.ID==id && n.ID > objval).OrderByDescending(p => p.ID).ToListAsync();
+            return Ok(OBJs);
+        }
+
 
         [HttpPost("bulkSaveServiceType")]
         public async Task<IActionResult> BulkSave([FromBody] List<ServiceType> Obj)
@@ -992,9 +1061,9 @@ namespace Township_API.Controllers
                     else
                     {
                         _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblModuleData ON");
-                        _context.ModuleData.Add(updatedObj); 
-                        await _context.SaveChangesAsync();
+                        _context.ModuleData.Add(updatedObj);
                         _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblModuleData OFF");
+                        await _context.SaveChangesAsync();
                     }
                 }
 
@@ -1087,15 +1156,15 @@ namespace Township_API.Controllers
 
                 _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblModuleData ON");
                 _context.Add(obj);
-                await _context.SaveChangesAsync();
                 _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblModuleData OFF");
- 
+                await _context.SaveChangesAsync();
+
                 return Ok(new { message = $"{obj.ID} Building created successfully" });
-        }
+            }
             catch (Exception ex)
             {
                 // await transaction.RollbackAsync();
-                return  StatusCode(500, new { error = ex.Message.ToString() });
+                return StatusCode(500, new { error = ex.Message.ToString() });
             }
         }
 
@@ -1106,6 +1175,16 @@ namespace Township_API.Controllers
         {
             int objval = (int)commonTypes.ModuleTypes.Building;
             var OBJs = await _context.ModuleData.Where(n => n.TypeID == objval && n.ID > objval).OrderByDescending(p => p.ID).ToListAsync();
+
+            return Ok(OBJs);
+        }
+
+        // GET: api/products 
+        [HttpGet("GetBuilding/{id}")]
+        public async Task<IActionResult> GetBuilding(int id)
+        {
+            int objval = (int)commonTypes.ModuleTypes.Building;
+            var OBJs = await _context.ModuleData.Where(n => n.TypeID == objval && n.ID > objval && n.ID==id).OrderByDescending(p => p.ID).ToListAsync();
 
             return Ok(OBJs);
         }
@@ -1140,8 +1219,8 @@ namespace Township_API.Controllers
                     {
                         _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblModuleData ON");
                         _context.ModuleData.Add(updatedObj);
-                        await _context.SaveChangesAsync();
                         _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblModuleData OFF");
+                        await _context.SaveChangesAsync();
                     }
                 } 
 
@@ -1224,8 +1303,8 @@ namespace Township_API.Controllers
                 // Turn IDENTITY_INSERT ON
                 _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblModuleData ON");
                 _context.Add(obj); //_context.Add(obj);await _context.SaveChangesAsync();
-                await _context.SaveChangesAsync();
                 _context.Database.ExecuteSqlRaw("SET  IDENTITY_INSERT tblModuleData OFF");
+                await _context.SaveChangesAsync();
                 return Ok(new { message = $"{obj.ID} Records of Amenities processed successfully" });
             }
             catch (Exception ex)
@@ -1242,6 +1321,14 @@ namespace Township_API.Controllers
         {
             int objval = (int)commonTypes.ModuleTypes.Amenities;
             var OBJs = await _context.ModuleData.Where(n => n.TypeID == objval && n.ID > objval).OrderByDescending(p => p.ID).ToListAsync();
+            return Ok(OBJs);
+        }
+
+        [HttpGet("GetAmenity/{id}")]
+        public async Task<IActionResult> GetAllAmenities(int id)
+        {
+            int objval = (int)commonTypes.ModuleTypes.Amenities;
+            var OBJs = await _context.ModuleData.Where(n => n.TypeID == objval && n.ID > objval && n.ID== id).OrderByDescending(p => p.ID).ToListAsync();
             return Ok(OBJs);
         }
 
@@ -1283,8 +1370,8 @@ namespace Township_API.Controllers
                         // Turn IDENTITY_INSERT ON
                         _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblModuleData ON");
                         _context.Add(updatedObj); //_context.Add(obj);await _context.SaveChangesAsync();
-                        await _context.SaveChangesAsync();
                         _context.Database.ExecuteSqlRaw("SET  IDENTITY_INSERT tblModuleData OFF");
+                        await _context.SaveChangesAsync();
                     }
                 }
                 //        await transaction.CommitAsync();
@@ -1366,11 +1453,10 @@ namespace Township_API.Controllers
             obj.createdon = DateTime.Now;
             // Turn IDENTITY_INSERT ON
             _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblVehicle ON");
-
             _context.Add(obj);
-            await _context.SaveChangesAsync();
             // Turn IDENTITY_INSERT ON
             _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblVehicle OFF");
+            await _context.SaveChangesAsync();
             return Ok();
         }
 

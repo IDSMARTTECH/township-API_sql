@@ -73,7 +73,7 @@ namespace Township_API.Controllers
         }
 
 
-        [HttpGet("{IdNumber}")]
+        [HttpGet("CardAccessRights/{IdNumber}")]
         public async Task<IActionResult> CardAccessRights(string IdNumber)
         {
             if (IdNumber != null)
@@ -82,10 +82,10 @@ namespace Township_API.Controllers
                 {
                     var jsonWrapper = new DependentJsonWrapper
                     {
-                        UserAllAccess = await _context._userAllAccess.Where(p => p.CardHolderID == IdNumber).ToListAsync(),
-                        UserNRDAccess = await _context._userNRDAccess.Where(p => p.CardHolderID == IdNumber).ToListAsync(),
+                        UserAllAccess = await _context._userAllAccess.Where(p => p.CardHolderID == IdNumber).ToListAsync()
+                   /*     ,UserNRDAccess = await _context._userNRDAccess.Where(p => p.CardHolderID == IdNumber).ToListAsync(),
                         UserBuildingAccess = await _context._userBuildingAccess.Where(p => p.CardHolderID == IdNumber).ToListAsync(),
-                        UserAminitiesAccess = await _context._userAmenitiesAccess.Where(p => p.CardHolderID == IdNumber).ToListAsync()
+                        UserAminitiesAccess = await _context._userAmenitiesAccess.Where(p => p.CardHolderID == IdNumber).ToListAsync() */
                     };
 
                     return Ok(jsonWrapper);
@@ -115,7 +115,7 @@ namespace Township_API.Controllers
                     bool isEdit=false;
                     if (objID.id != 0)
                     {
-                        var obj = await _context._userDoorAccess.Where (p=>p.id.ToString()==objID.id.ToString()).FirstOrDefaultAsync();
+                         existingobj = await _context._userDoorAccess.Where (p=>p.id.ToString()!=objID.id.ToString()).FirstOrDefaultAsync();
                         if (existingobj == null)
                         {
                             return BadRequest(new { message = $"Card Access Details mismatch found" });
@@ -123,23 +123,22 @@ namespace Township_API.Controllers
                     }
                     else
                     {
-                        existingobj = await _context._userDoorAccess.Where(p => p.CardHolderID == objID.CardHolderID && p.moduleID.ToString() == objID.moduleID.ToString())
-                                     .FirstOrDefaultAsync();
-
+                        existingobj = await _context._userDoorAccess.Where(p => p.CardHolderID.ToString() == objID.CardHolderID.ToString()  && p.moduleID.ToString() == objID.moduleID.ToString()).FirstOrDefaultAsync();
                         if (existingobj != null)
-                            isEdit = true;
+                        {  
+                                isEdit = true;
+                        }
                     }
                    
                     if (!isEdit)
                     {
                         // Turn IDENTITY_INSERT ON
                         _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblDoorAccess ON");
-
                         _context._userDoorAccess.Add(objID);
-                        await _context.SaveChangesAsync();
 
-                        // Turn IDENTITY_INSERT OFF
                         _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblDoorAccess OFF");
+                        await _context.SaveChangesAsync();
+                        // Turn IDENTITY_INSERT OFF
 
                     }
                     else
