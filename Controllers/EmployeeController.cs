@@ -78,7 +78,7 @@ namespace Township_API.Controllers
                 obj.code = number.ToString() + obj.ID.ToString("D9");
 
                 await _context.SaveChangesAsync();
-                return Ok(existingEmployee);
+                return Ok(new { message = $"{obj.ID} Employee Added successfully" });
             }
             catch (Exception ex)
             {
@@ -96,7 +96,7 @@ namespace Township_API.Controllers
         }
 
         // GET: api/products 
-        [HttpGet("{ID}")]
+        [HttpGet("GetContractorDetails/{ID}")]
         public async Task<IActionResult> GetContractorDetails(int ID)
         {
             var Contractors = await _context.Contractors.Where(p => p.ID == ID).ToListAsync();

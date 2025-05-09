@@ -108,6 +108,20 @@ namespace Township_API.Controllers
             }
         }
 
+        [HttpGet("GetContractor/{id}")]
+        public async Task<IActionResult> GetContractor(int id)
+        {
+            try
+            {
+                var Contractors = await _context.Contractors.Where(p=>p.ID==id) .OrderByDescending(p => p.ID).ToListAsync();
+                return Ok(Contractors);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Error :" + ex.Message.ToString());
+            }
+        }
+
         [HttpPost("{AddContractors}")]
         public async Task<IActionResult> AddContractors([FromBody] List<Contractor> Obj)
         {
