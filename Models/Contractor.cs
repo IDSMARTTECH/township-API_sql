@@ -31,8 +31,13 @@ namespace Township_API.Models
         public DateTime? CardPrintingDate { get; set; }
         public DateTime? RegistrationIssueDate { get; set; }
         public int? LogicalDeleted { get; set; } = 0;
+        public string? ContactPerson { get; set; } = null;
+        public string? RegistrationNumber { get; set; } = null;
+	    public DateTime? ValidFromDate { get; set; }
+        public DateTime? ValidToDate { get; set; }
+        public string? Address { get; set; }
     }
-
+  
     [Table("DependentContractor")]
     public class DependentContractor
     {

@@ -61,8 +61,6 @@ namespace Township_API.Controllers
 
             return Ok();
         }
-
-
         // GET: api/products 
         [HttpGet]
         public async Task<IActionResult> GetAll()
@@ -70,6 +68,15 @@ namespace Township_API.Controllers
             //var users = await _service.GetAllAsync();
             var users = await _context.UserRegisters.OrderByDescending(p => p.Id).ToListAsync();
             return Ok(users);
+        }
+
+        // GET: api/products 
+        [HttpGet("GetUser/{id}")]
+        public async Task<IActionResult> GetUserbyID(int id)
+        {
+            //var users = await _service.GetAllAsync();
+            var user = await _context.UserRegisters.Where(p=>p.Id==id).OrderByDescending(p => p.Id).FirstOrDefaultAsync();
+            return Ok(user);
         }
 
 
@@ -115,11 +122,13 @@ namespace Township_API.Controllers
                     bool isEdit=false;
                     if (objID.id != 0)
                     {
-                         existingobj = await _context._userDoorAccess.Where (p=>p.id.ToString()!=objID.id.ToString()).FirstOrDefaultAsync();
+                         existingobj = await _context._userDoorAccess.Where (p=>p.id.ToString()==objID.id.ToString()).FirstOrDefaultAsync();
                         if (existingobj == null)
                         {
                             return BadRequest(new { message = $"Card Access Details mismatch found" });
                         }
+                        if(existingobj.id>0)
+                        isEdit = true;
                     }
                     else
                     {

@@ -136,6 +136,8 @@ namespace Township_API.Models
 
         [Required, MaxLength(100)]
         public string? ModuleName { get; set; }
+        public bool? Viewreadonly { get; set; } = false;
+
     }
 
     [Table("tblRole")]

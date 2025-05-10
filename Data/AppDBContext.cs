@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Data;
 using System.Reflection;
-using Township_API.Models;
-using Module = Township_API.Models.Module; 
+using Township_API.Models; 
 using Microsoft.AspNetCore.Mvc;
+using Module = Township_API.Models.Module;
 
 namespace Township_API.Data
 {

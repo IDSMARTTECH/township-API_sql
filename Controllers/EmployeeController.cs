@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Data;
 using System.Numerics;
 using static Township_API.Models.commonTypes;
+using System.Reflection.Metadata.Ecma335;
 
 namespace Township_API.Controllers
 {
@@ -95,35 +96,17 @@ namespace Township_API.Controllers
             return Ok(Employees);
         }
 
-        // GET: api/products 
-        [HttpGet("GetContractorDetails/{ID}")]
-        public async Task<IActionResult> GetContractorDetails(int ID)
-        {
-            var Contractors = await _context.Contractors.Where(p => p.ID == ID).ToListAsync();
-            string? IdNumber = Contractors[0].IDNumber;
-            if (IdNumber != null)
-            {
-                try
-                {
-                    var jsonWrapper = new DependentJsonWrapper
-                    {
-                        Owners = Contractors,
-                        DependentOwners = _context.DependentContractors.Where(p => p.PID == ID).ToList(),
-                        Vehicles = _context.Vehicles.Where(p => p.TagUID == IdNumber).ToList(),
-                        UserAllAccess = await _context._userAllAccess.Where(p => p.CardHolderID == IdNumber).ToListAsync(),
-                        UserNRDAccess = _context._userNRDAccess.Where(p => p.CardHolderID != null && p.CardHolderID.ToString() == IdNumber).ToList(),
-                        UserBuildingAccess = _context._userBuildingAccess.Where(p => p.CardHolderID != null && p.CardHolderID.ToString() == IdNumber).ToList(),
-                        UserAminitiesAccess = _context._userAmenitiesAccess.Where(p => p.CardHolderID != null && p.CardHolderID.ToString() == IdNumber).ToList()
-                    };
 
-                    return Ok(jsonWrapper);
-                }
-                catch (Exception ex)
-                {
-                    return BadRequest(ex.Message.ToString());
-                }
-            }
-            return Ok(new { message = $"Contractor records not found!" });
+        // GET: api/products 
+        [HttpGet("GetEmployeeByID/{id}")]
+        public async Task<IActionResult> GetEmployeeByID(int id)
+        {
+            var Employees = await _context.Employees.Where(p=>p.ID ==id).OrderByDescending(p => p.ID).ToListAsync();
+            if (Employees == null) 
+                   return BadRequest("No Data found");
+
+            
+            return Ok(Employees);
         }
 
 

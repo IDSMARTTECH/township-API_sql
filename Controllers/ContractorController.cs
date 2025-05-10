@@ -17,7 +17,6 @@ namespace Township_API.Controllers
             _context = context;
         }
 
-
         // PUT: api/products/5
         [HttpPost("{UpdateContractor}/{id}")]
         public async Task<IActionResult> UpdateContractor(int id, [FromBody] Contractor updatedContractor)
@@ -56,6 +55,10 @@ namespace Township_API.Controllers
             existingContractor.CardPrintingDate = updatedContractor.CardPrintingDate;
             existingContractor.RegistrationIssueDate = updatedContractor.RegistrationIssueDate;
             existingContractor.LogicalDeleted = updatedContractor.LogicalDeleted;
+            existingContractor.ContactPerson = updatedContractor.ContactPerson;
+            existingContractor.RegistrationNumber = updatedContractor.RegistrationNumber;
+            existingContractor.ValidFromDate = updatedContractor.ValidFromDate;
+            existingContractor.Address = updatedContractor.Address;
             _context.Entry(existingContractor).State = EntityState.Modified;
             await _context.SaveChangesAsync();
             return Ok(existingContractor);
@@ -122,6 +125,38 @@ namespace Township_API.Controllers
             }
         }
 
+        // GET: api/products 
+        [HttpGet("GetContractorDetails/{ID}")]
+        public async Task<IActionResult> GetContractorDetails(int ID)
+        {
+            var Contractors = await _context.Contractors.Where(p => p.ID == ID).ToListAsync();
+            string? IdNumber = Contractors[0].IDNumber;
+            if (IdNumber != null)
+            {
+                try
+                {
+                    var jsonWrapper = new DependentJsonWrapper
+                    {
+                        Owners = Contractors,
+                        DependentOwners = _context.DependentContractors.Where(p => p.PID == ID).ToList(),
+                        Vehicles = _context.Vehicles.Where(p => p.TagUID == IdNumber).ToList(),
+                        UserAllAccess = await _context._userAllAccess.Where(p => p.CardHolderID == IdNumber).ToListAsync(),
+                        UserNRDAccess = _context._userNRDAccess.Where(p => p.CardHolderID != null && p.CardHolderID.ToString() == IdNumber).ToList(),
+                        UserBuildingAccess = _context._userBuildingAccess.Where(p => p.CardHolderID != null && p.CardHolderID.ToString() == IdNumber).ToList(),
+                        UserAminitiesAccess = _context._userAmenitiesAccess.Where(p => p.CardHolderID != null && p.CardHolderID.ToString() == IdNumber).ToList()
+                    };
+
+                    return Ok(jsonWrapper);
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message.ToString());
+                }
+            }
+            return Ok(new { message = $"Contractor records not found!" });
+        }
+
+
         [HttpPost("{AddContractors}")]
         public async Task<IActionResult> AddContractors([FromBody] List<Contractor> Obj)
         {
@@ -170,6 +205,11 @@ namespace Township_API.Controllers
                         existingContractor.CardPrintingDate = objID.CardPrintingDate;
                         existingContractor.RegistrationIssueDate = objID.RegistrationIssueDate;
                         existingContractor.LogicalDeleted = objID.LogicalDeleted;
+                        existingContractor.ContactPerson = objID.ContactPerson;
+                        existingContractor.RegistrationNumber = objID.RegistrationNumber;
+                        existingContractor.ValidFromDate = objID.ValidFromDate;
+                        existingContractor.Address = objID.Address;
+
                         _context.Entry(existingContractor).State = EntityState.Modified;
                         await _context.SaveChangesAsync();
                     }

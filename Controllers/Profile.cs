@@ -112,10 +112,10 @@ namespace Township_API.Controllers
         }
 
 
-        [HttpGet("GetProfileDetails/{ID}")]
-        public async Task<ActionResult<IEnumerable<ProfileDetails>>> GetProfileDetails(string Id)
+        [HttpGet("GetProfileDetails/{id}")]
+        public async Task<ActionResult<IEnumerable<ProfileDetails>>> GetProfileDetails(string id)
         {
-            return await _context.ProfileDetails.Where(p => p.profileid.ToString() == Id.ToString()).ToListAsync();
+            return await _context.ProfileDetails.Where(p => p.profileid.ToString() == id.ToString()).IgnoreAutoIncludes().ToListAsync();
         }
 
         [HttpPost("AddUpdateProfileDetail")]
@@ -229,6 +229,14 @@ namespace Township_API.Controllers
 
         }
 
+        [HttpGet("GetModuleNames/{isViewOnly}")]
+        public async Task<ActionResult<IEnumerable<Module>>> GetModuleNames(bool isViewOnly=false)
+        {
+            if (isViewOnly) 
+                return await _context.Modules.Where(p => p.Viewreadonly == isViewOnly).IgnoreAutoIncludes().ToListAsync();
+
+            return await _context.Modules.IgnoreAutoIncludes().ToListAsync();
+        }
     }
 }
 
