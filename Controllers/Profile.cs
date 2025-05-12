@@ -33,8 +33,8 @@ namespace Township_API.Controllers
             return await _context.Profiles.Where (p=>p.ID ==id).ToListAsync();
         }
 
-        [HttpPost]
-        public async Task<ActionResult<Profile>> CreateProfile(Profile profile)
+        [HttpPost("AddUpdateProfileDetail")]
+        public async Task<IActionResult> AddUpdateProfileDetail([FromBody] ProfileDetails Obj)
         {
             try
             {
@@ -215,6 +215,7 @@ namespace Township_API.Controllers
 
                         _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblProfile OFF");
                         await _context.SaveChangesAsync();
+                        _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblProfile OFF");
                     }
                 }
                 //   await transaction.CommitAsync();
