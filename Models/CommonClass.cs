@@ -29,18 +29,20 @@
             ServiceProvider=7,
             contractor=8,
             Guest = 9, 
-            Employee = 11
+            Employee = 11,
+            DependentContractor = 12
         };
     }
     public class profileRegister
-    {
-        public string USER { get; set; }
+    {       
+        public string profileID { get; set; }
+        public string ModuleID { get; set; }
         public string ModuleName { get; set; }
-        public string RoleName { get; set; }
-        public string CanInsert { get; set; }
-        public string CanUpdate { get; set; }
-        public string CanDelete { get; set; }
-        public string CanView { get; set; }
+        public string profileName { get; set; } 
+        public string? CanInsert { get; set; } = "false";
+        public string? CanUpdate { get; set; } = "false";
+        public string? CanDelete { get; set; } = "false";
+        public string? CanView { get; set; } = "false";
     }
     public class DependentJsonWrapper
     {

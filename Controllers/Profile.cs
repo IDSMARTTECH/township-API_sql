@@ -5,7 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations.Schema;
 using static Township_API.Models.commonTypes;
-
+using System.Linq;
+using System.Text.Json;
 
 
 namespace Township_API.Controllers
@@ -30,42 +31,10 @@ namespace Township_API.Controllers
         [HttpGet("GetProfile/{id}")]
         public async Task<ActionResult<IEnumerable<Profile>>> GetProfileByID(int id)
         {
-            return await _context.Profiles.Where (p=>p.ID ==id).ToListAsync();
+            return await _context.Profiles.Where(p => p.ID == id).ToListAsync();
         }
 
-        [HttpPost("AddUpdateProfileDetail")]
-        public async Task<IActionResult> AddUpdateProfileDetail([FromBody] ProfileDetails Obj)
-        {
-            try
-            {
-                var existingprofile = await _context.Profiles.FindAsync(0);
-                if (existingprofile != null)
-                {
-                    return BadRequest("Profile Exists.");
-                }
-                var existingProf = await _context.Profiles.Where(p=>p.profilename==profile.profilename).ToListAsync();
-                if (existingProf != null)
-                {
-                    if (existingProf.Count>0) 
-                        return BadRequest("Profile name already Exists.");
-                }
-
-
-
-                _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblProfile ON");
-                _context.Add(profile);
-                _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblProfile OFF");
-                await _context.SaveChangesAsync();
-
-                return Ok(new { message = $"{profile.ID} Profile Created successfully" });
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { error = ex.Message });
-            }
-        }
-
-
+      
         [HttpPost("UpdateProfile/{id}")]
         public async Task<ActionResult<Profile>> UpdateProfile(int id, Profile profile)
         {
@@ -111,62 +80,19 @@ namespace Township_API.Controllers
 
         }
 
-
         [HttpGet("GetProfileDetails/{id}")]
-        public async Task<ActionResult<IEnumerable<ProfileDetails>>> GetProfileDetails(string id)
-        {
-            return await _context.ProfileDetails.Where(p => p.profileid.ToString() == id.ToString()).IgnoreAutoIncludes().ToListAsync();
-        }
+        public async Task<ActionResult> GetProfileDetails(string id)
+        { 
+            // Load data into memory
+            var _profileDtls = _context.ProfileDetails.Where(p=>p.profileid.ToString()== id) .ToList();
+            var _profile = _context.Profiles.ToList();
+            var _module = _context.Modules.ToList();
 
-        [HttpPost("AddUpdateProfileDetail")]
-        public async Task<IActionResult> AddUpdateProfileDetail([FromBody] ProfileDetails Obj)
-        {
-            if (Obj == null)  
-                return BadRequest("No Data provided");
-
-            //using var transaction = await _context.Database.BeginTransactionAsync();
-            try
-            { 
-
-                var existingobj = await _context.ProfileDetails
-                        .FirstOrDefaultAsync(p => p.profileid == Obj.profileid && p.moduleId == Obj.moduleId);
-
-                    if (existingobj != null)
-                    {
-                    existingobj.moduleId = Obj.moduleId;
-                    existingobj.profileid = Obj.profileid;
-                    existingobj.CanInsert = Obj.CanInsert;
-                    existingobj.CanView = Obj.CanView;
-
-                    existingobj.CanUpdate = Obj.CanUpdate;
-                    existingobj.CanDelete = Obj.CanDelete;
-                    existingobj.CanView = Obj.CanView;
-                    existingobj.isactive = Obj.isactive;
-                    existingobj.updatedby = Obj.updatedby;
-                    existingobj.updatedon = Obj.updatedon;
-                    existingobj.isdeleted = Obj.isdeleted;
-
-                        await _context.SaveChangesAsync();
-                    }
-                    else
-                    {
-                        _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblProfileDetails ON");
-                        _context.ProfileDetails.Add(Obj);
-
-                    _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblProfileDetails OFF");
-                    await _context.SaveChangesAsync();
-                    }
-                
-                //   await transaction.CommitAsync();
-
-                return Ok(new { message = $"Profile Detail processed successfully" });
-            }
-            catch (Exception ex)
-            {
-                //   await transaction.RollbackAsync();
-                return StatusCode(500, new { error = ex.Message });
-            }
-
+            // Perform join in memory
+            var result = from _pd in _profileDtls
+                         select (_pd.module.ModuleID, _pd.module.ModuleName, _pd.module.Viewreadonly, _pd.CanInsert, _pd.CanUpdate, _pd.CanInsert, _pd.CanView);
+             
+            return Ok(JsonSerializer.Serialize(result));  
         }
 
 
@@ -206,7 +132,7 @@ namespace Township_API.Controllers
                         existingProfilDtls.updatedon = objID.updatedon;
                         existingProfilDtls.isdeleted = objID.isdeleted;
 
-                        await   _context.SaveChangesAsync();
+                        await _context.SaveChangesAsync();
                     }
                     else
                     {
@@ -214,8 +140,7 @@ namespace Township_API.Controllers
                         _context.ProfileDetails.Add(objID);
 
                         _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblProfile OFF");
-                        await _context.SaveChangesAsync();
-                        _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblProfile OFF");
+                        await _context.SaveChangesAsync(); 
                     }
                 }
                 //   await transaction.CommitAsync();
@@ -231,9 +156,9 @@ namespace Township_API.Controllers
         }
 
         [HttpGet("GetModuleNames/{isViewOnly}")]
-        public async Task<ActionResult<IEnumerable<Module>>> GetModuleNames(bool isViewOnly=false)
+        public async Task<ActionResult<IEnumerable<_module>>> GetModuleNames(bool isViewOnly = false)
         {
-            if (isViewOnly) 
+            if (isViewOnly)
                 return await _context.Modules.Where(p => p.Viewreadonly == isViewOnly).IgnoreAutoIncludes().ToListAsync();
 
             return await _context.Modules.IgnoreAutoIncludes().ToListAsync();

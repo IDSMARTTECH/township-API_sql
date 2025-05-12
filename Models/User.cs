@@ -89,7 +89,7 @@ namespace Township_API.Models
 
         [ForeignKey("Module")]
         public int? moduleId { get; set; }
-        public Module? module { get; set; }
+        public _module? module { get; set; }
         public bool? CanInsert { get; set; } = false;
         public bool? CanUpdate { get; set; } = false;
         public bool? CanDelete { get; set; } = false;
@@ -129,7 +129,7 @@ namespace Township_API.Models
     //    public DateTime? updatedon { get; set; } = null;
     //}
     [Table("tblModules")]
-    public class Module
+    public class _module
     {
         [Key]
         public int ModuleID { get; set; }

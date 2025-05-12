@@ -79,17 +79,20 @@ namespace Township_API.Controllers
                 return BadRequest(new { message = "Validation Failed", errors });
             }
 
-            var existingContractor = await _context.ModuleData.FindAsync(0);
+            var existingContractor = await _context.ModuleData.FindAsync(0); 
             if (existingContractor != null)
             {
                 return BadRequest("Contractor Exists.");
             }
+            _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Contractor ON");
+            _context.Add(obj); 
+            _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Contractor OFF");
 
             await _context.SaveChangesAsync();
-            int number = (int)AccessCardHilders.contractor;
-            obj.IDNumber = number.ToString() + obj.ID.ToString("D10");
 
-            _context.Add(obj);
+
+            int number = (int)AccessCardHilders.contractor;
+            obj.IDNumber = number.ToString() + obj.ID.ToString("D10"); 
             await _context.SaveChangesAsync();
 
             return Ok();
@@ -221,6 +224,11 @@ namespace Township_API.Controllers
                         _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Contractor OFF");
 
                         await _context.SaveChangesAsync();
+
+
+                        int number = (int)AccessCardHilders.contractor;
+                        objID.IDNumber = number.ToString() + objID.ID.ToString("D10");
+                        await _context.SaveChangesAsync();
                     }
                 }
                 await transaction.CommitAsync();
@@ -281,8 +289,17 @@ namespace Township_API.Controllers
             {
                 return BadRequest("DependentContractor Exists.");
             }
-            _context.Add(obj);
+
+            _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT DependentContractor ON");
+            _context.Add(obj); 
+            _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT DependentContractor OFF");
             await _context.SaveChangesAsync();
+
+            int number = (int)AccessCardHilders.DependentContractor;
+            obj.IDNumber = number.ToString() + obj.ID.ToString("D9");
+
+            await _context.SaveChangesAsync();
+
 
             return Ok();
         }
@@ -326,10 +343,17 @@ namespace Township_API.Controllers
                         _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT DependentContractor ON");
                         _context.DependentContractors.Add(objID); 
                         _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT DependentContractor  OFF");
+                        await _context.SaveChangesAsync();
+
+                        int number = (int)AccessCardHilders.DependentContractor;
+                        objID.IDNumber = number.ToString() + objID.ID.ToString("D9");
+
+                        await _context.SaveChangesAsync();
                     }
                 }
 
-                await _context.SaveChangesAsync();
+
+
                 await transaction.CommitAsync();
 
                 return Ok(new { message = $"{Obj.Count} DependentContractor processed successfully" });

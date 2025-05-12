@@ -73,13 +73,16 @@ namespace Township_API.Controllers
                 {
                     return BadRequest("Employee Exists.");
                 }
+
+                _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblEmployee ON");
                 _context.Add(obj);
+                _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblEmployee OFF");
                 await _context.SaveChangesAsync();
                 int number = (int)AccessCardHilders.Employee;
                 obj.code = number.ToString() + obj.ID.ToString("D9");
 
                 await _context.SaveChangesAsync();
-                return Ok(new { message = $"{obj.ID} Employee Added successfully" });
+                return Ok(new { message = $"{obj.code} Employee Added successfully" });
             }
             catch (Exception ex)
             {
@@ -141,7 +144,7 @@ namespace Township_API.Controllers
                         _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblEmployee  OFF");
                         await _context.SaveChangesAsync();
                         int number = (int)AccessCardHilders.Employee;
-                        objID.code = number.ToString() + objID.ID.ToString("D10");
+                        objID.code = number.ToString() + objID.ID.ToString("D9");
                         await _context.SaveChangesAsync();
                     }
                 }

@@ -12,4 +12,9 @@ namespace Township_API.Controllers
         public Task<List<UserAmenitiesAccess>> UserAmenitiesAccess { get; set; }
 
     }
+
+    internal class ProfileWrapper
+    { 
+        public List<profileRegister> profileRegister { get; set; }
+    }
 }

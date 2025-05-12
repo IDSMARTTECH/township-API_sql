@@ -4,8 +4,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Data;
 using System.Reflection;
 using Township_API.Models; 
-using Microsoft.AspNetCore.Mvc;
-using Module = Township_API.Models.Module;
+using Microsoft.AspNetCore.Mvc; 
 
 namespace Township_API.Data
 {
@@ -16,7 +15,7 @@ namespace Township_API.Data
         public DbSet<User> UserRegisters { get; set; }
         public DbSet<Profile> Profiles { get; set; }
         public DbSet<Role> Roles { get; set; }
-        public DbSet<Module> Modules { get; set; }
+        public DbSet<_module> Modules { get; set; }
         //  public DbSet<RolePermission> RolePermissions { get; set; }
         public DbSet<ProfileDetails> ProfileDetails { get; set; }
 

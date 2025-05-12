@@ -72,13 +72,17 @@ namespace Township_API.Controllers
                     return BadRequest("ServiceProvider Exists.");
                 }
 
+                _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblServiceProvider  ON");
                 _context.Add(obj);
+                _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblServiceProvider  OFF");
                 await _context.SaveChangesAsync();
+
                 int number = (int)AccessCardHilders.ServiceProvider;
                 obj.code = number.ToString() + obj.ID.ToString("D10");
 
                 await _context.SaveChangesAsync();
-                return Ok(existingServiceProvider);
+
+                return Ok(new { message = $"{obj.code} ServiceProvider processed successfully" });
             }
             catch (Exception ex)
             {
