@@ -20,10 +20,11 @@ namespace Township_API.Controllers
         private readonly IConfiguration _configuration;
         private readonly AppDBContext _context;
 
-        public AuthController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager, IConfiguration configuration, AppDBContext context)
+        public AuthController( IConfiguration configuration, AppDBContext context)
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
+            //UserManager<IdentityUser> userManager, SignInManager< IdentityUser > signInManager,
+            //_userManager = userManager;
+            //_signInManager = signInManager;
             _configuration = configuration;
             _context = context;
         }
@@ -34,10 +35,13 @@ namespace Township_API.Controllers
             var user = await _context.UserRegisters.Where(p => (p.uid == model.Email || p.email == model.Email) && p.password == model.Password).ToListAsync();
             if (user != null)
             {
-
-                //    var roles = await _userManager.GetRolesAsync(user);
-                //  var token = GenerateJwtToken(user, roles);
-                return Ok(user);
+                if (user.Count > 0)
+                {
+                    var role = user[0].Role;
+                  //  var roles = await _context.Roles.Where(p => p.RoleID == user[0].roleID).FirstOrDefault();
+                    // var token = GenerateJwtToken(user, roles);
+                    return Ok(user);
+                }
             }
             return Unauthorized();
         }
