@@ -100,7 +100,7 @@ namespace Township_API.Controllers
             await _context.SaveChangesAsync();
 
             int number = (int)AccessCardHilders.Resident;
-            obj.IDNumber = number.ToString() + obj.ID.ToString("D10");
+            obj.IDNumber = number.ToString() + obj.ID.ToString("D5");
             await _context.SaveChangesAsync();
             return Ok(obj);
         }
@@ -203,7 +203,7 @@ namespace Township_API.Controllers
                         await _context.SaveChangesAsync();
 
                         int number = (int)AccessCardHilders.Resident;
-                        objID.IDNumber = number.ToString() + objID.ID.ToString("D10");
+                        objID.IDNumber = number.ToString() + objID.ID.ToString("D5");
                         await _context.SaveChangesAsync();
 
                     }
@@ -299,7 +299,7 @@ namespace Township_API.Controllers
             await _context.SaveChangesAsync(); 
 
             int number = (int)AccessCardHilders.DependentResident;
-            obj.IDNumber = number.ToString() + obj.ID.ToString("D10");
+            obj.IDNumber = number.ToString() + obj.ID.ToString("D5");
             await _context.SaveChangesAsync();
             return Ok();
         }
@@ -377,7 +377,7 @@ namespace Township_API.Controllers
                         await _context.SaveChangesAsync();
 
                         int number = (int)AccessCardHilders.DependentResident;
-                        objID.IDNumber = number.ToString() + objID.ID.ToString("D10");
+                        objID.IDNumber = number.ToString() + objID.ID.ToString("D5");
                         await _context.SaveChangesAsync();
                     }
                 }

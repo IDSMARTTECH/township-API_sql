@@ -36,6 +36,7 @@ namespace Township_API.Models
 	    public DateTime? ValidFromDate { get; set; }
         public DateTime? ValidToDate { get; set; }
         public string? Address { get; set; }
+        public int? ContactorType { get; set; } = 0;
     }
   
     [Table("DependentContractor")]

@@ -34,42 +34,54 @@ namespace Township_API.Controllers
             return await _context.Profiles.Where(p => p.ID == id).ToListAsync();
         }
 
-      
-        [HttpPost("UpdateProfile/{id}")]
-        public async Task<ActionResult<Profile>> UpdateProfile(int id, Profile profile)
+
+        [HttpPost("AddUpdateProfile")]
+        public async Task<ActionResult<Profile>> AddUpdateProfile(Profile profile)
         {
             try
             {
-                if (id != profile.ID)
+                if (profile == null)
+                    return BadRequest("No Data provided");
+
+                if (profile.ID == 0)
                 {
-                    return BadRequest("Profile ID mismatch.");
+                    var _existingprofile = await _context.Profiles.Where(p => p.ProfileName == profile.ProfileName).ToListAsync();
+                    if (_existingprofile != null)
+                    {
+                        if (_existingprofile.Count > 0)
+                            return BadRequest("Profile already exists!");
+                    }
+
+                    _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblProfile ON");
+                    _context.Profiles.Add(profile);
+                    await _context.SaveChangesAsync();
+                    _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblProfile OFF");
+
+                    return Ok(profile);
                 }
 
-                var existingprofile = await _context.Profiles.FindAsync(id);
-                if (existingprofile == null)
+                if (profile.ID > 0)
                 {
-                    return NotFound();
+                    var _exists = await _context.Profiles.Where(p => p.ID != profile.ID && p.ProfileName == profile.ProfileName).ToListAsync();
+                    if (_exists != null)
+                    {
+                        if (_exists.Count > 0)
+                            return BadRequest("Profile already exists!");
+                    }
+
+                    var existingobj = await _context.Profiles.Where(p => p.ID == profile.ID).FirstOrDefaultAsync();
+
+
+                    existingobj.ProfileName = profile.ProfileName;
+                    existingobj.Companyid = profile.Companyid;
+                    existingobj.UpdatedOn = profile.UpdatedOn;
+                    existingobj.UpdatedBy = profile.UpdatedBy;
+                    existingobj.isActive = profile.isActive;
+                    existingobj.isDeleted = profile.isDeleted;
+
+                    await _context.SaveChangesAsync();
+                    return Ok(profile);
                 }
-
-                var existingprof = await _context.Profiles.Where(p => p.ID != id && p.profilename == profile.profilename).ToListAsync();
-                if (existingprof != null)
-                {
-                    if (existingprof.Count > 0)
-                        return BadRequest("Profile already exists!");
-                }
-
-                existingprofile.profilename = profile.profilename;
-                existingprofile.uid = profile.uid;
-                existingprofile.updatedon = DateTime.Now;
-                existingprofile.updatedby = profile.updatedby;
-                existingprofile.isactive = profile.isactive;
-                existingprofile.isdeleted = profile.isdeleted;
-
-                _context.Entry(existingprofile).State = EntityState.Modified;
-
-                await _context.SaveChangesAsync();
-
-                return Ok(new { message = $"{id} Profile updated successfully" });
             }
             catch (Exception ex)
             {
@@ -77,22 +89,22 @@ namespace Township_API.Controllers
                 return BadRequest("Error :" + ex.Message.ToString());
 
             }
-
+            return Ok(null);
         }
 
         [HttpGet("GetProfileDetails/{id}")]
         public async Task<ActionResult> GetProfileDetails(string id)
-        { 
+        {
             // Load data into memory
-            var _profileDtls = _context.ProfileDetails.Where(p=>p.profileid.ToString()== id) .ToList();
+            var _profileDtls = _context.ProfileDetails.Where(p => p.profileid.ToString() == id).ToList();
             var _profile = _context.Profiles.ToList();
             var _module = _context.Modules.ToList();
 
             // Perform join in memory
             var result = from _pd in _profileDtls
                          select (_pd.module.ModuleID, _pd.module.ModuleName, _pd.module.Viewreadonly, _pd.CanInsert, _pd.CanUpdate, _pd.CanInsert, _pd.CanView);
-             
-            return Ok(JsonSerializer.Serialize(result));  
+
+            return Ok(JsonSerializer.Serialize(result));
         }
 
 
@@ -113,34 +125,32 @@ namespace Township_API.Controllers
                     if (existingobj != null)
                     {
                         // var existingLandOwner = await _service.UpdateLandownerAsync(objID.ID, existingobj);
-                        var existingProfilDtls = await _context.ProfileDetails.FindAsync(objID.id);
-                        if (existingProfilDtls == null)
+                        //var existingProfilDtls = await _context.ProfileDetails.FindAsync(objID.id);
+                        if (existingobj != null)
                         {
-                            return NotFound();
+
+                            existingobj.moduleId = objID.moduleId;
+                            existingobj.profileid = objID.profileid;
+                            existingobj.CanInsert = objID.CanInsert;
+                            existingobj.CanView = objID.CanView;
+
+                            existingobj.CanUpdate = objID.CanUpdate;
+                            existingobj.CanDelete = objID.CanDelete;
+                            existingobj.CanView = objID.CanView;
+                            existingobj.isactive = objID.isactive;
+                            existingobj.updatedby = objID.updatedby;
+                            existingobj.updatedon = objID.updatedon;
+                            existingobj.isdeleted = objID.isdeleted;
                         }
-
-                        existingProfilDtls.moduleId = objID.moduleId;
-                        existingProfilDtls.profileid = objID.profileid;
-                        existingProfilDtls.CanInsert = objID.CanInsert;
-                        existingProfilDtls.CanView = objID.CanView;
-
-                        existingProfilDtls.CanUpdate = objID.CanUpdate;
-                        existingProfilDtls.CanDelete = objID.CanDelete;
-                        existingProfilDtls.CanView = objID.CanView;
-                        existingProfilDtls.isactive = objID.isactive;
-                        existingProfilDtls.updatedby = objID.updatedby;
-                        existingProfilDtls.updatedon = objID.updatedon;
-                        existingProfilDtls.isdeleted = objID.isdeleted;
-
                         await _context.SaveChangesAsync();
                     }
                     else
                     {
-                        _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblProfile ON");
+                        _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblProfileDetails ON");
                         _context.ProfileDetails.Add(objID);
 
-                        _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblProfile OFF");
-                        await _context.SaveChangesAsync(); 
+                        _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblProfileDetails OFF");
+                        await _context.SaveChangesAsync();
                     }
                 }
                 //   await transaction.CommitAsync();

@@ -783,7 +783,7 @@ namespace Township_API.Services
             existingDependentLandowner.LicenseNo = updatedDependentLandowner.LicenseNo;
             existingDependentLandowner.AadharCardId = updatedDependentLandowner.AadharCardId;
             existingDependentLandowner.VoterID = updatedDependentLandowner.VoterID;
-            existingDependentLandowner.Firstname = updatedDependentLandowner.Firstname;
+            existingDependentLandowner.FirstName = updatedDependentLandowner.FirstName;
             existingDependentLandowner.MiddletName = updatedDependentLandowner.MiddletName;
             existingDependentLandowner.LastName = updatedDependentLandowner.LastName;
             existingDependentLandowner.ShortName = updatedDependentLandowner.ShortName;
@@ -840,7 +840,7 @@ namespace Township_API.Services
                         existingDependentLandOwner.LicenseNo = updatedDependentLandOwner.LicenseNo;
                         existingDependentLandOwner.AadharCardId = updatedDependentLandOwner.AadharCardId;
                         existingDependentLandOwner.VoterID = updatedDependentLandOwner.VoterID;
-                        existingDependentLandOwner.Firstname = updatedDependentLandOwner.Firstname;
+                        existingDependentLandOwner.FirstName = updatedDependentLandOwner.FirstName;
                         existingDependentLandOwner.MiddletName = updatedDependentLandOwner.MiddletName;
                         existingDependentLandOwner.LastName = updatedDependentLandOwner.LastName;
                         existingDependentLandOwner.ShortName = updatedDependentLandOwner.ShortName;

@@ -55,7 +55,7 @@ namespace Township_API.Controllers
             await _context.SaveChangesAsync();
 
             int number = (int)AccessCardHilders.Resident;
-            obj.IDNumber = number.ToString() + obj.ID.ToString("D10");
+            obj.IDNumber = number.ToString() + obj.ID.ToString("D5");
             await _context.SaveChangesAsync();
 
             return Ok();

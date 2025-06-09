@@ -94,7 +94,7 @@ namespace Township_API.Controllers
                 _context.Add(obj);
                 await _context.SaveChangesAsync(); 
                  int number = (int)AccessCardHilders.Landowner ;
-                 obj.IDNumber = number .ToString()+ obj.ID.ToString("D10");
+                 obj.IDNumber = number .ToString()+ obj.ID.ToString("D5");
                 await _context.SaveChangesAsync();
 
                 return Ok(new { message = $"{obj.ID} Landowner created successfully" });
@@ -217,7 +217,7 @@ namespace Township_API.Controllers
                         await _context.SaveChangesAsync();
 
                         int number = (int)AccessCardHilders.Landowner;
-                        objID.IDNumber = number.ToString() + objID.ID.ToString("D10");
+                        objID.IDNumber = number.ToString() + objID.ID.ToString("D5");
                         await _context.SaveChangesAsync();
                     }
                 }
@@ -272,7 +272,7 @@ namespace Township_API.Controllers
             existingDependentLandOwner.LicenseNo = updatedDLandOwner.LicenseNo;
             existingDependentLandOwner.AadharCardId = updatedDLandOwner.AadharCardId;
             existingDependentLandOwner.VoterID = updatedDLandOwner.VoterID;
-            existingDependentLandOwner.Firstname = updatedDLandOwner.Firstname;
+            existingDependentLandOwner.FirstName = updatedDLandOwner.FirstName;
             existingDependentLandOwner.MiddletName = updatedDLandOwner.MiddletName;
             existingDependentLandOwner.LastName = updatedDLandOwner.LastName;
             existingDependentLandOwner.ShortName = updatedDLandOwner.ShortName;
@@ -303,7 +303,7 @@ namespace Township_API.Controllers
             await _context.SaveChangesAsync(); 
 
             int number = (int)AccessCardHilders.DependentLandowner;
-            obj.IDNumber = number.ToString() + obj.ID.ToString("D10");
+            obj.IDNumber = number.ToString() + obj.ID.ToString("D5");
             await _context.SaveChangesAsync();
 
             return Ok(new { message = $"{obj.ID} Dependent Landowner saved successfully" });
@@ -350,7 +350,7 @@ namespace Township_API.Controllers
                         existingDependentLandOwner.LicenseNo = objID.LicenseNo;
                         existingDependentLandOwner.AadharCardId = objID.AadharCardId;
                         existingDependentLandOwner.VoterID = objID.VoterID;
-                        existingDependentLandOwner.Firstname = objID.Firstname;
+                        existingDependentLandOwner.FirstName = objID.FirstName;
                         existingDependentLandOwner.MiddletName = objID.MiddletName;
                         existingDependentLandOwner.LastName = objID.LastName;
                         existingDependentLandOwner.ShortName = objID.ShortName;
@@ -375,7 +375,7 @@ namespace Township_API.Controllers
                         await _context.SaveChangesAsync();
 
                         int number = (int)AccessCardHilders.DependentLandowner;
-                        objID.IDNumber = number.ToString() + objID.ID.ToString("D10");
+                        objID.IDNumber = number.ToString() + objID.ID.ToString("D5");
                         await _context.SaveChangesAsync();
                     }
                 }

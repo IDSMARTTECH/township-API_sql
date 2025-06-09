@@ -23,7 +23,7 @@ namespace Township_API.Controllers
         }
 
         // PUT: api/products/5
-        [HttpPost("{UpdateEmployee}/{id}")]
+        [HttpPost("UpdateEmployee/{id}")]
         public async Task<IActionResult> UpdateEmployee(int id, [FromBody] Employee updatedEmployee)
         {
             try
@@ -39,18 +39,27 @@ namespace Township_API.Controllers
                 if (existingEmployee == null)
                 {
                     return NotFound();
-                }
-                existingEmployee.ID = updatedEmployee.ID;
-                existingEmployee.code = updatedEmployee.code;
-                existingEmployee.name = updatedEmployee.name;
-                existingEmployee.email = updatedEmployee.email;
-                existingEmployee.phone = updatedEmployee.phone; 
-                existingEmployee.role = updatedEmployee.role;
-                existingEmployee.isactive = updatedEmployee.isactive;
-                existingEmployee.createdby = updatedEmployee.createdby;
-                existingEmployee.createdon = updatedEmployee.createdon;
+                }                 
+                existingEmployee.IDNumber = updatedEmployee.IDNumber;
+                existingEmployee.FirstName = updatedEmployee.FirstName;
+                existingEmployee.Middlename = updatedEmployee.Middlename;
+                existingEmployee.LastName = updatedEmployee.LastName;
+                existingEmployee.EmailID = updatedEmployee.EmailID; 
+                existingEmployee.MobileNo = updatedEmployee.MobileNo;               
+                existingEmployee.ICEno = updatedEmployee.ICEno;
+                existingEmployee.Role = updatedEmployee.Role;
+                existingEmployee.Gender = updatedEmployee.Gender;
+                existingEmployee.CardCSN = updatedEmployee.CardCSN;
+                existingEmployee.SiteID = updatedEmployee.SiteID;
+                existingEmployee.Role = updatedEmployee.Role;
+                existingEmployee.Dob = updatedEmployee.Dob;
+                existingEmployee.Doj = updatedEmployee.Doj;
+                existingEmployee.isResident = updatedEmployee.isResident;
+                existingEmployee.ResidentID = updatedEmployee.ResidentID;
+                existingEmployee.isactive = updatedEmployee.isactive; 
                 existingEmployee.updatedby = updatedEmployee.updatedby;
                 existingEmployee.updatedon = updatedEmployee.updatedon;
+                 
                 _context.Entry(existingEmployee).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
 
@@ -79,10 +88,10 @@ namespace Township_API.Controllers
                 _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblEmployee OFF");
                 await _context.SaveChangesAsync();
                 int number = (int)AccessCardHilders.Employee;
-                obj.code = number.ToString() + obj.ID.ToString("D9");
+                obj.IDNumber = number.ToString() + obj.ID.ToString("D4");
 
                 await _context.SaveChangesAsync();
-                return Ok(new { message = $"{obj.code} Employee Added successfully" });
+                return Ok(new { message = $"{obj.IDNumber} Employee Added successfully" });
             }
             catch (Exception ex)
             {
@@ -104,14 +113,40 @@ namespace Township_API.Controllers
         [HttpGet("GetEmployeeByID/{id}")]
         public async Task<IActionResult> GetEmployeeByID(int id)
         {
-            var Employees = await _context.Employees.Where(p=>p.ID ==id).OrderByDescending(p => p.ID).ToListAsync();
-            if (Employees == null) 
-                   return BadRequest("No Data found");
+            var Employees = await _context.Employees.Where(p => p.ID == id).OrderByDescending(p => p.ID).ToListAsync();
+            if (Employees == null)
+                return BadRequest("No Data found");
 
-            
+
             return Ok(Employees);
         }
 
+        // GET: api/products 
+        [HttpGet("GetEmployeeAccessDetails/{ID}")]
+        public async Task<IActionResult> GetEmployeeAccessDetails(int ID)
+        {
+            var Employees = await _context.Employees.Where(p => p.ID == ID).ToListAsync();
+            string? IdNumber = Employees[0].IDNumber;
+            if (IdNumber != null)
+            {
+                try
+                {
+                    var jsonWrapper = new DependentJsonWrapper
+                    {
+                        Owners = Employees,
+                        Vehicles = _context.Vehicles.Where(p => p.TagUID == IdNumber).ToList(),
+                        UserAllAccess = await _context._userAllAccess.Where(p => p.CardHolderID == IdNumber).ToListAsync()
+                     };
+
+                    return Ok(jsonWrapper);
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message.ToString());
+                }
+            }
+            return Ok(new { message = $"Employee records not found!" });
+        }
 
         [HttpPost("AddEmployees")]
         public async Task<IActionResult> AddEmployees([FromBody] List<Employee> Obj)
@@ -120,7 +155,7 @@ namespace Township_API.Controllers
                 return BadRequest("No Data provided");
 
             using var transaction = await _context.Database.BeginTransactionAsync();
-            
+
             try
             {
                 foreach (var objID in Obj)
@@ -136,20 +171,21 @@ namespace Township_API.Controllers
                         {
                             return NotFound();
                         }
+
                     }
                     else
-                    { 
+                    {
                         _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblEmployee ON");
                         _context.Employees.Add(objID);
                         _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblEmployee  OFF");
                         await _context.SaveChangesAsync();
                         int number = (int)AccessCardHilders.Employee;
-                        objID.code = number.ToString() + objID.ID.ToString("D9");
+                        objID.IDNumber = number.ToString() + objID.ID.ToString("D4");
                         await _context.SaveChangesAsync();
                     }
                 }
                 await _context.SaveChangesAsync();
-                await transaction.CommitAsync(); 
+                await transaction.CommitAsync();
 
                 return Ok(new { message = $"{Obj.Count} Employee processed successfully" });
             }

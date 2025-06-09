@@ -1,4 +1,7 @@
-﻿namespace Township_API.Models
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace Township_API.Models
 {
 
     public class commonTypes
@@ -53,6 +56,16 @@
         public object? UserNRDAccess { get; set; }
         public object? UserBuildingAccess { get; set; }
         public object? UserAminitiesAccess { get; set; } 
+    }
+    
+   [Table("images")] 
+    public class Image
+    {
+        [Key]
+        public int ImageId { get; set; }
+        public string FileName { get; set; }
+        public string ContentType { get; set; }
+        public byte[] Data { get; set; } // BLOB
     }
 
 

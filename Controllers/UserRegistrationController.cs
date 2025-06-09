@@ -19,7 +19,7 @@ namespace Township_API.Controllers
         }
 
         // PUT: api/products/5
-        [HttpPost("{UpdateUser}/{id}")]
+        [HttpPost("UpdateUser/{id}")]
         public async Task<IActionResult> UpdateUser(int id, [FromBody] User updatedUser)
         {
             if (id != updatedUser.Id)
@@ -27,11 +27,18 @@ namespace Township_API.Controllers
                 return BadRequest("User ID mismatch.");
             }
 
-            var existingUser = await _context.UserRegisters.FindAsync(0);
+            var existingUser = await _context.UserRegisters.FindAsync(updatedUser.Id);
             if (existingUser == null)
             {
                 return NotFound();
             }
+            var existingObj = await _context.UserRegisters.Where(p => p.Id.ToString() != updatedUser.Id.ToString() && p.name.ToString() == updatedUser.name.ToString()).ToListAsync();
+            if (existingObj != null)
+            {
+                if (existingObj.Count > 0)
+                    return BadRequest("User with this name Already Exists.");
+            }
+
 
             // Update properties
             existingUser.uid = updatedUser.uid;
@@ -39,6 +46,7 @@ namespace Township_API.Controllers
             existingUser.email = updatedUser.email;
             existingUser.phone = updatedUser.phone;
             existingUser.password = updatedUser.password;
+            existingUser.CompanyID = updatedUser.CompanyID;
             existingUser.Role = updatedUser.Role;
 
             _context.Entry(existingUser).State = EntityState.Modified;
@@ -56,6 +64,14 @@ namespace Township_API.Controllers
             {
                 return BadRequest("User Exists.");
             }
+
+            var existOBJ = await _context.UserRegisters.Where(p =>   p.name.ToString() == User.name.ToString()).ToListAsync();
+            if (existOBJ != null)
+            {
+                if (existOBJ.Count > 0)
+                    return BadRequest("User with this name Already Exists.");
+            }
+             
             _context.Add(User);
             await _context.SaveChangesAsync();
 

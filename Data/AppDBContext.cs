@@ -36,7 +36,12 @@ namespace Township_API.Data
         
         public DbSet<ModuleData> ModuleDatas { get; set; }
 
-         
+        public DbSet<Company> Companies { get; set; }
+        public DbSet<Project> Projects { get; set; }
+   public DbSet<Reader> Readers { get; set; }
+
+        public DbSet<Image> Images { get; set; }
+
         public IQueryable<NRD> NRDs => (IQueryable<NRD>)ModuleDatas.Where(n => n.TypeID == (int)commonTypes.ModuleTypes.NRD && n.ID > (int)commonTypes.ModuleTypes.NRD);
         public IQueryable<Building> Buildings => (IQueryable<Building>)ModuleDatas.Where(n => n.TypeID == (int)commonTypes.ModuleTypes.Building && n.ID > (int)commonTypes.ModuleTypes.Building);
         public IQueryable<VehicleType> VehicleTypes => (IQueryable<VehicleType>)ModuleDatas.Where(n => n.TypeID == (int)commonTypes.ModuleTypes.VehicleType && n.ID > (int)commonTypes.ModuleTypes.VehicleType);
@@ -50,6 +55,7 @@ namespace Township_API.Data
         public IQueryable<ReaderRelay> ReaderRelays => (IQueryable<ReaderRelay>)ModuleDatas.Where(n => n.TypeID == (int)commonTypes.ModuleTypes.ReaderRelays && n.ID > (int)commonTypes.ModuleTypes.ReaderRelays);
         public IQueryable<VehicleMake> VehicleMakes => (IQueryable<VehicleMake>)ModuleDatas.Where(n => n.TypeID == (int)commonTypes.ModuleTypes.VehicleMake && n.ID > (int)commonTypes.ModuleTypes.VehicleMake);
         public DbSet<DoorAccess> _userDoorAccess { get; set; }
+        public DbSet<AllCardHolder> AllCardHolders { get; set; }
         public DbSet<UserALLAccess> _userAllAccess { get; set; }
 
         public DbSet<UserAmenitiesAccess> _userAmenitiesAccess { get; set; }
@@ -86,6 +92,13 @@ namespace Township_API.Data
                 entity.ToView("vwAllDoorAccess"); // Name of the view in SQL
                                                         // Optional: configure column mapping if needed
                                                         // entity.Property(e => e.Name).HasColumnName("SomeColumn");
+            });
+            modelBuilder.Entity<AllCardHolder>(entity =>
+            {
+                entity.HasNoKey(); // Views often don’t have a primary key
+                entity.ToView("vwCardHolders"); // Name of the view in SQL
+                                                  // Optional: configure column mapping if needed
+                                                  // entity.Property(e => e.Name).HasColumnName("SomeColumn");
             });
         }
     }

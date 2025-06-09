@@ -32,6 +32,8 @@ namespace Township_API.Controllers
             {
                 return NotFound();
             }
+
+
             existingContractor.CSN = updatedContractor.CSN;
             existingContractor.IDNumber = updatedContractor.IDNumber;
             existingContractor.TagNumber = updatedContractor.TagNumber;
@@ -59,6 +61,7 @@ namespace Township_API.Controllers
             existingContractor.RegistrationNumber = updatedContractor.RegistrationNumber;
             existingContractor.ValidFromDate = updatedContractor.ValidFromDate;
             existingContractor.Address = updatedContractor.Address;
+            existingContractor.ContactorType = updatedContractor.ContactorType;
             _context.Entry(existingContractor).State = EntityState.Modified;
             await _context.SaveChangesAsync();
             return Ok(existingContractor);
@@ -92,7 +95,7 @@ namespace Township_API.Controllers
 
 
             int number = (int)AccessCardHilders.contractor;
-            obj.IDNumber = number.ToString() + obj.ID.ToString("D10"); 
+            obj.IDNumber = number.ToString() + obj.ID.ToString("D5"); 
             await _context.SaveChangesAsync();
 
             return Ok();
@@ -212,6 +215,7 @@ namespace Township_API.Controllers
                         existingContractor.RegistrationNumber = objID.RegistrationNumber;
                         existingContractor.ValidFromDate = objID.ValidFromDate;
                         existingContractor.Address = objID.Address;
+                        existingContractor.ContactorType = objID.ContactorType;
 
                         _context.Entry(existingContractor).State = EntityState.Modified;
                         await _context.SaveChangesAsync();
@@ -227,7 +231,7 @@ namespace Township_API.Controllers
 
 
                         int number = (int)AccessCardHilders.contractor;
-                        objID.IDNumber = number.ToString() + objID.ID.ToString("D10");
+                        objID.IDNumber = number.ToString() + objID.ID.ToString("D5");
                         await _context.SaveChangesAsync();
                     }
                 }
@@ -296,7 +300,7 @@ namespace Township_API.Controllers
             await _context.SaveChangesAsync();
 
             int number = (int)AccessCardHilders.DependentContractor;
-            obj.IDNumber = number.ToString() + obj.ID.ToString("D9");
+            obj.IDNumber = number.ToString() + obj.ID.ToString("D4");
 
             await _context.SaveChangesAsync();
 
@@ -346,7 +350,7 @@ namespace Township_API.Controllers
                         await _context.SaveChangesAsync();
 
                         int number = (int)AccessCardHilders.DependentContractor;
-                        objID.IDNumber = number.ToString() + objID.ID.ToString("D9");
+                        objID.IDNumber = number.ToString() + objID.ID.ToString("D4");
 
                         await _context.SaveChangesAsync();
                     }

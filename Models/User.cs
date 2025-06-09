@@ -1,11 +1,14 @@
 ﻿
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.VisualBasic;
 using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography.X509Certificates;
+using System.Security.Cryptography;
 using Township_API.Models;
 
 
@@ -37,8 +40,11 @@ namespace Township_API.Models
         [Required, EmailAddress]
         public string email { get; set; }
 
-        [Required, Phone]
+        [Required]
         public string? phone { get; set; }
+
+        [ForeignKey("Company")]
+        public int? CompanyID { get; set; } = 0;
         public bool? isactive { get; set; } = false;
         public bool? isdeleted { get; set; } = false;
         public int? createdby { get; set; }
@@ -49,6 +55,8 @@ namespace Township_API.Models
         [ForeignKey("Role")]
         public int? roleID { get; set; }
         public Role? Role { get; set; }
+
+        public Company? Company { get; set; }
     }
 
     // Profile
@@ -57,22 +65,16 @@ namespace Township_API.Models
     {
         // [ID],[profilename]     ,[uid]      ,[isactive]      ,[isdeleted]      ,[createdby]      ,[createdon]      ,[updatedby]      ,[updatedon]
         [Key]
-        public int ID { get; set; }
-
+        public int ID { get; set; } 
         [Required, MaxLength(100)]
-        public string? profilename { get; set; }
-
-        [ForeignKey("User")]
-        public int uid { get; set; }
-
-        public bool? isactive { get; set; } = false;
-        public bool? isdeleted { get; set; } = false;
-        public int? createdby { get; set; }
-        public DateTime? createdon { get; set; } = null;
-        public int? updatedby { get; set; }
-        public DateTime? updatedon { get; set; } = null;
-
-        public User? user { get; set; }
+        public string? ProfileName { get; set; } 
+        public bool? isActive { get; set; } = false;
+        public bool? isDeleted { get; set; } = false;
+        public int? CreatedBy { get; set; }
+        public DateTime? CreatedOn { get; set; } = null;
+        public int? UpdatedBy { get; set; }
+        public DateTime? UpdatedOn { get; set; } = null;
+        public int? Companyid { get; set; }
 
     }
 
@@ -101,33 +103,7 @@ namespace Township_API.Models
         public int? updatedby { get; set; }
         public DateTime? updatedon { get; set; } = null;
     }
-
-    //public class RolePermission
-    //{
-    //    [Key]
-    //    public int PermissionID { get; set; }
-
-    //    [ForeignKey("Role")]
-    //    public int RoleID { get; set; }
-
-    //    public Role  Role { get; set; }
-
-    //    [ForeignKey("Module")]
-    //    public int ModuleID { get; set; }
-    //    public Module Module { get; set; }
-
-    //    public bool CanInsert { get; set; } = false;
-    //    public bool CanUpdate { get; set; } = false;
-    //    public bool CanDelete { get; set; } = false;
-    //    public bool CanView { get; set; } = true;
-
-    //    public bool? isactive { get; set; } = false;
-    //    public bool? isdeleted { get; set; } = false;
-    //    public int? createdby { get; set; }
-    //    public DateTime? createdon { get; set; } = null;
-    //    public int? updatedby { get; set; }
-    //    public DateTime? updatedon { get; set; } = null;
-    //}
+     
     [Table("tblModules")]
     public class _module
     {
@@ -173,7 +149,7 @@ namespace Township_API.Models
         public DateTime? updatedon { get; set; } = null;
 
     }
-        
+
     public abstract class ModuleDataTemplate : ModuleData
     {
         [Key]
@@ -213,35 +189,49 @@ namespace Township_API.Models
 
     [Table("tblEmployee")]
     public class Employee
-    {      
+    {
         [Key]
         public int ID { get; set; }
+
+        [MaxLength(50)]
+        public string? IDNumber { get; set; }
         [Required]
         [MaxLength(50)]
-        public string? code { get; set; }
+        public string FirstName { get; set; } = "";
+        [MaxLength(50)]
+        public string? Middlename { get; set; } = "";
         [Required]
-        [MaxLength(100)] 
-        public string name { get; set; }
-        public string? phone { get; set; } 
-        public string? email { get; set; }
+        [MaxLength(50)]
+        public string? LastName { get; set; } = "";
+        [MaxLength(10)]
+        public string Gender { get; set; } = "";
         [MaxLength(25)]
-        public string? cardCSN { get; set; }
-        public int? siteid { get; set; }
-        public string? role { get; set; }
-        public bool? isactive { get; set; } = false;
+        public string? CardCSN { get; set; } = "";
+        public string? MobileNo { get; set; }
+        public string? ICEno { get; set; }
+        [EmailAddress]
+        public string? EmailID { get; set; }
+        public DateTime? Dob { get; set; } = null;
+        public DateTime? Doj { get; set; } = null;
+        public int? isResident { get; set; } = 0;
+        public int? ResidentID { get; set; } = 0;
+        public int? SiteID { get; set; }
+        public string? Role { get; set; }
+        public int? isactive { get; set; } = 0;
         public int? createdby { get; set; } = 0;
         public DateTime? createdon { get; set; } = null;
         public int? updatedby { get; set; } = 0;
         public DateTime? updatedon { get; set; } = null;
-
     }
+
     [Table("tblServiceProvider")]
     public class Service_Provider
-    {    public int ID { get; set; }
-        [MaxLength(50)] 
+    {
+        public int ID { get; set; }
+        [MaxLength(50)]
         public string? code { get; set; }
         [Required]
-        [MaxLength(100)] 
+        [MaxLength(100)]
         public string? name { get; set; }
         public string? email { get; set; }
         public string? phone { get; set; }
@@ -286,7 +276,7 @@ namespace Township_API.Models
         public int id { get; set; }
         [Required]
         public string moduleID { get; set; }
-        [Required] 
+        [Required]
         public string CardHolderID { get; set; }
         public DateTime validTillDate { get; set; }
         public bool? sun { get; set; }
@@ -296,14 +286,28 @@ namespace Township_API.Models
         public bool? thu { get; set; }
         public bool? fri { get; set; }
         public bool? sat { get; set; }
-        public bool? isactive { get; set; }=true;
-        public bool? isdeleted { get; set; } =false;
+        public bool? isactive { get; set; } = true;
+        public bool? isdeleted { get; set; } = false;
         public int? createdby { get; set; }
         public DateTime? createdon { get; set; }
         public int? updatedby { get; set; }
         public DateTime? updatedon { get; set; }
     }
-
+    public class AllCardHolder
+    {
+        public string CardType { get; set; }
+        public int id { get; set; }
+        public int pid { get; set; }
+        public string IDNumber { get; set; }
+        public string shortname { get; set; }
+        public string CSN { get; set; }
+        public string Building { get; set; }
+        public string FlatNumber { get; set; }
+        public DateTime? CardPrintingDate { get; set; }
+        public DateTime? CardIssueDate { get; set; }
+        public string Bld { get; set; }
+        public string NRD { get; set; }
+    }
     public class UserALLAccess
     {
         public int? id { get; set; }
@@ -312,15 +316,15 @@ namespace Township_API.Models
         public string? CardHolderID { get; set; }
         public DateTime? validTillDate { get; set; }
         public string? sun { get; set; }
-        public string? mon { get; set; }       
+        public string? mon { get; set; }
         public string? tue { get; set; }
         public string? wed { get; set; }
         public string? thu { get; set; }
         public string? fri { get; set; }
         public string? sat { get; set; }
-
         public string? isactive { get; set; }
         public string? isdeleted { get; set; }
+        public string? ModuleType { get; set; }
     }
 
     public class UserNRDAccess

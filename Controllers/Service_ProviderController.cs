@@ -78,7 +78,7 @@ namespace Township_API.Controllers
                 await _context.SaveChangesAsync();
 
                 int number = (int)AccessCardHilders.ServiceProvider;
-                obj.code = number.ToString() + obj.ID.ToString("D10");
+                obj.code = number.ToString() + obj.ID.ToString("D5");
 
                 await _context.SaveChangesAsync();
 
@@ -164,7 +164,7 @@ namespace Township_API.Controllers
                         _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblServiceProvider  OFF");
                         await _context.SaveChangesAsync();
                         int number = (int)AccessCardHilders.ServiceProvider;
-                        objID.code = number.ToString() + objID.ID.ToString("D10");
+                        objID.code = number.ToString() + objID.ID.ToString("D5");
                         await _context.SaveChangesAsync();
                     }
                 }

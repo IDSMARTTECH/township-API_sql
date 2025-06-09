@@ -66,7 +66,7 @@ namespace Township_API.Models
         public string? VoterID { get; set; } 
         [Required] 
         [MaxLength(50)] 
-        public string? Firstname { get; set; }
+        public string? FirstName { get; set; }
         [MaxLength(50)]
         public string? MiddletName { get; set; }
         [MaxLength(50)]

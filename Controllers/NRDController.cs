@@ -51,7 +51,7 @@ namespace Township_API.Controllers
                 _context.Entry(existingOBJ).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
 
-                return Ok(existingOBJ); 
+                return Ok(existingOBJ);
             }
             catch (Exception ex)
             {
@@ -113,15 +113,15 @@ namespace Township_API.Controllers
                 throw;
             }
         }
-        
-        [HttpGet("GetNRD/{ID}")]
-        public async Task<IActionResult> GetNRD(int id)
+        // GET: api/products 
+        [HttpGet("GetAllProjectNRDs/{ProjectID}")]
+        public async Task<IActionResult> GetAllProjectNRDs(int ProjectID)
         {
             try
             {
                 int objval = (int)commonTypes.ModuleTypes.NRD;
 
-                var OBJs = await _context.ModuleData.Where(n => n.TypeID == objval && n.ID > objval && n.ID==id).OrderByDescending(p => p.ID).ToListAsync();
+                var OBJs = await _context.ModuleData.Where(n => n.TypeID == objval && n.ID > objval && n.ParentID == ProjectID).OrderByDescending(p => p.ID).ToListAsync();
 
                 return Ok(OBJs);
             }
@@ -131,35 +131,53 @@ namespace Township_API.Controllers
                 throw;
             }
         }
-         
+
+        [HttpGet("GetNRD/{ID}")]
+        public async Task<IActionResult> GetNRD(int id)
+        {
+            try
+            {
+                int objval = (int)commonTypes.ModuleTypes.NRD;
+
+                var OBJs = await _context.ModuleData.Where(n => n.TypeID == objval && n.ID > objval && n.ID == id).OrderByDescending(p => p.ID).ToListAsync();
+
+                return Ok(OBJs);
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        }
+
 
         [HttpGet("NRDBuildingDetails")]
         public async Task<IActionResult> GetAllNRDData()
         {
             try
-            {  
-                List<tmpNRD>  nrdlist = new List<tmpNRD>();
+            {
+                List<tmpNRD> nrdlist = new List<tmpNRD>();
                 int objval = (int)commonTypes.ModuleTypes.NRD;
-                var OBJs = await _context.ModuleData.Where(n => n.TypeID == objval && n.ID > objval  ).OrderByDescending(p => p.ID).ToListAsync();
-               
-               
+                var OBJs = await _context.ModuleData.Where(n => n.TypeID == objval && n.ID > objval).OrderByDescending(p => p.ID).ToListAsync();
+
+
                 foreach (var NRDItem in OBJs)
                 {
 
-                    tmpNRD _nrd = new tmpNRD  { id = NRDItem.ID, nrdname = NRDItem.Name, code = NRDItem.Code, buildingList = null };
+                    tmpNRD _nrd = new tmpNRD { id = NRDItem.ID, nrdname = NRDItem.Name, code = NRDItem.Code, buildingList = null };
 
                     objval = (int)commonTypes.ModuleTypes.Building;
                     var OBJ2s = await _context.ModuleData.Where(n => n.TypeID == objval && n.ID > objval && n.ParentID == NRDItem.ID).ToListAsync();
                     List<tmpbuilding> buildings = new List<tmpbuilding>();
                     foreach (var Item in OBJ2s)
                     {
-                        tmpbuilding b = new tmpbuilding { id = Item.ID, name = Item.Name, code = Item.Code  };
+                        tmpbuilding b = new tmpbuilding { id = Item.ID, name = Item.Name, code = Item.Code };
                         buildings.Add(b);
                     }
                     _nrd.buildingList = buildings;
                     nrdlist.Add(_nrd); // attach manually
                 }
-                return Ok(nrdlist);                 
+                return Ok(nrdlist);
             }
             catch (Exception ex)
             {
@@ -168,7 +186,7 @@ namespace Township_API.Controllers
             }
         }
         public class tmpNRD { public int id { get; set; } public string nrdname { get; set; } public string code { get; set; } public List<tmpbuilding> buildingList { get; set; } }
-        public class tmpbuilding { public int id { get; set; } public string name { get; set; } public string code { get; set; }  }
+        public class tmpbuilding { public int id { get; set; } public string name { get; set; } public string code { get; set; } }
 
 
         [HttpPost("bulkSaveNRD")]
@@ -183,12 +201,15 @@ namespace Township_API.Controllers
                 {
                     var existingOBJ = await _context.ModuleData
                         .FirstOrDefaultAsync(v => v.ID == updatedObj.ID);
-                     
+
                     if (existingOBJ != null)
                     {
                         // Update properties 
                         existingOBJ.Code = updatedObj.Code;
                         existingOBJ.Name = updatedObj.Name;
+                        existingOBJ.ParentID = updatedObj.ParentID;
+                        existingOBJ.ModuleType = updatedObj.ModuleType;
+                        existingOBJ.TypeID = updatedObj.TypeID;
                         existingOBJ.isactive = updatedObj.isactive;
                         existingOBJ.createdby = 0;
                         existingOBJ.updatedby = 0;
@@ -208,7 +229,7 @@ namespace Township_API.Controllers
                     }
                 }
 
-               
+
                 return Ok(new { message = $"NRD processed successfully" });
             }
             catch (Exception ex)
@@ -248,7 +269,7 @@ namespace Township_API.Controllers
                     return NotFound();
                 }
                 var t = (int)ModuleTypes.Phases;
-                var existOBJ = await _context.ModuleData.Where(p =>p.ID.ToString()!=id.ToString() && p.Name.ToString() == updatedObj.Name.ToString() && updatedObj.TypeID.ToString() == t.ToString()).ToListAsync();
+                var existOBJ = await _context.ModuleData.Where(p => p.ID.ToString() != id.ToString() && p.Name.ToString() == updatedObj.Name.ToString() && updatedObj.TypeID.ToString() == t.ToString()).ToListAsync();
                 if (existOBJ != null)
                 {
                     if (existOBJ.Count > 0)
@@ -264,7 +285,7 @@ namespace Township_API.Controllers
                 _context.Entry(existingOBJ).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
 
-                return Ok(existingOBJ); 
+                return Ok(existingOBJ);
             }
             catch (Exception ex)
             {
@@ -284,7 +305,7 @@ namespace Township_API.Controllers
                 {
                     return BadRequest("Phase Exists.");
                 }
-                 
+
                 var t = (int)ModuleTypes.Phases;
                 var existOBJ = await _context.ModuleData.Where(p => p.Name.ToString() == obj.Name.ToString() && obj.TypeID.ToString() == t.ToString()).ToListAsync();
                 if (existOBJ != null)
@@ -320,7 +341,7 @@ namespace Township_API.Controllers
         [HttpGet("GetPhase/{id}")]
         public async Task<IActionResult> GetPhase(int id)
         {
-            var Phases = await _context.ModuleData.Where(p => (p.TypeID == (int)commonTypes.ModuleTypes.Phases && p.ID==id && p.ID > (int)commonTypes.ModuleTypes.Phases)).OrderByDescending(p => p.ID).ToListAsync();
+            var Phases = await _context.ModuleData.Where(p => (p.TypeID == (int)commonTypes.ModuleTypes.Phases && p.ID == id && p.ID > (int)commonTypes.ModuleTypes.Phases)).OrderByDescending(p => p.ID).ToListAsync();
             return Ok(Phases);
         }
 
@@ -354,7 +375,7 @@ namespace Township_API.Controllers
                         _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblModuleData OFF");
                         await _context.SaveChangesAsync();
                     }
-                } 
+                }
                 return Ok(new { message = $"{Obj.Count} Phase(s) processed successfully" });
             }
             catch (Exception ex)
@@ -395,10 +416,10 @@ namespace Township_API.Controllers
                     return NotFound();
                 }
                 int t = (int)ModuleTypes.ContractorType;
-                var existOBJ = await _context.ModuleData.Where(p =>p.ID!=id && p.Name.ToString() == updatedContractorType.Name.ToString() && updatedContractorType.TypeID.ToString() == t.ToString() ).ToListAsync();
+                var existOBJ = await _context.ModuleData.Where(p => p.ID != id && p.Name.ToString() == updatedContractorType.Name.ToString() && updatedContractorType.TypeID.ToString() == t.ToString()).ToListAsync();
                 if (existOBJ != null)
                 {
-                    if (existOBJ.Count>0)
+                    if (existOBJ.Count > 0)
                         return BadRequest("Contractor Type Already Exists.");
                 }
                 // Update properties
@@ -410,7 +431,7 @@ namespace Township_API.Controllers
                 _context.Entry(existingContractorType).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
 
-                return Ok(existingContractorType); 
+                return Ok(existingContractorType);
             }
             catch (Exception ex)
             {
@@ -434,7 +455,7 @@ namespace Township_API.Controllers
                 var existOBJ = await _context.ModuleData.Where(p => p.Name.ToString() == obj.Name.ToString() && obj.TypeID.ToString() == t.ToString()).ToListAsync();
                 if (existOBJ != null)
                 {
-                    if (existOBJ.Count>0) 
+                    if (existOBJ.Count > 0)
                         return BadRequest("Contractor Type Already Exists.");
                 }
                 // Turn IDENTITY_INSERT ON
@@ -442,7 +463,7 @@ namespace Township_API.Controllers
                 _context.Add(obj);
                 // Turn IDENTITY_INSERT ON
                 _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblModuleData OFF");
-                await _context.SaveChangesAsync();          
+                await _context.SaveChangesAsync();
                 return Ok(new { message = $"{obj.ID} Contractor Type processed successfully" });
             }
             catch (Exception ex)
@@ -469,7 +490,7 @@ namespace Township_API.Controllers
         {
             //var ContractorTypes = await _context.ContractorTypes.ToListAsync();
             int objval = (int)commonTypes.ModuleTypes.ContractorType;
-            var OBJs = await _context.ModuleData.Where(n => n.TypeID == objval && n.ID ==id && n.ID > objval).OrderByDescending(p => p.ID).ToListAsync();
+            var OBJs = await _context.ModuleData.Where(n => n.TypeID == objval && n.ID == id && n.ID > objval).OrderByDescending(p => p.ID).ToListAsync();
             return Ok(OBJs);
         }
 
@@ -504,7 +525,7 @@ namespace Township_API.Controllers
                         _context.ModuleData.Add(updatedObj);
                         _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblModuleData OFF");
                         await _context.SaveChangesAsync();
-                       
+
                     }
                 }
 
@@ -515,11 +536,175 @@ namespace Township_API.Controllers
             catch (Exception ex)
             {
                 // await transaction.RollbackAsync();
-                return  StatusCode(500, new { error = ex.Message });
+                return StatusCode(500, new { error = ex.Message });
             }
         }
 
     }
+
+    [Route("api/[controller]")]
+    [ApiController]
+    public class ReaderController : Controller
+    {
+        private readonly AppDBContext _context;
+
+        public ReaderController(AppDBContext context)
+        {
+            _context = context;
+        }
+
+        // PUT: api/products/5
+        [HttpPost("{UpdateReader}/{id}")]
+        public async Task<IActionResult> UpdateReader(int id, [FromBody] Reader updatedObj)
+        {
+            try
+            {
+                if (id != updatedObj.ID)
+                {
+                    return BadRequest("{updatedObj.code} ID mismatch.");
+                }
+
+                var existingOBJ = await _context.Readers.FindAsync(id);
+                if (existingOBJ == null)
+                {
+                    return NotFound();
+                }
+                var existOBJ = await _context.Readers.Where(p => p.ID.ToString() != id.ToString()
+                && p.code.ToString() == updatedObj.code.ToString()).ToListAsync();
+                if (existOBJ != null)
+                {
+                    if (existOBJ.Count > 0)
+                        return BadRequest("Reader ID Already Exists.");
+                }
+
+                // Update properties         
+                existingOBJ.code = updatedObj.code;
+                existingOBJ.readerip = updatedObj.readerip;
+                existingOBJ.readerport = updatedObj.readerport; ;
+                existingOBJ.readermode = updatedObj.readermode; ;
+                existingOBJ.readerLocation = updatedObj.readerLocation;
+                existingOBJ.readertype = updatedObj.readertype;
+                existingOBJ.isActive = updatedObj.isActive;
+                existingOBJ.IsDeleted = updatedObj.IsDeleted;
+ 
+                _context.Entry(existingOBJ).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+
+                return Ok(existingOBJ);
+            }
+            catch (Exception ex)
+            {
+                //     await transaction.RollbackAsync();
+                return StatusCode(500, new { error = ex.Message });
+            }
+        }
+
+
+        [HttpPost("AddReader")]
+        public async Task<IActionResult> AddReader([FromBody] Reader obj)
+        {
+            try
+            {
+                var existingReader = await _context.Readers.FindAsync(0);
+                if (existingReader != null)
+                {
+                    return BadRequest("Reader Exists.");
+                }
+                 
+                var existOBJ = await _context.Readers.Where(p => p.code.ToString() == obj.code.ToString()).ToListAsync();
+                if (existOBJ != null)
+                {
+                    if (existOBJ.Count > 0)
+                        return BadRequest("Reader code Already Exists.");
+                }
+
+                _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblReader ON");
+                _context.Add(obj);
+                _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblReader OFF");
+                await _context.SaveChangesAsync();
+
+                return Ok(new { message = $"{obj.ID} Reader processed successfully" });
+            }
+            catch (Exception ex)
+            {
+                // await transaction.RollbackAsync();
+                return StatusCode(500, new { error = ex.Message });
+            }
+        }
+
+
+        // GET: api/products 
+        [HttpGet]
+        public async Task<IActionResult> GetAllReaders()
+        {
+            var Readers = await _context.Readers.Where(p => (p.isActive==true)).OrderByDescending(p => p.code).ToListAsync();
+            return Ok(Readers);
+        }
+
+        // GET: api/products 
+        [HttpGet("GetReader/{id}")]
+        public async Task<IActionResult> GetReader(int id)
+        {
+            var Readers = await _context.Readers.Where(p => (p.ID == id )).OrderByDescending(p => p.ID).ToListAsync();
+            return Ok(Readers);
+        }
+
+        [HttpPost("bulkSaveReader")]
+        public async Task<IActionResult> BulkSave([FromBody] List<Reader> Obj)
+        {
+            //if (Vehicles == null || !Vehicles.Any())
+            //     return "BadRequest("No Vehicles provided")";
+
+            //  using var transaction = await _context.Database.BeginTransactionAsync();
+            try
+            {
+                foreach (var updatedObj in Obj)
+                {
+                    var existingOBJ = await _context.Readers
+                        .FirstOrDefaultAsync(v => v.ID == updatedObj.ID);
+
+                   
+
+                    if (existingOBJ != null)
+                    {
+                        var existOBJ = await _context.Readers.Where(p =>p.ID!=updatedObj.ID && p.code.ToString() == updatedObj.code.ToString()).ToListAsync();
+                        if (existOBJ != null)
+                        {
+                            if (existOBJ.Count > 0)
+                                return BadRequest("Reader code Already Exists.");
+                        }
+
+                        // Update properties 
+                        existingOBJ.code = updatedObj.code;
+                        existingOBJ.readerip = updatedObj.readerip;
+                        existingOBJ.readerport = updatedObj.readerport; ;
+                        existingOBJ.readermode = updatedObj.readermode; ;
+                        existingOBJ.readerLocation = updatedObj.readerLocation;
+                        existingOBJ.readertype = updatedObj.readertype;
+                        existingOBJ.isActive = updatedObj.isActive;
+                        existingOBJ.IsDeleted = updatedObj.IsDeleted;
+
+                        await _context.SaveChangesAsync();
+                    }
+                    else
+                    {
+                        _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblReader ON");
+                        _context.Readers.Add(updatedObj);
+                        _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblReader OFF");
+                        await _context.SaveChangesAsync();
+                    }
+                }
+                return Ok(new { message = $"{Obj.Count} Reader(s) processed successfully" });
+            }
+            catch (Exception ex)
+            {
+                // await transaction.RollbackAsync();
+                return StatusCode(500, new { error = ex.Message });
+            }
+        }
+
+    }
+
 
     [Route("api/[controller]")]
     [ApiController]
@@ -548,7 +733,7 @@ namespace Township_API.Controllers
                 return NotFound();
             }
             int t = (int)ModuleTypes.VehicleMake;
-            var existOBJ = await _context.ModuleData.Where(p =>p.ID !=id && p.Name.ToString() == updatedVehicleMake.Name.ToString() && updatedVehicleMake.TypeID.ToString() == t.ToString()).ToListAsync();
+            var existOBJ = await _context.ModuleData.Where(p => p.ID != id && p.Name.ToString() == updatedVehicleMake.Name.ToString() && updatedVehicleMake.TypeID.ToString() == t.ToString()).ToListAsync();
             if (existOBJ != null)
             {
                 return BadRequest("Vehicle Make Already Exists.");
@@ -606,7 +791,7 @@ namespace Township_API.Controllers
         public async Task<IActionResult> GetVehicle(int id)
         {
             int objval = (int)commonTypes.ModuleTypes.VehicleMake;
-            var OBJs = await _context.ModuleData.Where(n => n.TypeID == objval && n.ID==id && n.ID > objval).OrderByDescending(p => p.ID).ToListAsync();
+            var OBJs = await _context.ModuleData.Where(n => n.TypeID == objval && n.ID == id && n.ID > objval).OrderByDescending(p => p.ID).ToListAsync();
             return Ok(OBJs);
         }
 
@@ -745,7 +930,7 @@ namespace Township_API.Controllers
         public async Task<IActionResult> GetReaderLocation(int id)
         {
             int objval = (int)commonTypes.ModuleTypes.ReaderLocations;
-            var OBJs = await _context.ModuleData.Where(n => n.TypeID == objval && n.ID==id && n.ID > objval).OrderByDescending(p => p.ID).ToListAsync();
+            var OBJs = await _context.ModuleData.Where(n => n.TypeID == objval && n.ID == id && n.ID > objval).OrderByDescending(p => p.ID).ToListAsync();
             return Ok(OBJs);
         }
 
@@ -820,10 +1005,10 @@ namespace Township_API.Controllers
             var existingReaderRelay = await _context.ModuleData.FindAsync(id);
             if (existingReaderRelay == null)
             {
-                    return NotFound();
+                return NotFound();
             }
             int t = (int)ModuleTypes.ReaderRelays;
-            var existOBJ = await _context.ModuleData.Where(p =>p.ID==id && p.Name.ToString() == updatedReaderRelay.Name.ToString() && updatedReaderRelay.TypeID.ToString() == t.ToString()).ToListAsync();
+            var existOBJ = await _context.ModuleData.Where(p => p.ID == id && p.Name.ToString() == updatedReaderRelay.Name.ToString() && updatedReaderRelay.TypeID.ToString() == t.ToString()).ToListAsync();
             if (existOBJ != null)
             {
                 if (existOBJ.Count > 0)
@@ -889,7 +1074,7 @@ namespace Township_API.Controllers
         public async Task<IActionResult> GetReaderRelay(int id)
         {
             int objval = (int)commonTypes.ModuleTypes.ReaderRelays;
-            var OBJs = await _context.ModuleData.Where(n => n.TypeID == objval && n.ID==id && n.ID > objval).OrderByDescending(p => p.ID).ToListAsync();
+            var OBJs = await _context.ModuleData.Where(n => n.TypeID == objval && n.ID == id && n.ID > objval).OrderByDescending(p => p.ID).ToListAsync();
             return Ok(OBJs);
         }
 
@@ -924,7 +1109,7 @@ namespace Township_API.Controllers
                         _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblModuleData OFF");
                         await _context.SaveChangesAsync();
                     }
-                } 
+                }
                 // await transaction.CommitAsync();
 
                 return Ok(new { message = $"{Obj.Count} Vehicles processed successfully" });
@@ -961,14 +1146,14 @@ namespace Township_API.Controllers
 
             var existingServiceType = await _context.ModuleData.FindAsync(id);
             if (existingServiceType == null)
-            { 
-                    return NotFound();
+            {
+                return NotFound();
             }
             int t = (int)ModuleTypes.ServiceType;
-            var existOBJ = await _context.ModuleData.Where(p =>p.ID!=id && p.Name.ToString() == updatedServiceType.Name.ToString() && p.TypeID.ToString() == t.ToString()).ToListAsync();
+            var existOBJ = await _context.ModuleData.Where(p => p.ID != id && p.Name.ToString() == updatedServiceType.Name.ToString() && p.TypeID.ToString() == t.ToString()).ToListAsync();
             if (existOBJ != null)
             {
-                if (existOBJ.Count>0)
+                if (existOBJ.Count > 0)
                     return BadRequest("Service Type Already Exists.");
             }
             // Update properties
@@ -979,7 +1164,7 @@ namespace Township_API.Controllers
 
             _context.Entry(existingServiceType).State = EntityState.Modified;
             await _context.SaveChangesAsync();
-            
+
             return Ok(existingServiceType);
         }
 
@@ -1005,14 +1190,14 @@ namespace Township_API.Controllers
                 _context.Add(obj);
                 _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblModuleData OFF");
                 await _context.SaveChangesAsync();
- 
+
                 return Ok(new { message = $"{obj.ID} ServiceType processed successfully" });
             }
             catch (Exception ex)
             {
                 // await transaction.RollbackAsync();
                 return StatusCode(500, new { error = ex.Message });
-            } 
+            }
         }
 
 
@@ -1029,7 +1214,7 @@ namespace Township_API.Controllers
         public async Task<IActionResult> GetServiceType(int id)
         {
             int objval = (int)commonTypes.ModuleTypes.ServiceType;
-            var OBJs = await _context.ModuleData.Where(n => n.TypeID == objval && n.ID==id && n.ID > objval).OrderByDescending(p => p.ID).ToListAsync();
+            var OBJs = await _context.ModuleData.Where(n => n.TypeID == objval && n.ID == id && n.ID > objval).OrderByDescending(p => p.ID).ToListAsync();
             return Ok(OBJs);
         }
 
@@ -1069,12 +1254,12 @@ namespace Township_API.Controllers
 
                 // await transaction.CommitAsync();
 
-                return  Ok(new { message = $"{Obj.Count} Vehicles processed successfully" });
+                return Ok(new { message = $"{Obj.Count} Vehicles processed successfully" });
             }
             catch (Exception ex)
             {
                 // await transaction.RollbackAsync();
-                return  StatusCode(500, new { error = ex.Message });
+                return StatusCode(500, new { error = ex.Message });
             }
         }
 
@@ -1108,7 +1293,7 @@ namespace Township_API.Controllers
                     return NotFound();
                 }
                 int t = (int)ModuleTypes.Building;
-                var existOBJ = await _context.ModuleData.Where(p => p.ID != id && p.Name.ToString() == updatedBuilding.Name.ToString() && p.TypeID.ToString() == t.ToString()).ToListAsync();
+                var existOBJ = await _context.ModuleData.Where(p => p.ID != id && p.Name.ToString() == updatedBuilding.Name.ToString() && p.ParentID == updatedBuilding.ParentID && p.TypeID.ToString() == t.ToString()).ToListAsync();
                 if (existOBJ != null)
                 {
                     if (existOBJ.Count > 0)
@@ -1184,7 +1369,7 @@ namespace Township_API.Controllers
         public async Task<IActionResult> GetBuilding(int id)
         {
             int objval = (int)commonTypes.ModuleTypes.Building;
-            var OBJs = await _context.ModuleData.Where(n => n.TypeID == objval && n.ID > objval && n.ID==id).OrderByDescending(p => p.ID).ToListAsync();
+            var OBJs = await _context.ModuleData.Where(n => n.TypeID == objval && n.ID > objval && n.ID == id).OrderByDescending(p => p.ID).ToListAsync();
 
             return Ok(OBJs);
         }
@@ -1222,7 +1407,7 @@ namespace Township_API.Controllers
                         _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblModuleData OFF");
                         await _context.SaveChangesAsync();
                     }
-                } 
+                }
 
                 return Ok(new { message = $"{Obj.Count} Records of Building processed successfully" });
             }
@@ -1328,7 +1513,7 @@ namespace Township_API.Controllers
         public async Task<IActionResult> GetAllAmenities(int id)
         {
             int objval = (int)commonTypes.ModuleTypes.Amenities;
-            var OBJs = await _context.ModuleData.Where(n => n.TypeID == objval && n.ID > objval && n.ID== id).OrderByDescending(p => p.ID).ToListAsync();
+            var OBJs = await _context.ModuleData.Where(n => n.TypeID == objval && n.ID > objval && n.ID == id).OrderByDescending(p => p.ID).ToListAsync();
             return Ok(OBJs);
         }
 
@@ -1427,7 +1612,7 @@ namespace Township_API.Controllers
             existingVehicle.isactive = updatedVehicle.isactive;
             existingVehicle.updatedby = updatedVehicle.updatedby;
             existingVehicle.updatedon = updatedVehicle.updatedon;
-    
+
             _context.Entry(existingVehicle).State = EntityState.Modified;
             await _context.SaveChangesAsync();
 
@@ -1438,17 +1623,17 @@ namespace Township_API.Controllers
         [HttpPost("AddVehicle")]
         public async Task<IActionResult> AddVehicle([FromBody] Vehicle obj)
         {
-            var existingVehicle = await _context.Vehicles.FindAsync(0); 
+            var existingVehicle = await _context.Vehicles.FindAsync(0);
             if (existingVehicle != null)
             {
                 return BadRequest("Vehicle record Exists.");
             }
 
             var existingVeh = await _context.Vehicles.Where(p => p.RegNo == obj.RegNo && p.ID != obj.ID).ToListAsync();
-            if ( existingVeh!= null )
+            if (existingVeh != null)
             {
-                if  ( existingVeh.Count() > 0)
-                return BadRequest("Vehicle RegNo already registered with another user!");
+                if (existingVeh.Count() > 0)
+                    return BadRequest("Vehicle RegNo already registered with another user!");
             }
             obj.createdon = DateTime.Now;
             // Turn IDENTITY_INSERT ON
@@ -1465,7 +1650,7 @@ namespace Township_API.Controllers
         public async Task<IActionResult> GetAllVehicles()
         {
             var Vehicles = await _context.Vehicles.OrderByDescending(p => p.ID).ToListAsync();
-            return Ok(Vehicles); 
+            return Ok(Vehicles);
         }
 
         [HttpPost("bulkSaveVehicles")]
@@ -1475,7 +1660,7 @@ namespace Township_API.Controllers
             //     return "BadRequest("No Vehicles provided")";
 
             using var transaction = await _context.Database.BeginTransactionAsync();
-        
+
             try
             {
                 foreach (var updatedObj in Obj)
@@ -1484,7 +1669,7 @@ namespace Township_API.Controllers
                     if (existingVeh != null)
                     {
                         if (existingVeh.Count() > 0)
-                            return BadRequest("Vehicle RegNo {" + updatedObj.RegNo +"} already registered with another user!");
+                            return BadRequest("Vehicle RegNo {" + updatedObj.RegNo + "} already registered with another user!");
                     }
                     var existingOBJ = await _context.Vehicles
                         .FirstOrDefaultAsync(v => v.ID == updatedObj.ID);
@@ -1515,7 +1700,7 @@ namespace Township_API.Controllers
                         await _context.SaveChangesAsync();
                     }
                 }
-                await transaction.CommitAsync();                
+                await transaction.CommitAsync();
                 return Ok(new { message = $"{Obj.Count} Vehicles processed successfully" });
             }
             catch (Exception ex)
