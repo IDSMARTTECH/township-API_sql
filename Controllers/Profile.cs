@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using static Township_API.Models.commonTypes;
 using System.Linq;
 using System.Text.Json;
+using System.Diagnostics.Eventing.Reader;
 
 
 namespace Township_API.Controllers
@@ -71,7 +72,7 @@ namespace Township_API.Controllers
 
                     var existingobj = await _context.Profiles.Where(p => p.ID == profile.ID).FirstOrDefaultAsync();
 
-
+                    if (existingobj != null) { 
                     existingobj.ProfileName = profile.ProfileName;
                     existingobj.Companyid = profile.Companyid;
                     existingobj.UpdatedOn = profile.UpdatedOn;
@@ -80,7 +81,8 @@ namespace Township_API.Controllers
                     existingobj.isDeleted = profile.isDeleted;
 
                     await _context.SaveChangesAsync();
-                    return Ok(profile);
+                    }
+                    return Ok(existingobj);
                 }
             }
             catch (Exception ex)
@@ -92,21 +94,35 @@ namespace Township_API.Controllers
             return Ok(null);
         }
 
-        [HttpGet("GetProfileDetails/{id}")]
-        public async Task<ActionResult> GetProfileDetails(string id)
+        //[HttpGet("GetProfileDetails/{id}")]
+        //public async Task<ActionResult> GetProfileDetails(string id)
+        //{
+        //    // Load data into memory
+        //    var _profileDtls = _context.ProfileDetails.Where(p => p.profileid.ToString() == id).ToList();
+        //    //var _profile = _context.Profiles.ToList();
+        //    //var _module = _context.Modules.ToList();
+
+        //    // Perform join in memory
+        //    var result = from _pd in _profileDtls
+        //                 select (_pd.module.ModuleID, _pd.module.ModuleName, _pd.module.Viewreadonly, _pd.CanInsert, _pd.CanUpdate, _pd.CanInsert, _pd.CanView);
+
+        //    return Ok(JsonSerializer.Serialize(result));
+        //}
+        [HttpGet("GetProfileDDetails/{id}")]
+        public async Task<ActionResult<IEnumerable<ProfileDetails>>> GetProfileDetails(string id)
         {
-            // Load data into memory
-            var _profileDtls = _context.ProfileDetails.Where(p => p.profileid.ToString() == id).ToList();
-            var _profile = _context.Profiles.ToList();
-            var _module = _context.Modules.ToList();
-
+            ProfileDetails p = new ProfileDetails();
+              
             // Perform join in memory
-            var result = from _pd in _profileDtls
-                         select (_pd.module.ModuleID, _pd.module.ModuleName, _pd.module.Viewreadonly, _pd.CanInsert, _pd.CanUpdate, _pd.CanInsert, _pd.CanView);
+            var result = await  _context.ProfileDetails.Where(p => p.profileid.ToString() == id.ToString()).ToListAsync();
+            if (result != null)
+            {
+                return Ok(result);
+            }
 
-            return Ok(JsonSerializer.Serialize(result));
+            return Ok(null);
+
         }
-
 
         [HttpPost("AddUpdateProfileDetails")]
         public async Task<IActionResult> AddUpdateProfileDetails([FromBody] List<ProfileDetails> Obj)

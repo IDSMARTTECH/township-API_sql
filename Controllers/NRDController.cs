@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using Township_API.Data;
@@ -35,7 +36,7 @@ namespace Township_API.Controllers
                     return NotFound();
                 }
                 int t = (int)ModuleTypes.NRD;
-                var existsOBJ = await _context.ModuleData.Where(p => p.Name == updatedOBJ.Name && p.ID != updatedOBJ.ID && p.TypeID.ToString() == t.ToString()).ToListAsync();
+                var existsOBJ = await _context.ModuleData.Where(p => p.Name == updatedOBJ.Name && p.TypeID.ToString() == t.ToString() && p.ID != updatedOBJ.ID).ToListAsync();
                 if (existsOBJ != null)
                 {
                     if (existsOBJ.Count > 0)
@@ -103,8 +104,27 @@ namespace Township_API.Controllers
             {
                 int objval = (int)commonTypes.ModuleTypes.NRD;
 
-                var OBJs = await _context.ModuleData.Where(n => n.TypeID == objval && n.ID > objval).OrderByDescending(p => p.ID).ToListAsync();
+                //var OBJs = await _context.ModuleData.Where(n => n.TypeID == objval && n.ID > objval && n.isactive==true).OrderByDescending(p => p.ID).ToListAsync();
 
+                var OBJs = from Mod in _context.ModuleData  
+                             join Prnt in _context.ModuleData     on  Mod.ParentID  equals Prnt.ID
+                           where  Mod.ID > objval && Mod.isactive==true && Mod.ModuleType == "NRD"
+                           select new
+                           {
+                               Mod.ID,
+                               Mod.Name,
+                               Mod.Code,
+                               Mod.TypeID,
+                               Mod.ParentID,
+                               Mod.ModuleType,
+                               Parent= Prnt.Name,
+                               Mod.isactive,
+                               Mod.createdby,
+                               Mod.createdon,
+                               Mod.updatedby,
+                               Mod.updatedon
+                           }; 
+                // Id,Name,code,typeid,parentid,ModuleType,Discriminator,isactive,createdby,createdon,updatedby,updatedon
                 return Ok(OBJs);
             }
             catch (Exception ex)

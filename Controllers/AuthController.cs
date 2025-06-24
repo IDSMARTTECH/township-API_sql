@@ -41,9 +41,9 @@ namespace Township_API.Controllers
             if (user != null)
             {
                 if (user.Count > 0)
-                {
+                { 
                     var role = user[0].Role;
-                    //  var roles = await _context.Roles.Where(p => p.RoleID == user[0].roleID).FirstOrDefault();
+                     //  var roles = await _context.Roles.Where(p => p.RoleID == user[0].roleID).FirstOrDefault();
                     // var token = GenerateJwtToken(user, roles);
                     return Ok(user);
                 }

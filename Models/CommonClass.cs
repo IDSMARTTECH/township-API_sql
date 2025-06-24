@@ -19,9 +19,9 @@ namespace Township_API.Models
             ReaderLocations = 10,
             VehicleMake = 11,
             ReaderRelays = 12,
-            ServiceType = 13
+            ServiceType = 13 
         };
-        public enum AccessCardHilders
+        public enum AccessCardHolders
         { 
             Resident = 1,
             DependentResident = 2,    
@@ -33,7 +33,8 @@ namespace Township_API.Models
             contractor=8,
             Guest = 9, 
             Employee = 11,
-            DependentContractor = 12
+            DependentContractor = 12,
+            Visitor = 13
         };
     }
     public class profileRegister

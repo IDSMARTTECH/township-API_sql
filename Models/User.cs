@@ -54,8 +54,9 @@ namespace Township_API.Models
 
         [ForeignKey("Role")]
         public int? roleID { get; set; }
+        [NotMapped]
         public Role? Role { get; set; }
-
+        [NotMapped]
         public Company? Company { get; set; }
     }
 
@@ -65,9 +66,9 @@ namespace Township_API.Models
     {
         // [ID],[profilename]     ,[uid]      ,[isactive]      ,[isdeleted]      ,[createdby]      ,[createdon]      ,[updatedby]      ,[updatedon]
         [Key]
-        public int ID { get; set; } 
+        public int ID { get; set; }
         [Required, MaxLength(100)]
-        public string? ProfileName { get; set; } 
+        public string? ProfileName { get; set; }
         public bool? isActive { get; set; } = false;
         public bool? isDeleted { get; set; } = false;
         public int? CreatedBy { get; set; }
@@ -103,7 +104,7 @@ namespace Township_API.Models
         public int? updatedby { get; set; }
         public DateTime? updatedon { get; set; } = null;
     }
-     
+
     [Table("tblModules")]
     public class _module
     {
@@ -147,6 +148,9 @@ namespace Township_API.Models
         public DateTime? createdon { get; set; } = null;
         public int? updatedby { get; set; } = 0;
         public DateTime? updatedon { get; set; } = null;
+
+
+        
 
     }
 
@@ -198,13 +202,15 @@ namespace Township_API.Models
         [Required]
         [MaxLength(50)]
         public string FirstName { get; set; } = "";
-        [MaxLength(50)]
-        public string? Middlename { get; set; } = "";
+        [MaxLength(50)] 
+
+        [DisplayName("MiddletName")]
+        public string? MiddleName { get; set; } = "";
         [Required]
         [MaxLength(50)]
         public string? LastName { get; set; } = "";
         [MaxLength(10)]
-        public string Gender { get; set; } = "";
+        public string? Gender { get; set; } = "";
         [MaxLength(25)]
         public string? CardCSN { get; set; } = "";
         public string? MobileNo { get; set; }
@@ -217,32 +223,110 @@ namespace Township_API.Models
         public int? ResidentID { get; set; } = 0;
         public int? SiteID { get; set; }
         public string? Role { get; set; }
-        public int? isactive { get; set; } = 0;
+        public int? isactive { get; set; } = 0; 
+        public int? isdeleted { get; set; } = 0; 
         public int? createdby { get; set; } = 0;
         public DateTime? createdon { get; set; } = null;
         public int? updatedby { get; set; } = 0;
         public DateTime? updatedon { get; set; } = null;
+        [NotMapped]
+        public string? sitename { get; set; } = null;
     }
+
+    //[Table("tblServiceProvider")]
+    //public class Service_Provider
+    //{
+    //    public int ID { get; set; }
+    //    [MaxLength(50)]
+    //    public string? code { get; set; }
+    //    [Required]
+    //    [MaxLength(100)]
+    //    public string? name { get; set; }
+    //    public string? email { get; set; }
+    //    public string? phone { get; set; }
+    //    public string? ServiceProviderID { get; set; }
+    //    public string? role { get; set; }
+    //    public bool? isactive { get; set; } = false
+    //    public bool? isdelete { get; set; } = false;
+    //    public int? createdby { get; set; } = null;
+    //    public DateTime? createdon { get; set; } = null;
+    //    public int? updatedby { get; set; } = null;
+    //    public DateTime? updatedon { get; set; } = null     
+    //}
 
     [Table("tblServiceProvider")]
     public class Service_Provider
     {
         public int ID { get; set; }
-        [MaxLength(50)]
-        public string? code { get; set; }
-        [Required]
-        [MaxLength(100)]
-        public string? name { get; set; }
-        public string? email { get; set; }
-        public string? phone { get; set; }
-        public string? ServiceProviderID { get; set; }
-        public string? role { get; set; }
-        public bool? isactive { get; set; } = false;
-        public int? createdby { get; set; } = null;
-        public DateTime? createdon { get; set; } = null;
-        public int? updatedby { get; set; } = null;
-        public DateTime? updatedon { get; set; } = null;
+
+        public string IDNumber { get; set; }
+
+        public string FirstName { get; set; }
+
+        public string? MiddletName { get; set; }
+
+        public string LastName { get; set; }
+
+        public string? ShortName { get; set; }
+
+        public int ServiceTypeId { get; set; }
+
+        public string? ICEno { get; set; }
+
+        public string? AadharCardId { get; set; }
+
+        public string? VoterID { get; set; }
+
+        public string? EmailID { get; set; }
+
+        public string? Gender { get; set; }
+
+        public string? BloodGroup { get; set; }
+
+        public string? MobileNo { get; set; }
+
+        public string? CSN { get; set; }
+
+        public DateTime? Doj { get; set; }
+
+        public DateTime? CardIssueDate { get; set; }
+
+        public DateTime? CardPrintingDate { get; set; }
+
+        public DateTime? ValidFromDate { get; set; }
+
+        public DateTime? ValidToDate { get; set; }
+
+        public string? Address { get; set; }
+
+        public string? Refrence1ID { get; set; }
+
+        public string? Refrence1Name { get; set; }
+
+        public string? Refrence1Mobile { get; set; }
+
+        public string? Refrence2Name { get; set; }
+
+        public string? Refrence2Mobile { get; set; }
+
+        public string? Refrence2Details { get; set; }
+
+        public int? isActive { get; set; } = 0;
+
+        public int? isDeleted { get; set; } = 0;
+
+        public DateTime? CreatedOn { get; set; }
+
+        public int CreatedBy { get; set; } = 0;
+
+        public DateTime? UpdatedOn { get; set; }
+
+        public int? UpdatedBy { get; set; } = 0;
+        [NotMapped]
+        public string? serviceType { get; set; }
+
     }
+
 
     [Table("tblVehicle")]
     public class Vehicle

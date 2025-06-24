@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Township_API.Models
@@ -37,7 +38,8 @@ namespace Township_API.Models
         public DateTime? ValidToDate { get; set; }
         public string? Address { get; set; }
         public int? ContactorType { get; set; } = 0;
-    }
+         
+}
   
     [Table("DependentContractor")]
     public class DependentContractor

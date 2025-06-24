@@ -39,10 +39,24 @@ namespace Township_API.Controllers
                 if (existingEmployee == null)
                 {
                     return NotFound();
-                }                 
-                existingEmployee.IDNumber = updatedEmployee.IDNumber;
+                }
+                var existEmployee = await _context.Employees.Where(p => (p.FirstName == updatedEmployee.FirstName && p.LastName == updatedEmployee.LastName) && p.ID!= updatedEmployee.ID).ToListAsync();
+                if (existEmployee != null)
+                {
+                    if(existEmployee.Count>0)
+                    return BadRequest("Employee with name already Exists.");
+                }
+                  existEmployee = await _context.Employees.Where(p => (p.IDNumber == updatedEmployee.IDNumber) && p.ID != updatedEmployee.ID).ToListAsync();
+                if (existEmployee != null)
+                {
+                    if (existEmployee.Count > 0)
+                        return BadRequest("Employee with this Idnumber already Exists.");
+                }
+
+
+                //existingEmployee.IDNumber = updatedEmployee.IDNumber;
                 existingEmployee.FirstName = updatedEmployee.FirstName;
-                existingEmployee.Middlename = updatedEmployee.Middlename;
+                existingEmployee.MiddleName = updatedEmployee.MiddleName;
                 existingEmployee.LastName = updatedEmployee.LastName;
                 existingEmployee.EmailID = updatedEmployee.EmailID; 
                 existingEmployee.MobileNo = updatedEmployee.MobileNo;               
@@ -82,12 +96,17 @@ namespace Township_API.Controllers
                 {
                     return BadRequest("Employee Exists.");
                 }
+                var existEmployee = await _context.Employees.Where(p=>p.FirstName==obj.FirstName && p.LastName == obj.LastName ).ToListAsync();
+                if (existingEmployee != null)
+                {
+                    return BadRequest("Employee with name already Exists.");
+                }
 
                 _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblEmployee ON");
                 _context.Add(obj);
                 _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblEmployee OFF");
                 await _context.SaveChangesAsync();
-                int number = (int)AccessCardHilders.Employee;
+                int number = (int)AccessCardHolders.Employee;
                 obj.IDNumber = number.ToString() + obj.ID.ToString("D4");
 
                 await _context.SaveChangesAsync();
@@ -104,7 +123,14 @@ namespace Township_API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllEmployees()
         {
-            var Employees = await _context.Employees.OrderByDescending(p => p.ID).ToListAsync();
+            var Employees = await _context.Employees.Where (p=>p.isactive==1 && p.isdeleted==0 ).OrderByDescending(p => p.ID ).ToListAsync();
+            foreach (var emp in Employees)
+            {
+                var nr = await _context.Projects.Where(u => u.id.ToString() == emp.SiteID.ToString()).FirstOrDefaultAsync();
+                if (nr != null)
+                    emp.sitename = (string)nr.ProjectName.ToString(); 
+            }
+
             return Ok(Employees);
         }
 
@@ -113,7 +139,7 @@ namespace Township_API.Controllers
         [HttpGet("GetEmployeeByID/{id}")]
         public async Task<IActionResult> GetEmployeeByID(int id)
         {
-            var Employees = await _context.Employees.Where(p => p.ID == id).OrderByDescending(p => p.ID).ToListAsync();
+            var Employees = await _context.Employees.Where(p => p.ID == id && p.isdeleted == 0  ).OrderByDescending(p => p.ID).ToListAsync();
             if (Employees == null)
                 return BadRequest("No Data found");
 
@@ -125,7 +151,7 @@ namespace Township_API.Controllers
         [HttpGet("GetEmployeeAccessDetails/{ID}")]
         public async Task<IActionResult> GetEmployeeAccessDetails(int ID)
         {
-            var Employees = await _context.Employees.Where(p => p.ID == ID).ToListAsync();
+            var Employees = await _context.Employees.Where(p => p.ID == ID && p.isdeleted==0).ToListAsync();
             string? IdNumber = Employees[0].IDNumber;
             if (IdNumber != null)
             {
@@ -179,7 +205,7 @@ namespace Township_API.Controllers
                         _context.Employees.Add(objID);
                         _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblEmployee  OFF");
                         await _context.SaveChangesAsync();
-                        int number = (int)AccessCardHilders.Employee;
+                        int number = (int)AccessCardHolders.Employee;
                         objID.IDNumber = number.ToString() + objID.ID.ToString("D4");
                         await _context.SaveChangesAsync();
                     }
@@ -195,8 +221,5 @@ namespace Township_API.Controllers
                 return StatusCode(500, new { error = ex.Message });
             }
         }
-
-
     }
-
 }

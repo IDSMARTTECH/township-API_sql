@@ -96,7 +96,7 @@ namespace Township_API.Controllers
                 _context.Add(obj);
                 await _context.SaveChangesAsync();
 
-                int number = (int)AccessCardHilders.Tenent;
+                int number = (int)AccessCardHolders.Tenent;
                 obj.IDNumber = number.ToString() + obj.ID.ToString("D5");
                 await _context.SaveChangesAsync();
 
@@ -115,6 +115,16 @@ namespace Township_API.Controllers
         public async Task<IActionResult> GetAllTenents()
         {
             var Tenents = await _context.PrimaryTenents.OrderByDescending(p => p.ID).ToListAsync();
+            foreach (var res in Tenents)
+            {
+                var nr = await _context.ModuleData.Where(u => u.ID.ToString() == res.NRD.ToString()).FirstOrDefaultAsync();
+                if (nr != null)
+                    res.NRDName = (string)nr.Name.ToString();
+                nr = await _context.ModuleData.Where(u => u.ID.ToString() == res.Building.ToString()).FirstOrDefaultAsync();
+                if (nr != null)
+                    res.BuildingName = (string)nr.Name.ToString();
+            }
+
             return Ok(Tenents);
         }
 
@@ -213,7 +223,7 @@ namespace Township_API.Controllers
                     {
                         _context.PrimaryTenents.Add(objID);
 
-                        int number = (int)AccessCardHilders.Tenent;
+                        int number = (int)AccessCardHolders.Tenent;
                         objID.IDNumber = number.ToString() + objID.ID.ToString("D5");
                         await _context.SaveChangesAsync();
 
@@ -324,7 +334,7 @@ namespace Township_API.Controllers
 
                 // Turn IDENTITY_INSERT OFF
                 _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT DependentTenent  OFF");
-                int number = (int)AccessCardHilders.DependentTenent;
+                int number = (int)AccessCardHolders.DependentTenent;
                 obj.IDNumber = number.ToString() + obj.ID.ToString("D5");
                 await _context.SaveChangesAsync();
                 return Ok(new { message = $"{obj.ID} Depenent Tenent created successfully" });
@@ -404,7 +414,7 @@ namespace Township_API.Controllers
                     else
                     {
                         _context.DependentTenents.Add(objID);
-                        int number = (int)AccessCardHilders.DependentTenent;
+                        int number = (int)AccessCardHolders.DependentTenent;
                         objID.IDNumber = number.ToString() + objID.ID.ToString("D5");
                         await _context.SaveChangesAsync();
                     }

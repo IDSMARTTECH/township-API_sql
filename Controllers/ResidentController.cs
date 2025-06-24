@@ -3,7 +3,8 @@ using Township_API.Models;
 using Township_API.Services;
 using Township_API.Data;
 using Microsoft.EntityFrameworkCore;
-using static Township_API.Models.commonTypes;
+using static Township_API.Models.commonTypes; 
+using System;
 
 namespace Township_API.Controllers
 {
@@ -18,7 +19,7 @@ namespace Township_API.Controllers
         }
 
         // PUT: api/UpdateResident/5
-        [HttpPost("{UpdateResident}/{id}")]
+        [HttpPost("UpdateResident/{id}")]
         public async Task<IActionResult> UpdateResident(int id, [FromBody] PrimaryResident updatedResident)
         {
 
@@ -72,8 +73,8 @@ namespace Township_API.Controllers
 
 
                 _context.Entry(existingResident).State = EntityState.Modified;
-                await _context.SaveChangesAsync();
-
+                await _context.SaveChangesAsync(); 
+                 
                 return Ok(existingResident);
             }
             catch (Exception ex)
@@ -99,7 +100,7 @@ namespace Township_API.Controllers
             _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT PrimaryResident OFF");
             await _context.SaveChangesAsync();
 
-            int number = (int)AccessCardHilders.Resident;
+            int number = (int)AccessCardHolders.Resident;
             obj.IDNumber = number.ToString() + obj.ID.ToString("D5");
             await _context.SaveChangesAsync();
             return Ok(obj);
@@ -111,11 +112,27 @@ namespace Township_API.Controllers
         public async Task<IActionResult> GetAllResidents()
         {
             var Residents = await _context.PrimaryResidents.OrderByDescending(p => p.ID).ToListAsync();
+            if (Residents != null && Residents.Count>0)
+            {
+                foreach (var res in Residents)
+                {
+                    var nr = await _context.ModuleData.Where(u => u.ID.ToString() == res.NRD.ToString()).FirstOrDefaultAsync();
+                    if (nr != null)
+                        res.NRDName = (string)nr.Name.ToString();
+
+                    var bld = await _context.ModuleData.Where(u => u.ID.ToString() == res.Building.ToString()).FirstOrDefaultAsync();
+                    if (bld != null)
+                        res.BuildingName = (string)bld.Name.ToString();
+                }
+            }
+
+
             return Ok(Residents);
         }
 
 
         // GET: api/products 
+
         [HttpGet("{ID}")]
         public async Task<IActionResult> GetResidentDetails(int ID)
         {
@@ -202,7 +219,7 @@ namespace Township_API.Controllers
                         _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT PrimaryResident  OFF");
                         await _context.SaveChangesAsync();
 
-                        int number = (int)AccessCardHilders.Resident;
+                        int number = (int)AccessCardHolders.Resident;
                         objID.IDNumber = number.ToString() + objID.ID.ToString("D5");
                         await _context.SaveChangesAsync();
 
@@ -298,7 +315,7 @@ namespace Township_API.Controllers
             _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT DependentResident  OFF");
             await _context.SaveChangesAsync(); 
 
-            int number = (int)AccessCardHilders.DependentResident;
+            int number = (int)AccessCardHolders.DependentResident;
             obj.IDNumber = number.ToString() + obj.ID.ToString("D5");
             await _context.SaveChangesAsync();
             return Ok();
@@ -376,7 +393,7 @@ namespace Township_API.Controllers
                         _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT DependentResident  OFF");
                         await _context.SaveChangesAsync();
 
-                        int number = (int)AccessCardHilders.DependentResident;
+                        int number = (int)AccessCardHolders.DependentResident;
                         objID.IDNumber = number.ToString() + objID.ID.ToString("D5");
                         await _context.SaveChangesAsync();
                     }

@@ -1,73 +1,87 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authentication.JwtBearer; 
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Township_API.Data;
-using Township_API.Services;
-
-var builder = WebApplication.CreateBuilder(args);
-
-
-var port = builder.Configuration.GetValue<int>("AllowedPort");
-var allowedOrigin = $"http://localhost:{port}";
-//// Add services to the container.
-builder.Services.AddCors(options =>
+using Township_API.Services; 
+using EventFlow.Configuration.Serialization;
+internal class Program
 {
-    options.AddPolicy("AllowAngularDevClient",
-          policy =>
-          {
-              policy.WithOrigins(allowedOrigin)
-                    .AllowAnyHeader()
-                    .AllowAnyMethod();
-          });
-});
- 
-
-
-//configure database
-builder.Services.AddDbContext<AppDBContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
-// Configure Authentication
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
+    private static void Main(string[] args)
     {
-        options.RequireHttpsMetadata = false;
-        options.SaveToken = true;
-        options.TokenValidationParameters = new TokenValidationParameters
+        var builder = WebApplication.CreateBuilder(args);
+        var port = builder.Configuration.GetValue<int>("AllowedPort");
+        var URL = builder.Configuration.GetValue<string>("AllowedURL");
+        var allowedOrigin = $"http://{URL}:{port}";
+
+        //allowedOrigin = port;
+
+        //// Add services to the container.
+        builder.Services.AddCors(options =>
         {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = builder.Configuration["Jwt:Issuer"],
-            ValidAudience = builder.Configuration["Jwt:Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
-        };
-    });
+            options.AddPolicy("AllowAngularDevClient",
+                  policy =>
+                  {
+                      policy.WithOrigins(allowedOrigin)
+                            .AllowAnyHeader()
+                            .AllowAnyMethod();
+                  });
+        });
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+       
 
-var app = builder.Build();
+        //configure database
+        builder.Services.AddDbContext<AppDBContext>(options =>
+            options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Use CORS policy
-app.UseCors("AllowAngularDevClient");
+        // Configure Authentication
+        //builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        //    .AddJwtBearer(options =>
+        //    {
+        //        options.RequireHttpsMetadata = false;
+        //        options.SaveToken = true;
+        //        options.TokenValidationParameters = new TokenValidationParameters
+        //        {
+        //            ValidateIssuer = true,
+        //            ValidateAudience = true,
+        //            ValidateLifetime = true,
+        //            ValidateIssuerSigningKey = true,
+        //            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        //            ValidAudience = builder.Configuration["Jwt:Audience"],
+        //            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+        //        };
+        //    });
+
+        builder.Services.AddControllers() 
+        .AddJsonOptions(options =>
+        {
+            options.JsonSerializerOptions.IncludeFields = true;
+        });
+
+
+        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen();
+
+        var app = builder.Build();
+
+        // Use CORS policy
+        app.UseCors("AllowAngularDevClient");
 
 
 
 
-// Configure the HTTP request pipeline.
-if (1==1||app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
+        // Configure the HTTP request pipeline.
+        if (1 == 1 || app.Environment.IsDevelopment())
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI();
+        }
+
+        app.UseAuthorization();
+
+        app.MapControllers();
+
+        app.Run();
+    }
 }
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.Run();

@@ -39,6 +39,8 @@ namespace Township_API.Data
         public DbSet<Company> Companies { get; set; }
         public DbSet<Project> Projects { get; set; }
    public DbSet<Reader> Readers { get; set; }
+        public DbSet<GuestMaster> GuestMasters { get; set; }
+        public DbSet<VisitorMaster> VisitorMasters { get; set; }
 
         public DbSet<Image> Images { get; set; }
 

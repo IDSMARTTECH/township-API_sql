@@ -22,15 +22,15 @@ namespace Township_API.Controllers
         }
 
         // PUT: api/products/5
-        [HttpPost("{UpdateServiceProvider}/{id}")]
-        public async Task<IActionResult> UpdateServiceProvider(int id, [FromBody] Service_Provider updatedServiceProvider)
+        [HttpPost("UpdateServiceProvider")]
+        public async Task<IActionResult> UpdateServiceProvider([FromBody] Service_Provider updatedServiceProvider)
         {
             try
             {
-                if (id != updatedServiceProvider.ID)
-                {
-                    return BadRequest("ServiceProvider ID mismatch.");
-                }
+                //if (id != updatedServiceProvider.ID)
+                //{
+                //    return BadRequest("ServiceProvider ID mismatch.");
+                //}
 
                 //var existingServiceProvider = await _service.UpdateServiceProviderAsync(updatedServiceProvider.ID, updatedServiceProvider);
                 var existingServiceProvider = await _context.ServiceProviders.FindAsync(updatedServiceProvider.ID);
@@ -39,16 +39,46 @@ namespace Township_API.Controllers
                 {
                     return NotFound();
                 }
-                existingServiceProvider.ID = updatedServiceProvider.ID;
-                existingServiceProvider.code = updatedServiceProvider.code;
-                existingServiceProvider.name = updatedServiceProvider.name;
-                existingServiceProvider.email = updatedServiceProvider.email;
-                existingServiceProvider.phone = updatedServiceProvider.phone;
-                existingServiceProvider.ServiceProviderID = updatedServiceProvider.ServiceProviderID;
-                existingServiceProvider.role = updatedServiceProvider.role;
-                existingServiceProvider.isactive = updatedServiceProvider.isactive; 
-                existingServiceProvider.updatedby = updatedServiceProvider.updatedby;
-                existingServiceProvider.updatedon = updatedServiceProvider.updatedon;
+                ///flatnumber validation                
+                var existing = await _context.ServiceProviders.Where(p => p.ID != updatedServiceProvider.ID && p.FirstName == updatedServiceProvider.FirstName).ToListAsync();
+                if (existing != null)
+                {
+                    if (existing.Count() > 0)
+                        return BadRequest("Service provider is already register with other owner!");
+                }
+                //               existingServiceProvider.IDNumber = updatedServiceProvider.IDNumber;
+                existingServiceProvider.FirstName = updatedServiceProvider.FirstName;
+                existingServiceProvider.MiddletName = updatedServiceProvider.MiddletName;
+                existingServiceProvider.LastName = updatedServiceProvider.LastName;
+                existingServiceProvider.ShortName = updatedServiceProvider.ShortName;
+                existingServiceProvider.ServiceTypeId = updatedServiceProvider.ServiceTypeId;
+                existingServiceProvider.ICEno = updatedServiceProvider.ICEno;
+                existingServiceProvider.AadharCardId = updatedServiceProvider.AadharCardId;
+                existingServiceProvider.VoterID = updatedServiceProvider.VoterID;
+                existingServiceProvider.EmailID = updatedServiceProvider.EmailID;
+                existingServiceProvider.Gender = updatedServiceProvider.Gender;
+                existingServiceProvider.BloodGroup = updatedServiceProvider.BloodGroup;
+                existingServiceProvider.MobileNo = updatedServiceProvider.MobileNo;
+                existingServiceProvider.CSN = updatedServiceProvider.CSN;
+                existingServiceProvider.Doj = updatedServiceProvider.Doj;
+                existingServiceProvider.CardIssueDate = updatedServiceProvider.CardIssueDate;
+                existingServiceProvider.CardPrintingDate = updatedServiceProvider.CardPrintingDate;
+                existingServiceProvider.ValidFromDate = updatedServiceProvider.ValidFromDate;
+                existingServiceProvider.ValidToDate = updatedServiceProvider.ValidToDate;
+                existingServiceProvider.Address = updatedServiceProvider.Address;
+                existingServiceProvider.Refrence1ID = updatedServiceProvider.Refrence1ID;
+                existingServiceProvider.Refrence1Name = updatedServiceProvider.Refrence1Name;
+                existingServiceProvider.Refrence1Mobile = updatedServiceProvider.Refrence1Mobile;
+                existingServiceProvider.Refrence2Name = updatedServiceProvider.Refrence2Name;
+                existingServiceProvider.Refrence2Mobile = updatedServiceProvider.Refrence2Mobile;
+                existingServiceProvider.Refrence2Details = updatedServiceProvider.Refrence2Details;
+                existingServiceProvider.isActive = updatedServiceProvider.isActive;
+                existingServiceProvider.isDeleted = updatedServiceProvider.isDeleted;
+                existingServiceProvider.CreatedOn = updatedServiceProvider.CreatedOn;
+                existingServiceProvider.CreatedBy = updatedServiceProvider.CreatedBy;
+                existingServiceProvider.UpdatedOn = updatedServiceProvider.UpdatedOn;
+                existingServiceProvider.UpdatedBy = updatedServiceProvider.UpdatedBy;
+
                 _context.Entry(existingServiceProvider).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
 
@@ -73,16 +103,25 @@ namespace Township_API.Controllers
                 }
 
                 _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblServiceProvider  ON");
+                if (obj.ValidFromDate is null)
+                {
+                    obj.ValidFromDate = DateTime.Now;
+                    obj.ValidToDate = DateTime.Now.AddYears(25);
+                }
+                if (obj.Doj is null)
+                    obj.Doj = Convert.ToDateTime("01/01/2000");
+
+
                 _context.Add(obj);
                 _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblServiceProvider  OFF");
                 await _context.SaveChangesAsync();
 
-                int number = (int)AccessCardHilders.ServiceProvider;
-                obj.code = number.ToString() + obj.ID.ToString("D5");
+                int number = (int)AccessCardHolders.ServiceProvider;
+                obj.IDNumber = number.ToString() + obj.ID.ToString("D5");
 
                 await _context.SaveChangesAsync();
 
-                return Ok(new { message = $"{obj.code} ServiceProvider processed successfully" });
+                return Ok(new { message = $"{obj.IDNumber} ServiceProvider processed successfully" });
             }
             catch (Exception ex)
             {
@@ -94,8 +133,15 @@ namespace Township_API.Controllers
         // GET: api/products 
         [HttpGet("ServiceProvider")]
         public async Task<IActionResult> GetAllServiceProviders()
-        { 
-            var ServiceProviders = await _context.ServiceProviders.OrderByDescending(p =>p.ID).ToListAsync();
+        {
+            var ServiceProviders = await _context.ServiceProviders.Where(p=>p.isActive==1 && p.isDeleted ==0 ) .OrderByDescending(p => p.ID).ToListAsync();
+            foreach (var res in ServiceProviders)
+            {
+                var nr = await _context.ModuleData.Where(u => u.ID.ToString() == res.ServiceTypeId.ToString()).FirstOrDefaultAsync();
+                if (nr != null)
+                    res.serviceType = (string)nr.Name.ToString(); 
+            }
+
             return Ok(ServiceProviders);
         }
 
@@ -104,7 +150,7 @@ namespace Township_API.Controllers
         public async Task<IActionResult> GetService_providerDetails(int ID)
         {
             var sProviders = await _context.ServiceProviders.Where(p => p.ID == ID).ToListAsync();
-            string? IdNumber = sProviders[0].code;
+            string? IdNumber = sProviders[0].IDNumber;
             if (IdNumber != null)
             {
                 try
@@ -114,10 +160,10 @@ namespace Township_API.Controllers
                         Owners = sProviders,
                         DependentOwners = null,
                         Vehicles = _context.Vehicles.Where(p => p.TagUID == IdNumber).ToList(),
-                        UserAllAccess = await _context._userAllAccess.Where(p => p.CardHolderID == IdNumber).ToListAsync(),
-                        UserNRDAccess = _context._userNRDAccess.Where(p => p.CardHolderID != null && p.CardHolderID.ToString() == IdNumber).ToList(),
-                        UserBuildingAccess = _context._userBuildingAccess.Where(p => p.CardHolderID != null && p.CardHolderID.ToString() == IdNumber).ToList(),
-                        UserAminitiesAccess = _context._userAmenitiesAccess.Where(p => p.CardHolderID != null && p.CardHolderID.ToString() == IdNumber).ToList()
+                        UserAllAccess = await _context._userAllAccess.Where(p => p.CardHolderID == IdNumber).ToListAsync()
+                        //UserNRDAccess = _context._userNRDAccess.Where(p => p.CardHolderID != null && p.CardHolderID.ToString() == IdNumber).ToList(),
+                        //UserBuildingAccess = _context._userBuildingAccess.Where(p => p.CardHolderID != null && p.CardHolderID.ToString() == IdNumber).ToList(),
+                        //UserAminitiesAccess = _context._userAmenitiesAccess.Where(p => p.CardHolderID != null && p.CardHolderID.ToString() == IdNumber).ToList()
                     };
 
                     return Ok(jsonWrapper);
@@ -127,7 +173,7 @@ namespace Township_API.Controllers
                     return BadRequest(ex.Message.ToString());
                 }
             }
-            return Ok(new { message = $"Contractor records not found!" });
+            return Ok(new { message = $"Service provider records not found!" });
         }
 
 
@@ -137,7 +183,6 @@ namespace Township_API.Controllers
             if (Obj == null || !Obj.Any())
                 return BadRequest("No Data provided");
 
-            using var transaction = await _context.Database.BeginTransactionAsync();
 
             try
             {
@@ -148,12 +193,45 @@ namespace Township_API.Controllers
 
                     if (existingobj != null)
                     {
-                        //  var existingServiceProvider = await _service.UpdateServiceProviderAsync(objID.ID, existingobj);
-                        var existingServiceProvider = await _context.ServiceProviders.FindAsync(0);
+                        //var existingServiceProvider = await _service.UpdateServiceProviderAsync(objID.ID, existingobj);
+                        var existingServiceProvider = await _context.ServiceProviders.FindAsync(objID.ID);
                         if (existingServiceProvider == null)
                         {
                             return NotFound();
                         }
+
+                        existingServiceProvider.IDNumber = objID.IDNumber;
+                        existingServiceProvider.FirstName = objID.FirstName;
+                        existingServiceProvider.MiddletName = objID.MiddletName;
+                        existingServiceProvider.LastName = objID.LastName;
+                        existingServiceProvider.ShortName = objID.ShortName;
+                        existingServiceProvider.ServiceTypeId = objID.ServiceTypeId;
+                        existingServiceProvider.ICEno = objID.ICEno;
+                        existingServiceProvider.AadharCardId = objID.AadharCardId;
+                        existingServiceProvider.VoterID = objID.VoterID;
+                        existingServiceProvider.EmailID = objID.EmailID;
+                        existingServiceProvider.Gender = objID.Gender;
+                        existingServiceProvider.BloodGroup = objID.BloodGroup;
+                        existingServiceProvider.MobileNo = objID.MobileNo;
+                        existingServiceProvider.CSN = objID.CSN;
+                        existingServiceProvider.Doj = objID.Doj;
+                        existingServiceProvider.CardIssueDate = objID.CardIssueDate;
+                        existingServiceProvider.CardPrintingDate = objID.CardPrintingDate;
+                        existingServiceProvider.ValidFromDate = objID.ValidFromDate;
+                        existingServiceProvider.ValidToDate = objID.ValidToDate;
+                        existingServiceProvider.Address = objID.Address;
+                        existingServiceProvider.Refrence1ID = objID.Refrence1ID;
+                        existingServiceProvider.Refrence1Name = objID.Refrence1Name;
+                        existingServiceProvider.Refrence1Mobile = objID.Refrence1Mobile;
+                        existingServiceProvider.Refrence2Name = objID.Refrence2Name;
+                        existingServiceProvider.Refrence2Mobile = objID.Refrence2Mobile;
+                        existingServiceProvider.Refrence2Details = objID.Refrence2Details;
+                        existingServiceProvider.isActive = objID.isActive;
+                        existingServiceProvider.isDeleted = objID.isDeleted;
+                        existingServiceProvider.CreatedOn = objID.CreatedOn;
+                        existingServiceProvider.CreatedBy = objID.CreatedBy;
+                        existingServiceProvider.UpdatedOn = objID.UpdatedOn;
+                        existingServiceProvider.UpdatedBy = objID.UpdatedBy;
                     }
                     else
                     {
@@ -163,20 +241,19 @@ namespace Township_API.Controllers
                         // Turn IDENTITY_INSERT OFF
                         _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT tblServiceProvider  OFF");
                         await _context.SaveChangesAsync();
-                        int number = (int)AccessCardHilders.ServiceProvider;
-                        objID.code = number.ToString() + objID.ID.ToString("D5");
+                        int number = (int)AccessCardHolders.ServiceProvider;
+                        objID.IDNumber = number.ToString() + objID.ID.ToString("D5");
                         await _context.SaveChangesAsync();
                     }
                 }
 
                 await _context.SaveChangesAsync();
-                await transaction.CommitAsync();
 
                 return Ok(new { message = $"{Obj.Count} ServiceProvider processed successfully" });
             }
             catch (Exception ex)
             {
-                await transaction.RollbackAsync();
+
                 return StatusCode(500, new { error = ex.Message });
             }
         }

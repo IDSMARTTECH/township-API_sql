@@ -104,13 +104,45 @@ namespace Township_API.Controllers
                 return StatusCode(500, new { error = ex.Message });
             }
         }
-         
+
+
+        [HttpPost("DeleteCompany/{id}")]
+        public async Task<IActionResult> DeleteCompany(int id)
+        {
+            try
+            {
+                if (id <=0)
+                {
+                    return BadRequest("Company ID mismatch.");
+                }
+                var existingOBJ = await _context.Companies.FindAsync(id);
+                if (existingOBJ == null)
+                {
+                    return NotFound();
+                } 
+                existingOBJ.isdeleted = true;
+                existingOBJ.updatedby = 1;
+                existingOBJ.updatedon = DateTime.Now;
+
+                _context.Entry(existingOBJ).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+
+                return Ok(existingOBJ);
+            }
+            catch (Exception ex)
+            {
+                //     await transaction.RollbackAsync();
+                return StatusCode(500, new { error = ex.Message });
+            }
+        }
+
+
         [HttpGet]
         public async Task<IActionResult> GetAllCompanies()
         {
             try
             {
-                  var OBJs = await _context.Companies.Where(p=>p.isactive==true).IgnoreAutoIncludes().OrderByDescending(p => p.id).ToListAsync();
+                  var OBJs = await _context.Companies.Where(p=>p.isactive==true && p.isdeleted ==false).IgnoreAutoIncludes().OrderByDescending(p => p.id).ToListAsync();
 
 
                 return Ok(OBJs);
@@ -245,6 +277,37 @@ namespace Township_API.Controllers
             }
         }
 
+        [HttpPost("DeleteProject/{id}")]
+        public async Task<IActionResult> DeleteProject(int id)
+        {
+            try
+            {
+                if (id<=0)
+                {
+                    return BadRequest("Project ID mismatch.");
+                }
+                var existingOBJ = await _context.Projects.FindAsync(id);
+                if (existingOBJ == null)
+                {
+                    return NotFound();
+                }
+                 
+                existingOBJ.isdeleted = true;
+                existingOBJ.updatedby = 1;
+                existingOBJ.updatedon = DateTime.Now;
+
+                _context.Entry(existingOBJ).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+
+                return Ok(existingOBJ);
+            }
+            catch (Exception ex)
+            {
+                //     await transaction.RollbackAsync();
+                return StatusCode(500, new { error = ex.Message });
+            }
+        }
+
 
         [HttpPost("AddProject")]
         public async Task<IActionResult> AddProject([FromBody] Project obj)
@@ -317,6 +380,7 @@ namespace Township_API.Controllers
             try
             {
                 var OBJs = await _context.Projects.Where(n => n.id == id && n.isactive == true  && n.isdeleted == false).IgnoreAutoIncludes().OrderByDescending(p => p.id).ToListAsync();
+                
                 return Ok(OBJs);
             }
             catch (Exception ex)

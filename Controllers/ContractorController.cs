@@ -94,7 +94,7 @@ namespace Township_API.Controllers
             await _context.SaveChangesAsync();
 
 
-            int number = (int)AccessCardHilders.contractor;
+            int number = (int)AccessCardHolders.contractor;
             obj.IDNumber = number.ToString() + obj.ID.ToString("D5"); 
             await _context.SaveChangesAsync();
 
@@ -122,7 +122,7 @@ namespace Township_API.Controllers
         {
             try
             {
-                var Contractors = await _context.Contractors.Where(p=>p.ID==id) .OrderByDescending(p => p.ID).ToListAsync();
+                var Contractors = await _context.Contractors.Where(p=>p.ID==id && p.LogicalDeleted==0) .OrderByDescending(p => p.ID).ToListAsync();
                 return Ok(Contractors);
             }
             catch (Exception ex)
@@ -230,7 +230,7 @@ namespace Township_API.Controllers
                         await _context.SaveChangesAsync();
 
 
-                        int number = (int)AccessCardHilders.contractor;
+                        int number = (int)AccessCardHolders.contractor;
                         objID.IDNumber = number.ToString() + objID.ID.ToString("D5");
                         await _context.SaveChangesAsync();
                     }
@@ -299,7 +299,7 @@ namespace Township_API.Controllers
             _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT DependentContractor OFF");
             await _context.SaveChangesAsync();
 
-            int number = (int)AccessCardHilders.DependentContractor;
+            int number = (int)AccessCardHolders.DependentContractor;
             obj.IDNumber = number.ToString() + obj.ID.ToString("D4");
 
             await _context.SaveChangesAsync();
@@ -313,7 +313,7 @@ namespace Township_API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllDependentContractors()
         {
-            var DependentContractors = await _context.DependentContractors.OrderByDescending(p => p.ID).ToListAsync();
+            var DependentContractors = await _context.DependentContractors.Where(p=> p.LogicalDeleted == 0) .OrderByDescending(p => p.ID ).ToListAsync();
             return Ok(DependentContractors);
         }
 
@@ -349,7 +349,7 @@ namespace Township_API.Controllers
                         _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT DependentContractor  OFF");
                         await _context.SaveChangesAsync();
 
-                        int number = (int)AccessCardHilders.DependentContractor;
+                        int number = (int)AccessCardHolders.DependentContractor;
                         objID.IDNumber = number.ToString() + objID.ID.ToString("D4");
 
                         await _context.SaveChangesAsync();

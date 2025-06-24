@@ -39,7 +39,11 @@ namespace Township_API.Models
         public DateTime? CardPrintingDate { get; set; }
         public int? LogicalDeleted { get; set; } = 0;
         public DateTime? LandOwnerIssueDate { get; set; }
-    } 
+        [NotMapped]
+        public string? nrdName { get; set; } 
+       [NotMapped] 
+        public string? buildingName { get; set; }
+     } 
     [Table("DependentLandowner")]
     public class DependentLandOwner
     {

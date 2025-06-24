@@ -54,7 +54,7 @@ namespace Township_API.Controllers
             _context.Add(obj);
             await _context.SaveChangesAsync();
 
-            int number = (int)AccessCardHilders.Resident;
+            int number = (int)AccessCardHolders.Resident;
             obj.IDNumber = number.ToString() + obj.ID.ToString("D5");
             await _context.SaveChangesAsync();
 
@@ -66,7 +66,9 @@ namespace Township_API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllDependentResidents()
         {
-            var DependentResidents = await _context.DependentResidents.OrderByDescending(p => p.ID).ToListAsync();
+            var DependentResidents = await _context.DependentResidents.Where (p=>p.LogicalDeleted == 0).OrderByDescending(p => p.ID ).ToListAsync();
+            
+            
             return Ok(DependentResidents.OrderByDescending(e => e.ID));
         }         
     }

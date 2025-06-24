@@ -67,18 +67,18 @@ namespace Township_API.Controllers
                 existingLandowner.LandOwnerIssueDate = updatedLandowner.LandOwnerIssueDate;
                 _context.Entry(existingLandowner).State = EntityState.Modified;
 
-                await _context.SaveChangesAsync(); 
-            
+                await _context.SaveChangesAsync();
+
                 return Ok(existingLandowner);
             }
             catch (Exception ex)
             {
                 Console.WriteLine("Exception Error: " + ex.Message.ToString());
-                return BadRequest("Error :"+ ex.Message.ToString());
+                return BadRequest("Error :" + ex.Message.ToString());
 
             }
         }
-             
+
 
         [HttpPost("AddLandowner")]
         public async Task<IActionResult> AddLandowner([FromBody] PrimaryLandowner obj)
@@ -89,12 +89,12 @@ namespace Township_API.Controllers
                 if (existingLandowner != null)
                 {
                     return BadRequest("Landowner Exists.");
-                }           
-                
+                }
+
                 _context.Add(obj);
-                await _context.SaveChangesAsync(); 
-                 int number = (int)AccessCardHilders.Landowner ;
-                 obj.IDNumber = number .ToString()+ obj.ID.ToString("D5");
+                await _context.SaveChangesAsync();
+                int number = (int)AccessCardHolders.Landowner;
+                obj.IDNumber = number.ToString() + obj.ID.ToString("D5");
                 await _context.SaveChangesAsync();
 
                 return Ok(new { message = $"{obj.ID} Landowner created successfully" });
@@ -111,9 +111,20 @@ namespace Township_API.Controllers
         public async Task<IActionResult> GetAllLandowners()
         {
             try
-            { 
-                var Landowners = await _context.Landowners.OrderByDescending(p=>p.ID).ToListAsync();
-                return Ok(Landowners);
+            {
+                var Landowners = await _context.Landowners.Where(p => p.LogicalDeleted == 0).OrderByDescending(p => p.ID).ToListAsync();
+                foreach (var res in Landowners)
+                {
+                    var nr = await _context.ModuleData.Where(u => u.ID.ToString() == res.NRD.ToString()).FirstOrDefaultAsync();
+                    if (nr != null)
+                        res.nrdName = (string)nr.Name.ToString(); 
+                      nr = await _context.ModuleData.Where(u => u.ID.ToString() == res.Building.ToString()).FirstOrDefaultAsync();
+                    if (nr != null)
+                        res.buildingName = (string)nr.Name.ToString();
+
+                }
+
+                    return Ok(Landowners);
             }
             catch (Exception ex)
             {
@@ -128,7 +139,7 @@ namespace Township_API.Controllers
         public async Task<IActionResult> GetLandownerDetails(int ID)
         {
             var Landowners = await _context.Landowners.Where(p => p.ID == ID).ToListAsync();
-            if (Landowners != null &&  Landowners.Count>0)
+            if (Landowners != null && Landowners.Count > 0)
             {
 
                 string? IdNumber = Landowners[0].IDNumber;
@@ -144,7 +155,7 @@ namespace Township_API.Controllers
                             UserAllAccess = await _context._userAllAccess.Where(p => p.CardHolderID == IdNumber).ToListAsync(),
                             UserNRDAccess = await _context._userNRDAccess.Where(p => p.CardHolderID == IdNumber).ToListAsync(),
                             UserBuildingAccess = await _context._userBuildingAccess.Where(p => p.CardHolderID == IdNumber).ToListAsync(),
-                            UserAminitiesAccess = await _context._userAmenitiesAccess.Where(p => p.CardHolderID == IdNumber).ToListAsync() 
+                            UserAminitiesAccess = await _context._userAmenitiesAccess.Where(p => p.CardHolderID == IdNumber).ToListAsync()
                         };
 
 
@@ -183,7 +194,7 @@ namespace Township_API.Controllers
                         }
 
                         existingLandOwner.CSN = objID.CSN;
-                      //  existingLandOwner.IDNumber = objID.IDNumber;
+                        //  existingLandOwner.IDNumber = objID.IDNumber;
                         existingLandOwner.TagNumber = objID.TagNumber;
                         existingLandOwner.PANnumber = objID.PANnumber;
                         existingLandOwner.PassportNo = objID.PassportNo;
@@ -212,11 +223,11 @@ namespace Township_API.Controllers
                         await _context.SaveChangesAsync();
                     }
                     else
-                    {                         
+                    {
                         _context.Landowners.Add(objID);
                         await _context.SaveChangesAsync();
 
-                        int number = (int)AccessCardHilders.Landowner;
+                        int number = (int)AccessCardHolders.Landowner;
                         objID.IDNumber = number.ToString() + objID.ID.ToString("D5");
                         await _context.SaveChangesAsync();
                     }
@@ -245,7 +256,7 @@ namespace Township_API.Controllers
         {
             _context = context;
         }
- 
+
         // PUT: api/products/5 
         [HttpPost("{UpdateDependentLandOwner}/{id}")]
         public async Task<IActionResult> UpdateDependentLandOwner(int id, [FromBody] DependentLandOwner updatedDLandOwner)
@@ -256,7 +267,7 @@ namespace Township_API.Controllers
             }
 
             //var existingDependentLandOwner = await _service.UpdateDependentLandownerAsync(updatedDLandOwner.ID, updatedDLandOwner);
-            
+
             var existingDependentLandOwner = await _context.DependentLandowners.FindAsync(updatedDLandOwner.ID);
             if (existingDependentLandOwner == null)
             {
@@ -300,9 +311,9 @@ namespace Township_API.Controllers
                 return BadRequest("Dependent LandOwner Exists.");
             }
             _context.Add(obj);
-            await _context.SaveChangesAsync(); 
+            await _context.SaveChangesAsync();
 
-            int number = (int)AccessCardHilders.DependentLandowner;
+            int number = (int)AccessCardHolders.DependentLandowner;
             obj.IDNumber = number.ToString() + obj.ID.ToString("D5");
             await _context.SaveChangesAsync();
 
@@ -312,7 +323,7 @@ namespace Township_API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllDependentLandowners()
         {
-            var DependentLandOwners = await _context.DependentLandowners.OrderByDescending(p => p.ID).ToListAsync();
+            var DependentLandOwners = await _context.DependentLandowners.Where(p => p.LogicalDeleted == 0).OrderByDescending(p => p.ID).ToListAsync();
             return Ok(DependentLandOwners);
         }
 
@@ -343,7 +354,7 @@ namespace Township_API.Controllers
                         existingDependentLandOwner.PID = objID.PID;
                         //existingDependentLandOwner.id = existingDependentLandOwner
                         existingDependentLandOwner.CSN = objID.CSN;
-                       //a existingDependentLandOwner.IDNumber = objID.IDNumber;
+                        //a existingDependentLandOwner.IDNumber = objID.IDNumber;
                         existingDependentLandOwner.TagNumber = objID.TagNumber;
                         existingDependentLandOwner.PANnumber = objID.PANnumber;
                         existingDependentLandOwner.PassportNo = objID.PassportNo;
@@ -363,18 +374,18 @@ namespace Township_API.Controllers
                         existingDependentLandOwner.LogicalDeleted = objID.LogicalDeleted;
                         existingDependentLandOwner.DependLandOwnerIssueDate = objID.DependLandOwnerIssueDate;
                         _context.Entry(existingDependentLandOwner).State = EntityState.Modified;
-                        await _context.SaveChangesAsync(); 
+                        await _context.SaveChangesAsync();
                     }
                     else
                     {
                         // Turn IDENTITY_INSERT ON
-                        _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT DependentLandowner ON"); 
+                        _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT DependentLandowner ON");
                         _context.DependentLandowners.Add(objID);
                         // Turn IDENTITY_INSERT OFF
                         _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT DependentLandowner OFF");
                         await _context.SaveChangesAsync();
 
-                        int number = (int)AccessCardHilders.DependentLandowner;
+                        int number = (int)AccessCardHolders.DependentLandowner;
                         objID.IDNumber = number.ToString() + objID.ID.ToString("D5");
                         await _context.SaveChangesAsync();
                     }
@@ -389,8 +400,8 @@ namespace Township_API.Controllers
             {
                 await transaction.RollbackAsync();
                 return StatusCode(500, new { error = ex.Message });
-            } 
-        }           
+            }
+        }
     }
 
 }
