@@ -10,6 +10,7 @@ namespace Township_API.Controllers
     [ApiController]
     public class GuestController : Controller
     {
+        
         private readonly AppDBContext _context;
        
         public GuestController(AppDBContext context)
