@@ -41,9 +41,9 @@ namespace Township_API.Controllers
             if (user != null)
             {
                 if (user.Count > 0)
-                { 
+                {
                     var role = user[0].Role;
-                     //  var roles = await _context.Roles.Where(p => p.RoleID == user[0].roleID).FirstOrDefault();
+                    //  var roles = await _context.Roles.Where(p => p.RoleID == user[0].roleID).FirstOrDefault();
                     // var token = GenerateJwtToken(user, roles);
                     return Ok(user);
                 }
@@ -76,17 +76,18 @@ namespace Township_API.Controllers
         }
 
         [HttpGet("CardHolderSearch/{search}")]
-        public async Task<IActionResult> CardHolderSearch(string? search=null)
+        public async Task<IActionResult> CardHolderSearch(string? search = null)
         {
             List<AllCardHolder> cardHolder = new List<AllCardHolder>();
 
             try
             {
-//item.Column.Contains("value")
+                //item.Column.Contains("value")
                 if (search == null)
                     search = "";
-                if (search.Length >2) {
-                        cardHolder = await _context.AllCardHolders.Where(p => (p.IDNumber.Contains(search))|| (p.shortname.Contains(search))).ToListAsync();
+                if (search.Length > 2)
+                {
+                    cardHolder = await _context.AllCardHolders.Where(p => (p.IDNumber.Contains(search)) || (p.shortname.Contains(search))).ToListAsync();
                     if (cardHolder != null)
                     {
                         if (cardHolder.Count > 0)
@@ -95,8 +96,9 @@ namespace Township_API.Controllers
                         }
 
                     }
-                         
-                }       }
+
+                }
+            }
             catch (Exception ex)
             {
 
@@ -148,31 +150,71 @@ namespace Township_API.Controllers
         //    return null;
 
         //}
-        [HttpGet("{imageName}")]
+        [HttpGet("GetImageStream/{imageName}")]
         public IActionResult GetImageStream(string imageName)
         {
-            var imagePath = Path.Combine("Images", imageName);
+            try
+            {
+                var imagePath = Path.Combine("Images", imageName);
 
-            if (!System.IO.File.Exists(imagePath))
-                return NotFound();
+                if (!System.IO.File.Exists(imagePath))
+                {
+                    var image = _context.Images.Where(p => p.FileName.Contains(imageName)).FirstOrDefault();
+                    if (image == null || image.Data == null)
+                        return NotFound();
+                     
 
-            var stream = new FileStream(imagePath, FileMode.Open, FileAccess.Read);
-            var contentType = GetContentType(imagePath);
+                    var base64 = Convert.ToBase64String(image.Data);
+                    return File(base64, GetContentType(image.ContentType).Replace(".",""));
+                    //return Ok(new
+                    //{
+                    //    image.ImageId,
+                    //    image.FileName,
+                    //    image.ContentType,
+                    //    Base64 = $"data:{image.ContentType};base64,{base64}"
+                    //});
+                }
 
-            return File(stream, contentType);
+                var stream = new FileStream(imagePath, FileMode.Open, FileAccess.Read);
+                var contentType = GetContentType(imagePath);
+
+                return File(stream, contentType);
+            }
+            catch (Exception ex)
+            {
+                var r = ex.Message.ToString();
+                return BadRequest("error: " + r.ToString());
+            }
         }
 
-        [HttpGet("{filenm}")]
+        [HttpGet("GetImage/{filenm}")]
         public async Task<IActionResult> GetImage(string filenm)
         {
-            //var image = await GetImageByIdAsync(filenm);
-            var image = (Image)_context.Images.Where(p => p.FileName == filenm).FirstOrDefault();            
-            if (image == null)
-                return NotFound();
+            try
+            {
+                //var image = await GetImageByIdAsync(filenm);
+                var image = _context.Images.Where(p => p.FileName.Contains(filenm)).FirstOrDefault();
+                if (image == null || image.Data == null)
+                    return NotFound();
 
-            return File(image.Data, image.ContentType); // Serves binary as proper image
+                // return File(image.Data,"jpg"); // Serves binary as proper image
+
+                var base64 = Convert.ToBase64String(image.Data);
+                return Ok(new
+                {
+                    image.ImageId,
+                    image.FileName,
+                    image.ContentType,
+                    Base64 = $"data:{image.ContentType};base64,{base64}"
+                });
+            }
+            catch (Exception ex)
+            {
+                var r = ex.Message.ToString();
+                return BadRequest("error: " + r.ToString());
+            }
         }
-                
+
         [HttpPost("upload")]
         public async Task<IActionResult> UploadImage(IFormFile file)
         {
@@ -200,9 +242,9 @@ namespace Township_API.Controllers
             catch (Exception ex)
             {
                 var r = ex.Message.ToString();
-                return BadRequest("error: "+r.ToString());
+                return BadRequest("error: " + r.ToString());
             }
-           
+
         }
 
         private string GetContentType(string path)
@@ -302,4 +344,3 @@ namespace Township_API.Controllers
      }
      */
 }
-    

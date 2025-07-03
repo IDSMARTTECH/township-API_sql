@@ -89,7 +89,7 @@ namespace Township_API.Models
         [ForeignKey("Profile")]
         public int? profileid { get; set; }
         public Profile? profile { get; set; }
-
+        
         [ForeignKey("Module")]
         public int? moduleId { get; set; }
         public _module? module { get; set; }

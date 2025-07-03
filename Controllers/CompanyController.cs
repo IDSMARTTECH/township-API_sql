@@ -441,5 +441,166 @@ namespace Township_API.Controllers
         }
     }
 
+    [Route("api/[controller]")]
+    [ApiController]
+    public class AccessRightsController : Controller
+    {
+        private readonly AppDBContext _context;
+        public AccessRightsController(AppDBContext context)
+        {
+            _context = context;
+        }
+
+        [HttpPost("AddUpdateAccessBlockRevoke/{id}")]
+        public async Task<IActionResult> AddUpdateAccessBlockRevoke(int id, [FromBody] AccessBlockRevoke_Register  updatedOBJ)
+        {
+            try
+            {
+                if (updatedOBJ.id > 0)
+                {
+
+                    var existingOBJ = await _context.AccessBlockRevokeRegister.FindAsync(id);
+                    if (existingOBJ == null)
+                    {
+                        return NotFound();
+                    }
+                     
+                    existingOBJ.IDnumber = updatedOBJ.IDnumber;
+                    existingOBJ.CardCsn = updatedOBJ.CardCsn;
+                    existingOBJ.BlockRevokType = updatedOBJ.BlockRevokType;
+                    existingOBJ.updatedOn = updatedOBJ.updatedOn;
+                    existingOBJ.updatedby = updatedOBJ.updatedby;
+                    existingOBJ.fromdate = updatedOBJ.fromdate;
+                    if (existingOBJ.todate!=null)
+                    existingOBJ.todate = updatedOBJ.todate;
+
+                    _context.Entry(existingOBJ).State = EntityState.Modified;
+                    await _context.SaveChangesAsync();
+
+                    return Ok(existingOBJ);
+                }
+                else
+                {
+                    // Turn IDENTITY_INSERT ON
+                    _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT AccessBlockRevoke_Register ON");
+                    _context.AccessBlockRevokeRegister.Add(updatedOBJ);
+                    //  await transaction.CommitAsync();
+                    // Turn IDENTITY_INSERT ON
+                    _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT AccessBlockRevoke_Register OFF");
+                    await _context.SaveChangesAsync();
+                    return Ok(new { message = $"Access processed successfully" }); ;
+                }
+            }
+            catch (Exception ex)
+            {
+                //     await transaction.RollbackAsync();
+                return StatusCode(500, new { error = ex.Message });
+            }
+        }
+
+        
+        [HttpGet]
+        public async Task<IActionResult> GetAccessBlockRevoke_Register( DateTime Fromdate,DateTime Todate)
+        {
+            try
+            {
+                if (Fromdate <= Todate)
+                    Todate = Fromdate.AddDays(1);
+
+                object OBJs;
+                 
+                    OBJs = await _context.AccessBlockRevokeRegister.Where(p => p.fromdate >= Fromdate && p.todate <= Todate).OrderByDescending(p => p.id).ToListAsync();
+                
+                return Ok(OBJs);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+         
+    }
+
+    [Route("api/[controller]")]
+    [ApiController]
+    public class CardLostDamageRegisterController : Controller
+    {
+        private readonly AppDBContext _context;
+        public CardLostDamageRegisterController(AppDBContext context)
+        {
+            _context = context;
+        }
+
+        [HttpPost("AddUpdateCardLostDamageRegister/{id}")]
+        public async Task<IActionResult> AddUpdateCardLostDamageRegister(int id, [FromBody] CardLostDamage_Register updatedOBJ)
+        {
+            try
+            {
+                if (updatedOBJ.id > 0)
+                {
+
+                    var existingOBJ = await _context.CardLostDamage_Register.FindAsync(id);
+                    if (existingOBJ == null)
+                    {
+                        return NotFound();
+                    }
+
+                    existingOBJ.IDnumber = updatedOBJ.IDnumber;
+                    existingOBJ.CardCsn = updatedOBJ.CardCsn;
+                    existingOBJ.LostDamageType = updatedOBJ.LostDamageType;
+                    existingOBJ.updatedOn = updatedOBJ.updatedOn;
+                    existingOBJ.updatedby = updatedOBJ.updatedby;
+                    existingOBJ.reporteddate = updatedOBJ.reporteddate;
+                    if (existingOBJ.blockeddate != null)
+                        existingOBJ.blockeddate = updatedOBJ.blockeddate;
+
+                    _context.Entry(existingOBJ).State = EntityState.Modified;
+                    await _context.SaveChangesAsync();
+
+                    return Ok(existingOBJ);
+                }
+                else
+                {
+                    // Turn IDENTITY_INSERT ON
+                    _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT CardLostDamage_Register ON");
+                    _context.CardLostDamage_Register.Add(updatedOBJ);
+                    //  await transaction.CommitAsync();
+                    // Turn IDENTITY_INSERT ON
+                    _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT CardLostDamage_Register OFF");
+                    await _context.SaveChangesAsync();
+                    return Ok(new { message = $"CardLostDamage processed successfully" }); ;
+                }
+            }
+            catch (Exception ex)
+            {
+                //     await transaction.RollbackAsync();
+                return StatusCode(500, new { error = ex.Message });
+            }
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> GetCardLostDamageRegister(DateTime Fromdate, DateTime Todate)
+        {
+            try
+            {
+                if (Fromdate <= Todate)
+                    Todate = Fromdate.AddDays(1);
+
+                object OBJs;
+
+                OBJs = await _context.CardLostDamage_Register.Where(p => p.blockeddate >= Fromdate && p.blockeddate <= Todate).OrderByDescending(p => p.id).ToListAsync();
+
+                return Ok(OBJs);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+    }
+
+
 }
 

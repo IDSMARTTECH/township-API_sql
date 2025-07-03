@@ -1,5 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Security.Cryptography;
 
 namespace Township_API.Models
 {
@@ -68,6 +70,69 @@ namespace Township_API.Models
         public string ContentType { get; set; }
         public byte[] Data { get; set; } // BLOB
     }
+
+
+    [Table("ServiceProviderOwners")]
+    public class ServiceProviderOwners
+    {
+        //Id, SProviderID, 
+        [Key]
+        public int Id { get; set; }
+        [Required]
+        public string SProviderID { get; set; }
+        [Required] 
+        public string Hid { get; set; }
+         
+        public string? OwnerDetails { get; set; } = "";
+        public bool isActive { get; set; } = true;
+
+        [NotMapped]
+        public string? OwnerName { get; set; } = ""; 
+        [NotMapped]
+        public string? building { get; set; } = ""; 
+        [NotMapped]
+        public string? Neighbourhood { get; set; } = "";
+        [NotMapped]
+        public string? FlatNumber { get; set; } = "";
+
+    }
+    // Id, SProviderID , Hid, OwnerDetails,  isActive
+
+
+    [Table("AccessBlockRevoke_Register")]
+    public class AccessBlockRevoke_Register
+    {
+        [Key]
+        public int id { get; set; }
+        public int IDnumber { get; set; }
+        public string CardCsn { get; set; }
+        public string BlockRevokType { get; set; }
+        public DateTime? fromdate { get; set; }
+        public DateTime? todate { get; set; }
+        public DateTime? createdOn { get; set; }
+        public int? createdby { get; set; } = 0;
+        public DateTime updatedOn { get; set; } 
+        public int updatedby { get; set; } = 0;
+    }
+
+
+    [Table("CardLostDamage_Register")]
+    public class CardLostDamage_Register
+    { 
+        [Key]
+        public int id { get; set; }
+        public int IDnumber { get; set; }
+        public string CardCsn { get; set; }
+        public string description { get; set; }
+        public string LostDamageType { get; set; }
+        public DateTime? reporteddate { get; set; }
+        public DateTime? blockeddate { get; set; }
+        public DateTime? createdOn { get; set; }
+        public int? createdby { get; set; } = 0;
+        public DateTime updatedOn { get; set; }
+        public int updatedby { get; set; } = 0;
+    }
+
 
 
 }

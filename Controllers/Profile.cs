@@ -111,16 +111,37 @@ namespace Township_API.Controllers
         [HttpGet("GetProfileDDetails/{id}")]
         public async Task<ActionResult<IEnumerable<ProfileDetails>>> GetProfileDetails(string id)
         {
-            ProfileDetails p = new ProfileDetails();
-              
-            // Perform join in memory
-            var result = await  _context.ProfileDetails.Where(p => p.profileid.ToString() == id.ToString()).ToListAsync();
-            if (result != null)
+            try
             {
-                return Ok(result);
-            }
+                ProfileDetails p = new ProfileDetails();
 
-            return Ok(null);
+                // Perform join in memory
+                var result = await _context.ProfileDetails.IgnoreAutoIncludes().Where(p => p.profileid.ToString() == id.ToString()).ToListAsync();
+                if (result != null)
+                {
+                    if (result.Count > 0)
+                    {
+                        foreach (var res in result)
+                        {
+                            var nr = await _context.Modules.Where(u => u.ModuleID.ToString() == res.moduleId.ToString()).FirstOrDefaultAsync();
+                            if (nr != null)
+                            {
+                                res.module.ModuleID = nr.ModuleID;
+                                res.module.ModuleName = nr.ModuleName;
+                            }
+                        }
+
+                        return Ok(result);
+                    } 
+                }
+                return Ok(null);
+
+            }
+            catch (Exception ex)
+            {
+                //   await transaction.RollbackAsync();
+                return StatusCode(500, new { error = ex.Message });
+            }
 
         }
 

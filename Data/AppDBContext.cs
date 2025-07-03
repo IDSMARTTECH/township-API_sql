@@ -65,6 +65,11 @@ namespace Township_API.Data
 
         public DbSet<UserBuildingAccess> _userBuildingAccess { get; set; }
           
+        public DbSet<ServiceProviderOwners> ServiceProviderOwners { get; set; }
+
+        public DbSet<AccessBlockRevoke_Register> AccessBlockRevokeRegister { get; set; }
+        public DbSet<CardLostDamage_Register> CardLostDamage_Register { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {  
             modelBuilder.Entity<UserNRDAccess>(entity =>

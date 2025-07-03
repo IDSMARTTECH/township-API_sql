@@ -62,6 +62,10 @@ namespace Township_API.Controllers
             existingContractor.ValidFromDate = updatedContractor.ValidFromDate;
             existingContractor.Address = updatedContractor.Address;
             existingContractor.ContactorType = updatedContractor.ContactorType;
+            existingContractor.Company = updatedContractor.Company;
+            existingContractor.Agency = updatedContractor.Agency;
+
+
             _context.Entry(existingContractor).State = EntityState.Modified;
             await _context.SaveChangesAsync();
             return Ok(existingContractor);
@@ -70,23 +74,31 @@ namespace Township_API.Controllers
         [HttpPost("AddContractor")]
         public async Task<IActionResult> AddContractor([FromBody] Contractor obj)
         {
-            if (!ModelState.IsValid)
-            {
-                var errors = ModelState
-                    .Where(ms => ms.Value.Errors.Any())
-                    .ToDictionary(
-                        kvp => kvp.Key,
-                        kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
-                    );
+            //if (!ModelState.IsValid)
+            //{
+            //    var errors = ModelState
+            //        .Where(ms => ms.Value.Errors.Any())
+            //        .ToDictionary(
+            //            kvp => kvp.Key,
+            //            kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
+            //        );
 
-                return BadRequest(new { message = "Validation Failed", errors });
-            }
+            //    return BadRequest(new { message = "Validation Failed", errors });
+            //}
 
-            var existingContractor = await _context.ModuleData.FindAsync(0); 
+            var existingContractor = await _context.Contractors.FindAsync(0); 
             if (existingContractor != null)
             {
                 return BadRequest("Contractor Exists.");
             }
+            var existsOBJ = await _context.Contractors.Where(p => p.FirstName == obj.FirstName && p.Agency== obj.Agency && p.ID != obj.ID).ToListAsync();
+            if (existsOBJ != null)
+            {
+                if (existsOBJ.Count > 0)
+                    return BadRequest("Contractor Name with this Agency is already Exists.");
+            }
+
+
             _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Contractor ON");
             _context.Add(obj); 
             _context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT Contractor OFF");
@@ -109,6 +121,21 @@ namespace Township_API.Controllers
             try
             {
                 var Contractors = await _context.Contractors.OrderByDescending(p => p.ID).ToListAsync();
+                if (Contractors != null)
+                {
+                    if (Contractors.Count > 0)
+                    {
+                        foreach (var res in Contractors)
+                        {
+                            int mdl = (int)ModuleTypes.ContractorType;
+                            var nr = await _context.ModuleData.Where(u => u.ID.ToString() == res.ContactorType.ToString() && u.ModuleType.ToString() == mdl.ToString()).FirstOrDefaultAsync();
+                            if (nr != null)
+                            {
+                                res.ContractorTypeName = nr.Name.ToString();
+                            }
+                        }
+                    }
+                }
                 return Ok(Contractors);
             }
             catch (Exception ex)
@@ -123,6 +150,22 @@ namespace Township_API.Controllers
             try
             {
                 var Contractors = await _context.Contractors.Where(p=>p.ID==id && p.LogicalDeleted==0) .OrderByDescending(p => p.ID).ToListAsync();
+
+                if (Contractors != null)
+                {
+                    if (Contractors.Count > 0)
+                    {
+                        foreach (var res in Contractors)
+                        {
+                            int mdl =(int) ModuleTypes.ContractorType;
+                            var nr = await _context.ModuleData.Where(u =>u.ID.ToString() == res.ContactorType.ToString() && u.ModuleType.ToString() == mdl.ToString()).FirstOrDefaultAsync();
+                            if (nr != null)
+                            {
+                                res.ContractorTypeName = nr.Name.ToString(); 
+                            }
+                        }
+                    }
+                }
                 return Ok(Contractors);
             }
             catch (Exception ex)

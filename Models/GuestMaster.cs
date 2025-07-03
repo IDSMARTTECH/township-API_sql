@@ -78,7 +78,7 @@ namespace Township_API.Models
         public string? FlatNumber { get; set; }
         public DateTime? CardIssueDate { get; set; }
         public DateTime? CardPrintingDate { get; set; }
-        public DateTime? LogicalDeleted { get; set; }
+        public int? LogicalDeleted { get; set; }=1;
         [Required] 
         public DateTime? visitStartTime { get; set; }
         public DateTime? visitEndTime { get; set; }
@@ -92,7 +92,13 @@ namespace Township_API.Models
         public string? NRDName { get; set; } = null;
         [NotMapped]
         public string? BuildingName { get; set; } = null;
-
+        [NotMapped]
+        [DataType(DataType.Date)]
+        public string? visitStartDate { get; set; }
+        [NotMapped]
+        [DataType(DataType.Date)]
+        public string? visitEndDate { get; set; }  
+          
     }
 
 }
