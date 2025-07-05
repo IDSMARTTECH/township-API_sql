@@ -88,11 +88,11 @@ namespace Township_API.Models
 
         [ForeignKey("Profile")]
         public int? profileid { get; set; }
-        public Profile? profile { get; set; }
+        public Profile? profile { get; set; } = null;
         
-        [ForeignKey("Module")]
+        [ForeignKey("_module")]
         public int? moduleId { get; set; }
-        public _module? module { get; set; }
+        public _module? module { get; set; } = null;
         public bool? CanInsert { get; set; } = false;
         public bool? CanUpdate { get; set; } = false;
         public bool? CanDelete { get; set; } = false;
@@ -104,7 +104,7 @@ namespace Township_API.Models
         public int? updatedby { get; set; }
         public DateTime? updatedon { get; set; } = null;
     }
-
+    
     [Table("tblModules")]
     public class _module
     {

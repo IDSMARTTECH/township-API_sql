@@ -42,6 +42,7 @@ namespace Township_API.Data
         public DbSet<GuestMaster> GuestMasters { get; set; }
         public DbSet<VisitorMaster> VisitorMasters { get; set; }
 
+        public DbSet<ANPR> ANPRs { get; set; }
         public DbSet<Image> Images { get; set; }
 
         public IQueryable<NRD> NRDs => (IQueryable<NRD>)ModuleDatas.Where(n => n.TypeID == (int)commonTypes.ModuleTypes.NRD && n.ID > (int)commonTypes.ModuleTypes.NRD);

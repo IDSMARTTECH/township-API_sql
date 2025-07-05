@@ -8,6 +8,7 @@ using static Township_API.Models.commonTypes;
 using System.Linq;
 using System.Text.Json;
 using System.Diagnostics.Eventing.Reader;
+using System.Reflection;
 
 
 namespace Township_API.Controllers
@@ -112,30 +113,57 @@ namespace Township_API.Controllers
         public async Task<ActionResult<IEnumerable<ProfileDetails>>> GetProfileDetails(string id)
         {
             try
-            {
-                ProfileDetails p = new ProfileDetails();
-
+            { 
+                List<ProfileDetails> profileDetails = new List<ProfileDetails>();               
                 // Perform join in memory
-                var result = await _context.ProfileDetails.IgnoreAutoIncludes().Where(p => p.profileid.ToString() == id.ToString()).ToListAsync();
+                var result = await _context.Modules.ToListAsync();
                 if (result != null)
                 {
+                    int i=1;
                     if (result.Count > 0)
                     {
+                        Profile _profile = await _context.Profiles.Where(u => u.ID == Convert.ToInt16(id)).FirstOrDefaultAsync();
+                        ProfileDetails P;
                         foreach (var res in result)
-                        {
-                            var nr = await _context.Modules.Where(u => u.ModuleID.ToString() == res.moduleId.ToString()).FirstOrDefaultAsync();
+                        {   
+                            P = new ProfileDetails();
+                            _module M = new _module();
+                            P.id = i;
+                            P.moduleId = res.ModuleID;
+                            P.profileid =Convert.ToInt16( id);
+                            P.profile= _profile;
+                            M.ModuleID = res.ModuleID;
+                            M.ModuleName = res.ModuleName;
+                            M.Viewreadonly = res.Viewreadonly;
+                            P.module = M;
+                            P.updatedby = 0;
+                            P.updatedon =DateTime.Now;
+                            P.isdeleted = false;
+                            var nr = await _context.ProfileDetails.Where(u =>u.profileid== Convert.ToInt16(id) && u.moduleId.ToString() == res.ModuleID.ToString()).FirstOrDefaultAsync();
                             if (nr != null)
                             {
-                                res.module.ModuleID = nr.ModuleID;
-                                res.module.ModuleName = nr.ModuleName;
+                                P.CanUpdate = nr.CanUpdate;
+                                P.CanDelete = nr.CanDelete;
+                                P.CanView = nr.CanView;
+                                P.isactive = nr.isactive;
+                                
                             }
+                            else
+                            {
+                                P.CanUpdate = false;
+                                P.CanDelete = false;
+                                P.CanView = false;
+                                P.isactive = false;
+                            }
+                            i++;
+                            profileDetails.Add(P);
                         }
 
-                        return Ok(result);
+                       // return Ok(profileDetails);
                     } 
                 }
-                return Ok(null);
-
+                // return Ok(null);
+                return Ok(profileDetails);
             }
             catch (Exception ex)
             {
